@@ -21,6 +21,18 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component('businessSPA', require('./components/SPA/businessSPA.vue').default);
+Vue.component('businessesTableComponent', require('./components/table/BusinessTableComponent.vue').default);
+Vue.component('newBusinessCreationForm', require('./components/form/newBusinessCreationForm.vue').default);
+
+Vue.component('userSPA', require('./components/SPA/userSPA.vue').default);
+Vue.component('UserTableComponent', require('./components/table/UserTableComponent.vue').default);
+Vue.component('newUserCreationForm', require('./components/form/newUserCreationForm.vue').default);
+
+
+Vue.component('customerSPA', require('./components/SPA/customerSPA.vue').default);
+Vue.component('CustomerTableComponent', require('./components/table/CustomerTableComponent.vue').default);
+Vue.component('newCustomerCreationForm', require('./components/form/newCustomerCreationForm.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -29,4 +41,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+
 });
+
+
