@@ -45,7 +45,6 @@
 <script>
 
     export default {
-
         data() {
             return {
                 view: 'list',

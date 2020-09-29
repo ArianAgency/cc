@@ -48,7 +48,7 @@
 
         data() {
             return {
-                view: 'add',
+                view: 'list',
                 csrf: "",
             }
         },

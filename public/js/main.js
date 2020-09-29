@@ -415,8 +415,8 @@ $(function () {
       borderWidth: 2,
       data: [1, 13, 9, 17, 34, 41, 38]
     }]
-  }; // var ctx = $('#social-box-chart-2').get(0).getContext('2d');
-
+  };
+  var ctx = $('#social-box-chart-2').get(0).getContext('2d');
   var socialBoxChart2 = new Chart(ctx, {
     type: 'line',
     data: data2,

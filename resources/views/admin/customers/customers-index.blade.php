@@ -5,14 +5,16 @@
     <div id="app">
 
 
-<customer-s-p-a></customer-s-p-a>
+        <customer-s-p-a user="{{ Auth::user() }}"></customer-s-p-a>
 
     </div>
 
-    <script>
+    <script type="application/javascript">
         var Laravel = {
             'csrfToken': '{{csrf_token()}}'
-        };
-        console.log('Laravel = ' + Laravel['csrfToken'])
+        }
+
+        // console.log('Laravel = ' + Laravel['csrfToken'])
+
     </script>
 @endsection

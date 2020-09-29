@@ -22,12 +22,12 @@
     <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" >
 <header class="app-header navbar">
     @include('admin.main.app-header')
 </header>
 
-<div class="app-body">
+<div class="app-body" id="app">
     <div class="sidebar">
         @include('admin.main.app-body-sidebar')
     </div>
@@ -59,29 +59,44 @@
 </div>
 
 <footer class="app-footer">
+
     <span>کلیه حقوق مال آرین © 2020 .</span>
 
 </footer>
 
 <!-- Bootstrap and necessary plugins -->
-<script src="/admin/content/js/jquery.min.js"></script>
-<script src="/admin/content/js/popper.min.js"></script>
-<script src="/admin/content/js/bootstrap.min.js"></script>
-<script src="/admin/content/js/pace.min.js"></script>
+{{--<script src="public/admin/content/js/jquery.min.js"></script>--}}
+{{--<script src="public/admin/content/js/popper.min.js"></script>--}}
+{{--<script src="public/admin/content/js/bootstrap.min.js"></script>--}}
+{{--<script src="public/admin/content/js/pace.min.js"></script>--}}
+{{--<script src="public/admin/content/js/Chart.min.js"></script>--}}
+{{--<script src="public/admin/content/js/app.js"></script>--}}
+{{--<script src="/admin/content/js/app.js"></script>--}}
 
 
 <!-- Plugins and scripts required by all views -->
-<script src="/admin/content/js/Chart.min.js"></script>
+{{--<script src="/admin/content/js/Chart.min.js"></script>--}}
 
 <!-- main scripts -->
 
 {{--<script src="/admin/content/js/app.js"></script>--}}
+<script src="{{ asset('admin/content/js/jquery.min.js') }}" ></script>
+{{--<script src="{{ asset('admin/content/js/popper.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('admin/content/js/bootstrap.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('admin/content/js/pace.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('admin/content/js/Chart.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('admin/content/js/app.js') }}" ></script>--}}
+
+{{--<script src="{{ asset('js/jquery.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('js/popper.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('js/bootstrap.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('js/pace.min.js') }}" ></script>--}}
+{{--<script src="{{ asset('js/Chart.min.js') }}" ></script>--}}
+<script src="{{ asset('js/main.js') }}" ></script>
 <script src="{{ asset('js/app.js') }}" ></script>
 
-<!-- Plugins and scripts required by this views -->
-
-<!-- Custom scripts required by this view -->
-<script src="/admin/content/js/views/main.js"></script>
+{{--<script src="/public/admin/content/js/views/main.js"></script>--}}
 
 </body>
 </html>
+

@@ -10,11 +10,11 @@
     <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
     <title>Bootstrap 4 Admin Template</title>
     <!-- Icons -->
-    <link href="content/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="content/css/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <link href="/admin/content/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/admin/content/css/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
     <!-- Main styles for this application -->
-    <link href="content/css/style.css" rel="stylesheet">
-    <link href="content/css/custom.css" rel="stylesheet" />
+    <link href="/admin/content/css/style.css" rel="stylesheet">
+    <link href="/admin/content/css/custom.css" rel="stylesheet" />
     <!-- Styles required by this views -->
 </head>
 
@@ -55,20 +55,27 @@
                     </div>
 
                     <button type="button" class="btn btn-block btn-success">ساخت حساب کاربری</button>
+
+
+                    <button type="button" class="btn btn-primary btn-sm w-100 mt-2 " onclick="window.location.href='{{url('/login') }}'">قبلا ثبت نام کردم</button>
+
                 </div>
-                <div class="card-footer p-4">
-                    <div class="row">
-                        <div class="col-6">
-                            <button class="btn btn-block btn-facebook" type="button">
-                                <span>فیس بوک</span>
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-block btn-twitter" type="button">
-                                <span>توییتر</span>
-                            </button>
-                        </div>
-                    </div>
+
+
+
+                <div class="card-body ">
+{{--                    <div class="row">--}}
+{{--                        <div class="col-6">--}}
+{{--                            <button class="btn btn-block btn-facebook" type="button">--}}
+{{--                                <span>فیس بوک</span>--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-6">--}}
+{{--                            <button class="btn btn-block btn-twitter" type="button">--}}
+{{--                                <span>توییتر</span>--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
             </div>
         </div>
@@ -76,9 +83,9 @@
 </div>
 
 <!-- Bootstrap and necessary plugins -->
-<script src="content/js/jquery.min.js"></script>
-<script src="content/js/popper.min.js"></script>
-<script src="content/js/bootstrap.min.js"></script>
+<script src="/admin/content/js/jquery.min.js"></script>
+<script src="/admin/content/js/popper.min.js"></script>
+<script src="/admin/content/js/bootstrap.min.js"></script>
 
 </body>
 </html>

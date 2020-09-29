@@ -29,29 +29,36 @@
     </li>
     <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <img src="content/img/avatars/6.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
+            <img src="admin/content/img/avatars/6.jpg" class="img-avatar" alt="{{ Auth::user()->name }}">
         </a>
         <div class="dropdown-menu dropdown-menu-left">
             <div class="dropdown-header text-center">
                 <strong>حساب کاربری</strong>
             </div>
-            <a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> بروزرسانی<span class="badge badge-info">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> بروزرسانی<span
+                    class="badge badge-info">42</span></a>
             <a class="dropdown-item" href="#"><i class="fa fa-envelope-o"></i> پیام ها<span class="badge badge-success">42</span></a>
-            <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> کارهای محول شده<span class="badge badge-danger">42</span></a>
-            <a class="dropdown-item" href="#"><i class="fa fa-comments"></i> نظرات<span class="badge badge-warning">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> کارهای محول شده<span
+                    class="badge badge-danger">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-comments"></i> نظرات<span
+                    class="badge badge-warning">42</span></a>
             <div class="dropdown-header text-center">
                 <strong>تنظیمات</strong>
             </div>
             <a class="dropdown-item" href="#"><i class="fa fa-user"></i> پروفایل</a>
             <a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> تنظیمات</a>
-            <a class="dropdown-item" href="#"><i class="fa fa-usd"></i> پرداختها<span class="badge badge-secondary">42</span></a>
-            <a class="dropdown-item" href="#"><i class="fa fa-file"></i> پروژه ها<span class="badge badge-primary">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-usd"></i> پرداختها<span
+                    class="badge badge-secondary">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-file"></i> پروژه ها<span
+                    class="badge badge-primary">42</span></a>
             <div class="divider"></div>
             <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> بستن حساب کاربری </a>
-            <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> خروج</a>
+            <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-lock"></i> خروج</a>
         </div>
     </li>
 </ul>
 <button class="navbar-toggler aside-menu-toggler" type="button">
     <span class="navbar-toggler-icon"></span>
 </button>
+
+

@@ -174,6 +174,8 @@
         },
         mounted: function () {
             console.log('TableComponent mounted.')
+
+
         },
     }
 </script>

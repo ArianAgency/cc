@@ -19,6 +19,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
+            error_log('Auth::guard($guard)->check() = FALSE');
             return redirect(RouteServiceProvider::HOME);
         }
 

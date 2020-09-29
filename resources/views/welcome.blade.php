@@ -8,7 +8,7 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
+{{--    <link href="content/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">--}}
     <!-- Styles -->
     <style>
         html, body {
@@ -68,7 +68,7 @@
     @if (Route::has('login'))
         <div class="top-right links">
             @auth
-                <a href="{{ url('/home') }}">Home</a>
+                <a href="{{ url('/admin-panel') }}">Dashboard</a>
             @else
                 <a href="{{ route('login') }}">Login</a>
 

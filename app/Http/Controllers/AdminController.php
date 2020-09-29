@@ -6,6 +6,7 @@ use App\Business;
 use App\Customer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Input\Input;
@@ -15,6 +16,11 @@ class AdminController extends Controller
 {
     public function home()
     {
+        if (Auth::user() != null) {
+            Auth::user()->name;
+            error_log(Auth::user()->name);
+        }
+
         return view('admin.main.home');
     }
 
