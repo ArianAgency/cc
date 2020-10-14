@@ -13,9 +13,11 @@
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                             <div class="input-group">
                                                 <input type="text" id="name" name="name" class="form-control"
+                                                       v-bind:value="formItems.name"
                                                        placeholder="نام">
                                                 <span class="input-group-addon"> </span>
                                                 <input type="text" id="family" name="family" class="form-control"
+                                                       v-bind:value="formItems.family"
                                                        placeholder=" نام خوانوادگی">
                                             </div>
                                         </div>
@@ -26,6 +28,7 @@
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                             <div class="input-group">
                                                 <input type="text" id="father_name" name="father_name"
+                                                       v-bind:value="formItems.father_name"
                                                        class="form-control"
                                                        placeholder=" نام پدر">
                                                 <span class="input-group-addon"></span>
@@ -33,11 +36,13 @@
 
                                                 <div class="form-check form-check-inline mr-1">
                                                     <input class="form-check-input" type="radio" id="m"
+                                                           :checked="formItems.gender==='مرد'"
                                                            value="مرد" name="gender">
                                                     <label class="form-check-label" for="m">مرد</label>
                                                 </div>
                                                 <div class="form-check form-check-inline mr-1">
                                                     <input class="form-check-input" type="radio" id="f"
+                                                           :checked="formItems.gender==='زن'"
                                                            checked="checked"
                                                            value="زن" name="gender">
                                                     <label class="form-check-label" for="f">زن</label>
@@ -51,12 +56,14 @@
                                             <span class="input-group-text"><i class="fa fa-mobile"></i></span>
                                             <div class="input-group">
                                                 <input type="text" id="mobile" name="mobile" class="form-control"
+                                                       v-bind:value="formItems.mobile"
                                                        placeholder="شماره موبایل">
                                                 <span class="input-group-text bg-warning text-dark ">
                                                 <i class="fa fa-exclamation-triangle "></i></span>
                                                 <span class="input-group-addon"></span>
                                                 <span class="input-group-text"><i class="fa fa-phone"></i></span>
                                                 <input type="text" id="phone" name="phone" class="form-control"
+                                                       v-bind:value="formItems.phone"
                                                        placeholder="تلفن">
                                             </div>
                                         </div>
@@ -68,6 +75,7 @@
                                                 <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                                             </div>
                                             <input type="email" id="email" name="email" class="form-control"
+                                                   v-bind:value="formItems.email"
                                                    placeholder="ایمیل">
                                             <span class="input-group-text bg-warning text-dark ">
                                                 <i class="fa fa-exclamation-triangle "></i></span>
@@ -79,6 +87,7 @@
                                                 <span class="input-group-text"><i class="fab fa-instagram"></i></span>
                                             </div>
                                             <input type="text" id="social" name="social" class="form-control"
+                                                   v-bind:value="formItems.social"
                                                    placeholder="اینستاگرام">
                                             <span class="input-group-addon"></span>
                                             <div class="input-group-prepend">
@@ -86,7 +95,8 @@
                                                     class="fa fa-birthday-cake"></i></span>
 
                                                 <input type="text" id="birthday" name="birthday" class="form-control"
-                                                       v-model="birthday" placeholder="تاریخ تولد">
+                                                       v-model="birthday.length > 0 ? birthday : formItems.birthday"
+                                                       placeholder="تاریخ تولد">
                                                 <date-picker v-model="birthday" element="birthday"
                                                              format="YYYY-MM-DD"></date-picker>
                                             </div>
@@ -99,19 +109,23 @@
                                                 <span class="input-group-text"><i class="far fa-id-card"></i></span>
                                             </div>
                                             <input type="text" id="national_code" name="national_code"
+                                                   v-bind:value="formItems.national_code"
                                                    class="form-control"
                                                    placeholder="کد ملی">
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fa fa-heart"></i></span>
                                             <div class="form-check form-check-inline mr-1">
                                                 <input class="form-check-input" type="radio" id="single"
-                                                       checked="checked" value="مجرد" name="marriage_status"
+                                                       value="مجرد" name="marriage_status"
+                                                       :checked="formItems.marriage_status==='مجرد'"
                                                        v-on:click="married=0">
                                                 <label class="form-check-label" for="single">مجرد</label>
                                             </div>
                                             <div class="form-check form-check-inline mr-1">
                                                 <input class="form-check-input " type="radio" id="rel"
-                                                       value="متاهل" name="marriage_status" v-on:click="married=1">
+                                                       value="متاهل" name="marriage_status"
+                                                       :checked="formItems.marriage_status==='متاهل'"
+                                                       v-on:click="married=1">
                                                 <label class="form-check-label" for="rel">متاهل</label>
                                             </div>
                                             <span class="input-group-addon"></span>
@@ -121,7 +135,8 @@
                                                        class="form-control"
                                                        v-model="marriageDate" placeholder="تاریخ ازدواج"
                                                        :readonly="married != 1">
-                                                <date-picker v-model="marriageDate" element="marriage-date"
+                                                <date-picker element="marriage-date"
+                                                             v-model="married.length > 0 ? marriageDate : formItems.wedding_anniversary"
                                                              :disabled="married != 1"></date-picker>
                                             </div>
                                         </div>
@@ -131,13 +146,28 @@
                                             <div class="input-group-prepend w-30">
                                                 <span class="input-group-text"><i class="fas fa-book"></i></span>
                                                 <select id="education" name="education" class="form-control h-100 ">
-                                                    <option value="0">تحصیلات</option>
-                                                    <option value="1">زیر دیپلم</option>
-                                                    <option value="2">دیپلم</option>
-                                                    <option value="4">فوق دیپلم</option>
-                                                    <option value="5">کارشناسی</option>
-                                                    <option value="6">کارشناسی ارشد</option>
-                                                    <option value="7">دکتری</option>
+                                                    <option value="-" :selected="formItems.education === '-'">>تحصیلات
+                                                    </option>
+                                                    <option value="زیر دیپلم"
+                                                            :selected="formItems.education === 'زیر دیپلم'">زیر دیپلم
+                                                    </option>
+                                                    <option value="دیپلم" :selected="formItems.education === 'دیپلم'">
+                                                        دیپلم
+                                                    </option>
+                                                    <option value="فوق دیپلم"
+                                                            :selected="formItems.education === 'فوق دیپلم'">فوق دیپلم
+                                                    </option>
+                                                    <option value="کارشناسی"
+                                                            :selected="formItems.education === 'کارشناسی'">
+                                                        کارشناسی
+                                                    </option>
+                                                    <option value="کارشناسی ارشد"
+                                                            :selected="formItems.education === 'کارشناسی ارشد'">کارشناسی
+                                                        ارشد
+                                                    </option>
+                                                    <option value="دکتری" :selected="formItems.education === 'دکتری'">
+                                                        دکتری
+                                                    </option>
                                                 </select>
                                             </div>
                                             <span class="input-group-addon"></span>
@@ -145,6 +175,7 @@
                                                 <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                             </div>
                                             <input type="text" id="field" name="field" class="form-control"
+                                                   v-bind:value="formItems.field"
                                                    placeholder="رشته">
                                         </div>
                                     </div>
@@ -155,7 +186,9 @@
                                                     class="fas fa-map-marked-alt"></i></span>
                                             </div>
                                             <textarea class="form-control flex-fill" id="address" placeholder="آدرس"
-                                                      name="address" rows="2"/>
+                                                      v-bind:value="formItems.address"
+                                                      name="address" rows="2"
+                                            />
                                         </div>
                                     </div>
 
@@ -164,31 +197,17 @@
                                             <span class="input-group-text"><i class="fas fa-search-location"></i></span>
                                             <div class="input-group">
                                                 <input type="text" id="orgin" name="orgin" class="form-control "
+                                                       v-bind:value="formItems.orgin"
                                                        placeholder="محل ثبت نام" readonly>
                                                 <span class="input-group-addon"></span>
                                                 <span class="input-group-text"><i
                                                     class="fab fa-internet-explorer"></i></span>
                                                 <input type="text" id="website" name="website" class="form-control"
+                                                       v-bind:value="formItems.website"
                                                        placeholder="وبسایت">
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <span class="input-group-text"><i class="far fa-comments"></i></span>
-                                            <div class="input-group">
-                                                <input type="text" id="finding_way" name="finding_way"
-                                                       class="form-control "
-                                                       placeholder="نحوه آشنایی">
-                                                <span class="input-group-addon"></span>
-                                                <span class="input-group-text"><i class="far fa-building"></i></span>
-                                                <input type="text" id="job" name="job" class="form-control"
-                                                       placeholder="شغل">
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                 </div>
                             </div>
@@ -200,7 +219,7 @@
                                                 <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
                                             </div>
                                             <input type="text" id="card_number" name="card_number" class="form-control"
-                                                   v-bind:value="this.$parent.splitedCardNumber(availableCardNumber,4)"
+                                                   v-bind:value="$parent.indexForEdit >= 0 ? $parent.splitedCardNumber(formItems.card_number,4) : $parent.splitedCardNumber(availableCardNumber,4)"
                                                    placeholder="شماره کارت" readonly>
                                         </div>
                                     </div>
@@ -209,11 +228,13 @@
                                             <span class="input-group-text"><i class="fas fa-wallet"></i></span>
                                             <div class="input-group">
                                                 <input type="number" id="wallet" name="wallet" class="form-control "
+                                                       v-bind:value="formItems.wallet"
                                                        placeholder="کیف پول">
                                                 <span class="input-group-addon"></span>
                                                 <span class="input-group-text"><i
                                                     class="fas fa-star-half-alt"></i></span>
                                                 <input type="number" id="score" name="score" class="form-control"
+                                                       v-bind:value="formItems.score"
                                                        placeholder="امتیاز">
                                             </div>
                                         </div>
@@ -223,13 +244,15 @@
                                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                                             <div class="input-group">
                                                 <input type="text" id="business" name="business" class="form-control "
-                                                       placeholder="کسب و کار">
+                                                       v-bind:value="formItems.business.company_name"
+                                                       placeholder="کسب و کار" readonly>
                                                 <span class="input-group-addon"></span>
                                                 <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
                                                 <select id="role_id" name="role_id" class="form-control h-100 ">
                                                     <option value="0">سطح دسترسی</option>
-                                                    <option v-for="role in roles" v-bind:value="role.id_roles">{{
-                                                        role.name_fa }}
+                                                    <option v-for="role in roles" v-bind:value="role.id_roles "
+                                                            :selected="formItems.role_id === role.id_roles">
+                                                        {{ role.name_fa }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -241,7 +264,7 @@
                                                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
                                             </div>
                                             <input type="password" id="password" name="password" class="form-control"
-                                                   placeholder="رمز عبور">
+                                                   autocomplete="new-password" placeholder="رمز عبور">
                                         </div>
                                     </div>
                                 </div>
@@ -290,14 +313,15 @@
                 birthday: '',
                 marriageDate: '',
                 posts: [],
-                availableCardNumber: '',
-                roles: '',
-                married: false,
                 csrf: "",
+                availableCardNumber: '',
+                married: false,
+                formItems: [],
+                is_it_new_registration: 'true',
+                roles: '',
             }
         },
         methods: {
-
             user_new_form_submit: function (event) {
                 event.preventDefault()
                 const formData = new FormData(this.$refs['form']); // reference to form element
@@ -305,13 +329,12 @@
                 for (let [key, val] of formData.entries()) {
                     Object.assign(data, {[key]: val})
                 }
-                console.log(data);
-
-
+                Object.assign(data, {'is_it_new_registration': this.is_it_new_registration})
                 axios.post('http://127.0.0.1:8000/admin-panel/user/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
+                        this.setToNewForm();
                         // var self = this;
                         // Object.keys(this.data.form).forEach(function (key, index) {
                         //     self.data.form[key] = '';
@@ -364,15 +387,31 @@
                         console.log(e)
                     })
             },
+            populateFormInputIfIsForEdit() {
+                if (this.$parent.indexForEdit >= 0) {
+                    // console.log('populateFormInputIfIsForEdit = ')
+                    // console.log(this.data[0])
+                    this.formItems = this.data[this.$parent.indexForEdit]
+                }
+            },
+            setToNewForm() {
+                this.$parent.indexForEdit = -1
+                this.formItems = '';
+                this.$parent.getUserData(`http://127.0.0.1:8000/admin-panel/user/index?page=1`)
+            }
         },
         created: function () {
-
+            this.data = this.$parent.data.data
         },
         mounted: function () {
             console.log('newUserCreation mounted.')
+            console.log('parent.indexForEdit = ' + this.$parent.indexForEdit)
             this.csrf = window.Laravel.csrfToken
             this.getFormInitData(0);
-
+            this.populateFormInputIfIsForEdit()
+            if (this.$parent.indexForEdit >= 0) {
+                this.is_it_new_registration = 'false';
+            }
         },
     }
 

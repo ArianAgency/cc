@@ -5,12 +5,7 @@
     <div id="app">
 
 
-{{--        <user-table-component></user-table-component>--}}
-
-{{--        <new-user-creation-form></new-user-creation-form>--}}
-
-
-        <user-s-p-a></user-s-p-a>
+        <user-s-p-a :user-id={{ Auth::user()->id_users }}></user-s-p-a>
 
     </div>
 
@@ -18,6 +13,6 @@
     var Laravel = {
             'csrfToken': '{{csrf_token()}}'
         };
-        console.log('Laravel = ' + Laravel['csrfToken'])
+        // console.log('Laravel = ' + Laravel['csrfToken'])
     </script>
 @endsection

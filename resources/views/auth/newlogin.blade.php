@@ -97,7 +97,10 @@
 {{--<script src="/admin/content/js/popper.min.js"></script>--}}
 {{--<script src="/admin/content/js/bootstrap.min.js"></script>--}}
 
-
+<?php
+use Illuminate\Support\Facades\Hash;$hashedPassword = Hash::make('secret');
+//echo $hashedPassword; // $2y$10$jSAr/RwmjhwioDlJErOk9OQEO7huLz9O6Iuf/udyGbHPiTNuB3Iuy
+?>
 
 </body>
 </html>

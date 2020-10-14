@@ -1,6 +1,6 @@
 <template>
 
-    <businesses-table-component v-if="view==='list'">
+    <businesses-table-component v-if="view==='list' && dataIsReady">
 
         <template slot="header">
             <div class="card-header">
@@ -8,7 +8,7 @@
                     <i class="fa fa-align-justify"></i>
                     <span>لیست کسب و کارها</span>
                 </div>
-                <div class="mybtn"  v-on:click="viewController('add')">
+                <div class="mybtn" v-on:click="viewController('add'),pageTitle = 'ثبت کسب و کار جدید'">
                     <button href="#" class="btn btn-success">
                         <i class="fas fa-plus"></i>
                         افزودن
@@ -23,9 +23,9 @@
             <div class="card-header">
                 <div class="mytitle">
                     <i class="fa fa-align-justify"></i>
-                    <span>ثبت کسب و کار جدید</span>
+                    <span>{{pageTitle}}</span>
                 </div>
-                <div class="mybtn"  v-on:click="viewController('list')">
+                <div class="mybtn" v-on:click="viewController('list'),indexForEdit = -1">
                     <button href="#" class="btn btn-success">
                         <i class="fas fa-list"></i>
                         لیست
@@ -45,31 +45,66 @@
 <script>
 
     export default {
-
+        props: ['userId'],
         data() {
             return {
                 view: 'list',
                 csrf: "",
+                userID: this.userId,
+                data: '',
+                dataIsReady: false,
+                indexForEdit: -1,
+                pageTitle: 'ثبت کسب و کار جدید'
             }
         },
         methods: {
             viewController(event) {
                 this.view = event;
                 // alert('event.id : ' + event)
+            },
+            splitedCardNumber: function (txt, num) {
+                var txt = String(txt)
+                var txtLength = String(txt).length;
+                // console.log('splitNChars + ' + txt)
+                // console.log('txt.length = ' + txtLength)
+                var result = '';
+                for (var i = 0; i < txtLength; i += num) {
+                    if (i != 0) {
+                        result = result + '-';
+                    }
+                    result = result + (txt.substr(i, num));
+                }
+                console.log('splitedCardNumber result = ' + result)
+                return result;
+            },
+            getBusinessData(href) {
+                axios.get(href)
+                    .then(response => {
+                        console.log(response.data.data)
+                        this.data = response.data.data
+                        this.dataIsReady = true;
+                    })
+                    .catch(e => {
+                        this.errors.push(e)
+                        console.log(e)
+                    })
             }
         },
         mounted: function () {
+            console.log('Business SPA mounted.')
             this.csrf = window.Laravel.csrfToken;
-            console.log('TableComponent mounted.')
+        },
+        created: function () {
+            console.log('Business SPA created.')
+            this.getBusinessData(`http://127.0.0.1:8000/admin-panel/business/index?page=1`)
 
         },
-
     }
 
 
 </script>
 
-<style >
+<style>
     .div-body {
         margin: 15px;
     }

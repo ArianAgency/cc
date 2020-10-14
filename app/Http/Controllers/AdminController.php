@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Business;
 use App\Customer;
+use App\Service;
 use App\User;
+use App\X_sens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -113,9 +115,10 @@ class AdminController extends Controller
         error_log('*******************************');
 
 //        error_log('image = ' . $request['image']);
-//        error_log('brand_name = ' . $request->brand_name);
-//        error_log('company_name = ' . $request->company_name);
+        error_log('$foundation_date = ' . $request->foundation_date);
+        error_log('company_name = ' . $request->company_name);
 
+        $is_it_new_registration = $request->is_it_new_registration;
         $brand_name = $request->brand_name;
         $company_name = $request->company_name;
         $company_type = $request->company_type;
@@ -128,9 +131,7 @@ class AdminController extends Controller
         $phone = $request->phone;
         $support_phone = $request->support_phone;
         $mobile = $request->mobile;
-        $mobile_verified_at = $request->mobile_verified_at;
         $email = $request->email;
-        $email_verified_at = $request->email_verified_at;
         $work_time = $request->work_time;
         $logo_address = $request->image;
         $have_social = $request->have_social;
@@ -145,25 +146,28 @@ class AdminController extends Controller
         $password = password_hash($request->password, PASSWORD_DEFAULT);
 //        error_log('password_hash  = ' . $password);
 
-        if (strlen($mobile_verified_at) == 0) {
-            $mobile_verified_at = "NULL";
-        }
-        if (strlen($email_verified_at) == 0) {
-            $email_verified_at = "NULL";
-        }
+
         if (strlen($have_social) == 0) {
             $have_social = "1";
         }
         if (strlen($parent_id) == 0) {
             $parent_id = "0";
         }
+        if (strlen($registration_origin) == 0) {
+            $registration_origin = "1";
+        }
+        if (strlen($logo_address) == 0) {
+            $logo_address = "NULL";
+        }
+        error_log('$logo_address => ');
 
 
-        $query = "call sp_register_new_business  ('$brand_name', '$company_name', '$company_type', '$foundation_date', '$register_code', '$national_code',
-        '$financial_code', '$company_field', '$address', '$phone', '$support_phone', '$mobile', $mobile_verified_at,
-        '$email', $email_verified_at, '$work_time', '$logo_address', '$have_social', '$company_size', '$parent_id',
+        $query = "CALL sp_register_new_business  ($is_it_new_registration,'$brand_name', '$company_name', '$company_type', '$foundation_date', '$register_code', '$national_code',
+        '$financial_code', '$company_field', '$address', '$phone', '$support_phone', '$mobile',
+        '$email', '$work_time', '$logo_address', '$have_social', '$company_size', '$parent_id',
         '$bank_account', '$card_pre_number', '$registration_origin', '$website', '$finding_way','$have_hashtag', '$password')";
 
+        error_log('sp_register_new_business -> $query = ' . $query);
 
         try {
             $queryResult = DB:: select(DB::raw($query));
@@ -288,6 +292,14 @@ class AdminController extends Controller
                 //                $roles = DB::table('roles')->get();
                 $roles = DB::table('roles')->where('id_roles', '>', 1)->get();
                 break;
+            case 'detail':
+                $userDetail = Auth::user();
+//                error_log($userDetail->name);
+                $business = DB::table('businesses')->where('id_businesses', '=', $userDetail->businesse_id)->get();
+                $userDetail['business'] = $business[0];
+//                error_log($userDetail);
+                return Response(['status' => 'Done', 'user' => $userDetail], 200);
+                break;
         }
         error_log('End of user_get_this -');
         return Response(['status' => 'Done', 'roles' => $roles, 'availableCardNumber' => $availableCardNumber], 200);
@@ -303,6 +315,7 @@ class AdminController extends Controller
 //        error_log('brand_name = ' . $request->brand_name);
 //        error_log('company_name = ' . $request->company_name);
 
+        $is_it_new_registration = $request->is_it_new_registration;
         $name = $request->name;
         $family = $request->family;
         $father_name = $request->father_name;
@@ -381,7 +394,7 @@ class AdminController extends Controller
         }
 
 
-        $query = "CALL sp_register_new_users  ('$name', '$family', '$father_name', '$national_code', '$gender', '$mobile', '$phone', '$email',
+        $query = "CALL sp_register_new_users  ($is_it_new_registration,'$name', '$family', '$father_name', '$national_code', '$gender', '$mobile', '$phone', '$email',
                          $have_social, '$birthday', '$marriage_status', $wedding_anniversary, '$education', '$field', '$address',
                          $registration_origin, '$website', '$skill', '$card_number',$wallet,$score, '$businesse_id', '$role_id', '$user_ip', '$password')";
 
@@ -466,12 +479,13 @@ class AdminController extends Controller
         $availableCardPreNumber = '';
         error_log($get_this);
 
+        $response = array();
+        $response['status'] = 'Done';
+
         switch ($get_this) {
             case 'availableCardNumber':
                 $lastCardNumber = DB::table('customers')->where('card_number', 'like', '90%')
                     ->orderBy('created_at', 'desc')->get('card_number');
-
-
                 error_log('$lastCardNumber = ' . $lastCardNumber);
                 error_log('count($lastCardNumber) = ' . count($lastCardNumber));
                 if (count($lastCardNumber) > 0) {
@@ -479,11 +493,17 @@ class AdminController extends Controller
                 } else {
                     $availableCardNumber = '9009000000000001';
                 }
-
+                $response['availableCardNumber'] = $availableCardNumber;
+                break;
+            case 'getAllDetail':
+                $id_customers = $request['id_customers'];
+                $customerDetail = DB::table('customers')->where('id_customers', '=', $id_customers);
+                $response['customerDetail'] = $customerDetail;
                 break;
         }
 
-        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
+//        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
+        return Response($response, 200);
     }
 
     public function customer_new(Request $request)
@@ -496,6 +516,7 @@ class AdminController extends Controller
 //        error_log('brand_name = ' . $request->brand_name);
 //        error_log('company_name = ' . $request->company_name);
 
+        $is_it_new_registration = $request->is_it_new_registration;
         $name = $request->name;
         $family = $request->family;
         $father_name = $request->father_name;
@@ -564,7 +585,7 @@ class AdminController extends Controller
             }
         }
 
-        $query = "CALL sp_register_new_customer  (true,'$name', '$family', '$father_name', '$gender', '$mobile', '$phone', '$email',
+        $query = "CALL sp_register_new_customer  ($is_it_new_registration,'$name', '$family', '$father_name', '$gender', '$mobile', '$phone', '$email',
                                  '$have_social', '$birthday', '$marriage_status', $wedding_anniversary, '$education', '$field', '$address',
                                  '$registration_origin', '$website', '$finding_way', '$job','$card_number','$wallet','$score',
                                  '$customer_ip', '$password')";
@@ -581,8 +602,326 @@ class AdminController extends Controller
         }
     }
 
-    //****************************************************************************Customer
-    //****************************************************************************Tools
+//****************************************************************************Customer
+//****************************************************************************Product / Service
+    public function services()
+    {
+        return view('admin.services.services-index');
+    }
+
+    public function serviceAction(Request $request)
+    {
+        $action = $request['action'];
+        $service_id = $request['id_service'];
+        $value = $request['value'];
+        $result = '';
+
+        try {
+
+            switch ($action) {
+
+                case 'is_active':
+                    DB::table('customer')
+                        ->where('id_services', $service_id)
+                        ->update(['is_active' => $value]);
+                    break;
+            }
+            $result = 'Done';
+            error_log($result);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $result = 'error';
+            error_log($e);
+        }
+
+
+        error_log($action);
+        error_log($service_id);
+        error_log($result);
+
+        return Response(['action' => $action, 'user_id' => $service_id, 'value' => $value], 200);
+    }
+
+    public function service_type(Request $request)
+    {
+        $type = $request['type'];
+        $services = '';
+
+        switch ($type) {
+            case 'index':
+                $page = $request['page'];
+                $services = Service::paginate(10);
+                break;
+
+            case 'all':
+                $services = Service::all();
+                $services = array('current_page' => 0, 'data' => $services);
+                break;
+        }
+
+
+        return Response(['status' => 'Done', 'data' => $services], 200);
+    }
+
+    public function service_get_this(Request $request)
+    {
+        error_log($request);
+        $get_this = $request['this'];
+
+        error_log('service_get_this - ' . $get_this);
+        $response = array();
+        $response['status'] = 'Done';
+
+        switch ($get_this) {
+
+            case 'getAllDataForServiceEdit':
+                $id_user = $request['userID'];
+                $id_business = $request['businessID'];
+                error_log('id_user = ' . $id_user);
+                error_log('id_business = ' . $id_business);
+                $serviceDetail = DB::table('businesses')->where('id_businesses', '=', $id_business)->get();;
+                $response['business'] = $serviceDetail[0];
+                $userDetail = DB::table('users')->where('id_users', '=', $id_user)->get();;
+                $response['user'] = $userDetail[0];
+                break;
+        }
+
+
+//        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
+        return Response($response, 200);
+    }
+
+    public function service_new(Request $request)
+    {
+        error_log('*******************************');
+        error_log('request = ' . $request);
+        error_log('*******************************');
+
+//        error_log('image = ' . $request['image']);
+//        error_log('brand_name = ' . $request->brand_name);
+//        error_log('company_name = ' . $request->company_name);
+
+        $is_it_new_registration = $request->is_it_new_registration;
+        $id_services = $request->id_services;
+        $id_business = $request->id_business;
+        $name = $request->name;
+        $sync_code = $request->sync_code;
+        $description = $request->description;
+        $price = $request->price;
+        $price = $price;
+        $is_edited = $request->is_edited;
+        $expire_at = $request->expire_at;
+        $updated_at = $request->updated_at;
+        $is_active = $request->is_active;
+
+//        $creator_user_id = auth()->user()->id;
+        $creator_user_id = Auth::user()->id_users;
+
+        error_log('$creator_user_id = ');
+        error_log($creator_user_id);
+
+        $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+        $query = "CALL sp_create_new_service ($is_it_new_registration,'$id_services','$id_business', '$name', '$sync_code',
+        '$description', '$price','1', '$creator_user_id', '$creator_user_ip','$expire_at')";
+        error_log('sp_create_new_service -> $query = ' . $query);
+
+        try {
+            $queryResult = DB:: select(DB::raw($query));
+            return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
+        } catch (\Illuminate\Database\QueryException $ex) {
+//            dd($ex->getMessage());
+            error_log('query error = ' . $ex->getMessage());
+            error_log('query error code= ' . $ex->getCode());
+            return Response(['status' => 'error', 'code' => 2], 409);
+        }
+    }
+
+    public function services_load_type(Request $request)
+    {
+        $type = $request['type'];
+        $services = '';
+
+        switch ($type) {
+            case 'index':
+                $page = $request['page'];
+                $services = Service::paginate(10);
+                break;
+
+            case 'all':
+                $services = Service::all();
+                $services = array('current_page' => 0, 'data' => $services);
+                break;
+        }
+
+
+        return Response(['status' => 'Done', 'data' => $services], 200);
+    }
+//****************************************************************************Product / Service
+//****************************************************************************X Sens
+    public function xsenses()
+    {
+        return view('admin.xsenses.xsenses-index');
+    }
+
+    public function xsensAction(Request $request)
+    {
+        $action = $request['action'];
+        $service_id = $request['id_service'];
+        $value = $request['value'];
+        $result = '';
+
+        try {
+
+            switch ($action) {
+
+                case 'is_active':
+                    DB::table('customer')
+                        ->where('id_services', $service_id)
+                        ->update(['is_active' => $value]);
+                    break;
+            }
+            $result = 'Done';
+            error_log($result);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $result = 'error';
+            error_log($e);
+        }
+
+
+        error_log($action);
+        error_log($service_id);
+        error_log($result);
+
+        return Response(['action' => $action, 'user_id' => $service_id, 'value' => $value], 200);
+    }
+
+    public function xsens_type(Request $request)
+    {
+
+        $type = $request['type'];
+        $x_senses = '';
+        error_log('xsens_type = ' . $type);
+
+        switch ($type) {
+            case 'index':
+                $page = $request['page'];
+                $x_senses = DB::table('v_get_x_sens_table_data')->paginate(10);
+                $chords = DB::table('chords')->get();
+
+
+                break;
+            case 'all':
+                $x_senses = X_sens::all();
+                $x_senses = array('current_page' => 0, 'data' => $x_senses);
+                break;
+        }
+
+
+        return Response(['status' => 'Done', 'data' => $x_senses, 'chords' => $chords], 200);
+    }
+
+    public function xsens_get_this(Request $request)
+    {
+        error_log($request);
+        $get_this = $request['this'];
+
+        error_log('service_get_this - ' . $get_this);
+        $response = array();
+        $response['status'] = 'Done';
+
+        switch ($get_this) {
+
+            case 'getAllDataForServiceEdit':
+                $id_user = $request['userID'];
+                $id_business = $request['businessID'];
+                error_log('id_user = ' . $id_user);
+                error_log('id_business = ' . $id_business);
+                $serviceDetail = DB::table('businesses')->where('id_businesses', '=', $id_business)->get();;
+                $response['business'] = $serviceDetail[0];
+                $userDetail = DB::table('users')->where('id_users', '=', $id_user)->get();;
+                $response['user'] = $userDetail[0];
+                break;
+        }
+//        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
+        return Response($response, 200);
+    }
+
+    public function xsens_new(Request $request)
+    {
+        error_log('*******************************');
+        error_log('request = ' . $request);
+        error_log('*******************************');
+
+//        error_log('image = ' . $request['image']);
+//        error_log('brand_name = ' . $request->brand_name);
+//        error_log('company_name = ' . $request->company_name);
+
+        $is_it_new_registration = $request->is_it_new_registration;
+        $x_sens_name_fa = $request->x_sens_name_fa;
+        $x_sens_name_en = $request->x_sens_name_en;
+        $first_chord_id = $request->first_chord_id;
+        $mid_chord_id = $request->mid_chord_id;
+        $last_chord_id = $request->last_chord_id;
+        $off_chord = $request->off_chord;
+
+        $last_chord_id = $last_chord_id == '0' ? 'NULL' : $last_chord_id;
+
+        $creator_user_id = Auth::user()->id_users;
+        $business_id = Auth::user()->businesse_id;
+
+        error_log('$creator_user_id = ');
+        error_log($creator_user_id);
+
+        $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+        $sp_name = '';
+
+        if ($is_it_new_registration == 'true') {
+            $sp_name = 'sp_create_new_x_sense';
+            $query = "CALL sp_create_new_x_sense ('$x_sens_name_fa', '$x_sens_name_en', '$first_chord_id', '$mid_chord_id', $last_chord_id, '$off_chord',
+                            '$creator_user_id', '$business_id', '$creator_user_ip')";
+        } else if ($is_it_new_registration == 'false') {
+            $id_x_senses = $request->id_x_senses;
+            $sp_name = 'sp_update_x_sense';
+            $query = "CALL sp_update_x_sense ('$id_x_senses','$x_sens_name_fa', '$x_sens_name_en', '$first_chord_id', '$mid_chord_id', $last_chord_id, '$off_chord',
+                            '$creator_user_id', '$business_id', '$creator_user_ip')";
+        }
+
+        error_log($sp_name . ' -> $query = ' . $query);
+
+        try {
+            $queryResult = DB:: select(DB::raw($query));
+            return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
+        } catch (\Illuminate\Database\QueryException $ex) {
+//            dd($ex->getMessage());
+            error_log('query error = ' . $ex->getMessage());
+            error_log('query error code= ' . $ex->getCode());
+            return Response(['status' => 'error', 'code' => 2], 409);
+        }
+    }
+
+    public function xsens_load_type(Request $request)
+    {
+        $type = $request['type'];
+        $services = '';
+
+        switch ($type) {
+            case 'index':
+                $page = $request['page'];
+                $services = Service::paginate(10);
+                break;
+
+            case 'all':
+                $services = Service::all();
+                $services = array('current_page' => 0, 'data' => $services);
+                break;
+        }
+
+
+        return Response(['status' => 'Done', 'data' => $services], 200);
+    }
+//****************************************************************************X Sens
+//****************************************************************************Tools
     public function store(Request $request)
     {
 //        error_log('image_name = ' . $request->file('image')->);
@@ -617,6 +956,4 @@ class AdminController extends Controller
     }
 
     //****************************************************************************Tools
-
-
 }

@@ -19,15 +19,15 @@
                             <th>شماره کارت</th>
                             <th>وضعیت</th>
                             <th></th>
-
+                            <th>ویرایش</th>
                         </tr>
                         </thead>
 
                         <tbody class="animated fadeIn">
 
-                        <tr v-for="user in data.data">
+                        <tr v-for="(user,index) in $parent.data.data">
 
-                            <td>100</td>
+                            <td>{{index +1}}</td>
 
                             <td>{{user.name}}</td>
                             <td>{{user.family}}</td>
@@ -50,6 +50,11 @@
                                 <span class="switch-label" data-on="On" data-off="Off"></span>
                                 <span class="switch-handle"></span>
                             </label></td>
+                            <th v-on:click="$parent.indexForEdit = index ,$parent.view = 'add',$parent.pageTitle = 'ویرایش اطلاعات کاربر'">
+                                <a href="#">
+                                    <i class="fa fa-edit"/>
+                                </a>
+                            </th>
                         </tr>
 
 
@@ -63,12 +68,12 @@
                     <!--                    @if( count($data) > 10)-->
                     <ul class="pagination">
                         <li class="page-item" v-if="data.prev_page_url !==null"><a class="page-link" href="#"
-                                                                                   v-on:click="getTableData(data.prev_page_url)">قبلی</a>
+                                                                                   v-on:click="parent.getUserData(data.prev_page_url)">قبلی</a>
                         </li>
                         <li class="page-item disabled" v-else><a class="page-link " href="#">قبلی</a></li>
 
                         <li class="page-item" v-show="data.prev_page_url !==null"><a class="page-link" href="#"
-                                                                                     v-on:click="getTableData(data.prev_page_url)">{{data.current_page
+                                                                                     v-on:click="parent.getUserData(data.prev_page_url)">{{data.current_page
                             - 1}}</a>
                         </li>
 
@@ -76,13 +81,13 @@
                         <li class="page-item active"><a class="page-link" href="#">{{data.current_page}}</a></li>
 
                         <li class="page-item" v-show="data.next_page_url !==null"><a class="page-link" href="#"
-                                                                                     v-on:click="getTableData(data.next_page_url)">{{data.current_page
+                                                                                     v-on:click="parent.getUserData(data.next_page_url)">{{data.current_page
                             + 1}}</a>
                         </li>
 
 
                         <li class="page-item" v-if="data.next_page_url !==null"><a class="page-link" href="#"
-                                                                                   v-on:click="getTableData(data.next_page_url)">بعدی</a>
+                                                                                   v-on:click="parent.getUserData(data.next_page_url)">بعدی</a>
                         </li>
                         <li class="page-item disabled" v-else><a class="page-link " href="#">بعدی</a></li>
 
@@ -110,7 +115,7 @@
             return {
                 is_active_label: '',
                 data: '',
-                posts: []
+                posts: [],
             }
         },
         methods: {
@@ -155,30 +160,16 @@
                         console.log('error : ' + error);
                     });
             },
-            getTableData(href) {
-
-                axios.get(href)
-                    .then(response => {
-                        console.log(response.data.data)
-                        this.data = response.data.data
-
-                    })
-                    .catch(e => {
-                        this.errors.push(e)
-                        console.log(e)
-                    })
-            }
-
         },
         created: function () {
-            this.getTableData(`http://127.0.0.1:8000/admin-panel/user/index?page=1`)
+            this.data = this.$parent.data
         },
         mounted: function () {
-            console.log('TableComponent mounted.')
+            console.log('UserTableComponent mounted.')
         },
     }
 </script>
 
-<style >
+<style>
 
 </style>

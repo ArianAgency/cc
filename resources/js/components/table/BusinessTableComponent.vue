@@ -21,15 +21,15 @@
                             <th>وضعیت</th>
                             <th>لوگو</th>
                             <th></th>
-
+                            <th>ویرایش</th>
                         </tr>
                         </thead>
 
                         <tbody class="animated fadeIn">
 
-                        <tr v-for="business in data.data">
+                        <tr v-for="(business,index) in $parent.data.data">
 
-                            <td>100</td>
+                            <td>{{index +1}}</td>
 
                             <td>{{business.brand_name}}</td>
                             <td>{{business.company_name}}</td>
@@ -47,8 +47,6 @@
                                 <progressive-img
                                     :src="'../storage/logo_img/'+business.logo_address"
                                 />
-
-                                <!--                                <img :src="'../storage/logo_img/logo.jpg'" />-->
                             </td>
                             <td v-else>
                                 ندارد
@@ -60,7 +58,11 @@
                                 <span class="switch-label" data-on="On" data-off="Off"></span>
                                 <span class="switch-handle"></span>
                             </label></td>
-
+                            <th v-on:click="$parent.indexForEdit = index ,$parent.view = 'add',$parent.pageTitle = 'ویرایش اطلاعات کسب و کار'">
+                                <a href="#">
+                                    <i class="fa fa-edit"/>
+                                </a>
+                            </th>
                         </tr>
 
 
@@ -74,12 +76,12 @@
                     <!--                    @if( count($data) > 10)-->
                     <ul class="pagination">
                         <li class="page-item" v-if="data.prev_page_url !==null"><a class="page-link" href="#"
-                                                                                   v-on:click="getTableData(data.prev_page_url)">قبلی</a>
+                                                                                   v-on:click="parent.getBusinessData(data.prev_page_url)">قبلی</a>
                         </li>
                         <li class="page-item disabled" v-else><a class="page-link " href="#">قبلی</a></li>
 
                         <li class="page-item" v-show="data.prev_page_url !==null"><a class="page-link" href="#"
-                                                                                     v-on:click="getTableData(data.prev_page_url)">{{data.current_page
+                                                                                     v-on:click="parent.getBusinessData(data.prev_page_url)">{{data.current_page
                             - 1}}</a>
                         </li>
 
@@ -87,13 +89,13 @@
                         <li class="page-item active"><a class="page-link" href="#">{{data.current_page}}</a></li>
 
                         <li class="page-item" v-show="data.next_page_url !==null"><a class="page-link" href="#"
-                                                                                     v-on:click="getTableData(data.next_page_url)">{{data.current_page
+                                                                                     v-on:click="parent.getBusinessData(data.next_page_url)">{{data.current_page
                             + 1}}</a>
                         </li>
 
 
                         <li class="page-item" v-if="data.next_page_url !==null"><a class="page-link" href="#"
-                                                                                   v-on:click="getTableData(data.next_page_url)">بعدی</a>
+                                                                                   v-on:click="parent.getBusinessData(data.next_page_url)">بعدی</a>
                         </li>
                         <li class="page-item disabled" v-else><a class="page-link " href="#">بعدی</a></li>
 
@@ -147,6 +149,7 @@
                 console.log('event.id : ' + event.target.id);
                 var label_id = event.target.id.substring(0, 3) + 'lb_' + id_business;
                 console.log('label_id : ' + label_id);
+                console.log('id_user : ' + id_business);
 
                 axios.post('http://127.0.0.1:8000/admin-panel/business', {
                     action: 'is_active',
@@ -158,38 +161,21 @@
                         if (status == 1) {
                             // $('#' + label_id).innerHTML = ' <span  class="badge badge-success">فعال</span>';
                             $('#' + label_id).html('<span  class="badge badge-success">فعال</span>');
-
                         } else {
                             // $('#' + label_id).innerHTML = '  <span  class="badge badge-secondary" >غیر فعال</span>';
                             $('#' + label_id).html(' <span  class="badge badge-secondary" >غیر فعال</span>');
                         }
-
                     })
                     .catch(function (error) {
                         console.log('error : ' + error);
                     });
             },
-            getTableData(href) {
-
-                // axios.get(`http://127.0.0.1:8000/admin-panel/business/all`)
-                axios.get(href)
-                    .then(response => {
-                        console.log(response.data.data.current_page)
-                        this.data = response.data.data
-
-                    })
-                    .catch(e => {
-                        this.errors.push(e)
-                        console.log(e)
-                    })
-            }
-
         },
         created: function () {
-            this.getTableData(`http://127.0.0.1:8000/admin-panel/business/index?page=1`)
+            this.data = this.$parent.data
         },
         mounted: function () {
-            console.log('TableComponent mounted.')
+            console.log('BusinessTableComponent mounted.')
         },
     }
 </script>

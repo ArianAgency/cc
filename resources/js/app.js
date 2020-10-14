@@ -33,6 +33,17 @@ Vue.component('newUserCreationForm', require('./components/form/newUserCreationF
 Vue.component('customerSPA', require('./components/SPA/customerSPA.vue').default);
 Vue.component('CustomerTableComponent', require('./components/table/CustomerTableComponent.vue').default);
 Vue.component('newCustomerCreationForm', require('./components/form/newCustomerCreationForm.vue').default);
+
+
+Vue.component('serviceSPA', require('./components/SPA/serviceSPA.vue').default);
+Vue.component('ServiceTableComponent', require('./components/table/ServiceTableComponent.vue').default);
+Vue.component('newServiceCreationForm', require('./components/form/newServiceCreationForm.vue').default);
+
+Vue.component('xsensSPA', require('./components/SPA/xsensSPA').default);
+Vue.component('XsensTableComponent', require('./components/table/XsensTableComponent').default);
+Vue.component('newXsensCreationForm', require('./components/form/newXsensCreationForm').default);
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

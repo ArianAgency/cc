@@ -1,6 +1,6 @@
 <template>
 
-    <customer-table-component v-if="view==='list'">
+    <customer-table-component v-if="view==='list' && dataIsReady">
 
         <template slot="header">
             <div class="card-header">
@@ -8,7 +8,7 @@
                     <i class="fa fa-align-justify"></i>
                     <span>لیست مشتریان</span>
                 </div>
-                <div class="mybtn"  v-on:click="viewController('add')">
+                <div class="mybtn" v-on:click="viewController('add'),pageTitle = 'ثبت مشتری جدید'">
                     <button href="#" class="btn btn-success">
                         <i class="fas fa-plus"></i>
                         افزودن
@@ -23,9 +23,9 @@
             <div class="card-header">
                 <div class="mytitle">
                     <i class="fa fa-align-justify"></i>
-                    <span>ثبت مشتری جدید</span>
+                    <span>{{pageTitle}}</span>
                 </div>
-                <div class="mybtn"  v-on:click="viewController('list')">
+                <div class="mybtn" v-on:click="viewController('list'),indexForEdit = -1">
                     <button href="#" class="btn btn-success">
                         <i class="fas fa-list"></i>
                         لیست
@@ -36,19 +36,22 @@
     </new-customer-creation-form>
 
 
-    <!--<new-business-creation-form></new-business-creation-form>-->
-
-
 </template>
 
 
 <script>
 
     export default {
+        props: ['userId'],
         data() {
             return {
                 view: 'list',
-                csrf:""
+                csrf: "",
+                userID: this.userId,
+                data: '',
+                dataIsReady: false,
+                indexForEdit: -1,
+                pageTitle: 'ثبت مشتری جدید'
             }
         },
         methods: {
@@ -59,24 +62,39 @@
             splitedCardNumber: function (txt, num) {
                 var txt = String(txt)
                 var txtLength = String(txt).length;
-                console.log('splitNChars + ' + txt)
-                console.log('txt.length = ' + txtLength)
+                // console.log('splitNChars + ' + txt)
+                // console.log('txt.length = ' + txtLength)
                 var result = '';
                 for (var i = 0; i < txtLength; i += num) {
                     if (i != 0) {
                         result = result + '-';
                     }
-                    result =  result + (txt.substr(i, num));
+                    result = result + (txt.substr(i, num));
                 }
-                console.log('result = ' + result)
+                console.log('splitedCardNumber result = ' + result)
                 return result;
-            }
+            },
+            getCustomerData(href) {
+                axios.get(href)
+                    .then(response => {
+                        console.log(response.data.data)
+                        this.data = response.data.data
+                        this.dataIsReady = true;
+                    })
+                    .catch(e => {
+                        this.errors.push(e)
+                        console.log(e)
+                    })
+            },
+
         },
         mounted: function () {
             console.log('Customer SPA mounted.')
             this.csrf = window.Laravel.csrfToken;
-
-
+        },
+        created: function () {
+            console.log('Customer SPA created.')
+            this.getCustomerData(`http://127.0.0.1:8000/admin-panel/customer/index?page=1`)
         },
 
     }
@@ -85,7 +103,7 @@
 </script>
 
 
-<style >
+<style>
     .div-body {
         margin: 15px;
     }
