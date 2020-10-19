@@ -43,7 +43,16 @@ Vue.component('xsensSPA', require('./components/SPA/xsensSPA').default);
 Vue.component('XsensTableComponent', require('./components/table/XsensTableComponent').default);
 Vue.component('newXsensCreationForm', require('./components/form/newXsensCreationForm').default);
 
+Vue.component('servicesXsenseJunctionSPA', require('./components/SPA/servicesXsenseJunctionSPA').default);
+Vue.component('Jservices_xsenseTableComponent', require('./components/table/Jservices_xsenseTableComponent').default);
+Vue.component('newSerXsensCreationForm', require('./components/form/newSerXsensCreationForm').default);
+
+
+Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
+
 Vue.component('pagination', require('laravel-vue-pagination'));
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

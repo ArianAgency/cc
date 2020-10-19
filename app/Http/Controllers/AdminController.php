@@ -921,6 +921,164 @@ class AdminController extends Controller
         return Response(['status' => 'Done', 'data' => $services], 200);
     }
 //****************************************************************************X Sens
+//****************************************************************************services-xsense-junction
+    public function services_xsense()
+    {
+        return view('admin.services-xsense.services-xsense-index');
+    }
+
+    public function services_xsenseAction(Request $request)
+    {
+        $action = $request['action'];
+        $id_services_x_sense_junction = $request['id'];
+        $value = $request['value'];
+        $result = '';
+
+        try {
+
+            switch ($action) {
+
+                case 'is_active':
+                    DB::table('services_x_sense_junction')
+                        ->where('id_services_x_sense_junction', $id_services_x_sense_junction)
+                        ->update(['is_active' => $value]);
+                    break;
+            }
+            $result = 'Done';
+            error_log($result);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $result = 'error';
+            error_log($e);
+        }
+
+
+        error_log($action);
+        error_log($id_services_x_sense_junction);
+        error_log($result);
+
+        return Response(['action' => $action, '$id_services_x_sense_junction' => $id_services_x_sense_junction, 'value' => $value], 200);
+    }
+
+    public function services_xsense_type(Request $request)
+    {
+
+        $type = $request['type'];
+        $services_xsense = '';
+        error_log('services_xsense_type = ' . $type);
+        $id_business = Auth::user()->businesse_id;
+
+
+        switch ($type) {
+            case 'index':
+                $page = $request['page'];
+                $services_xsense = DB::table('v_get_SerXsen_table_data')->where('id_business','=',$id_business)->paginate(10);
+                break;
+            case 'all':
+                $services_xsense = X_sens::all();
+                $services_xsense = array('current_page' => 0, 'data' => $services_xsense);
+                break;
+        }
+
+        return Response(['status' => 'Done', 'data' => $services_xsense], 200);
+    }
+
+    public function services_xsense_get_this(Request $request)
+    {
+//        error_log($request);
+        $get_this = $request['this'];
+
+        error_log('services_xsense_get_this -> ' . $get_this);
+        $response = array();
+        $response['status'] = 'Done';
+
+        switch ($get_this) {
+
+            case 'serXsenList':
+
+                $id_user = Auth::user()->id_users;
+                $id_business = Auth::user()->businesse_id;
+
+                if ($id_user == '*') {
+                    $services = DB::table('services')->get();
+                    $xsens = DB::table('x_senses')->get();
+                } else {
+                    $services = DB::table('services')->where('id_business', '=', $id_business)->get();
+                    $xsens = DB::table('x_senses')->where('business_id', '=', $id_business)->get();
+                }
+
+                $response['services'] = $services;
+                $response['xsenses'] = $xsens;
+                break;
+        }
+//        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
+        return Response($response, 200);
+    }
+
+    public function services_xsense_new(Request $request)
+    {
+        error_log('*******************************');
+        error_log('request = ' . $request);
+        error_log('*******************************');
+
+//        error_log('image = ' . $request['image']);
+//        error_log('brand_name = ' . $request->brand_name);
+//        error_log('company_name = ' . $request->company_name);
+
+        $is_it_new_registration = $request->is_it_new_registration;
+        $id_service = $request->id_service;
+        $id_x_sense = $request->id_x_sense;
+        $off_percent = strlen($request->off_percent) > 0 ? $request->off_percent : '0';
+        $score_percent = strlen($request->score_percent) > 0 ? $request->score_percent : '0';
+        $cash_back_percent = strlen($request->cash_back_percent) > 0 ? $request->cash_back_percent : '0';
+        $cash_back_value = strlen($request->cash_back_value) > 0 ? $request->cash_back_value : '0';
+        $expire_at = strlen($request->expire_at) > 0 ? $request->expire_at : date('Y-m-d', strtotime(' +1 day'));
+
+        $creator_user_id = Auth::user()->id_users;
+        $business_id = Auth::user()->businesse_id;
+
+        $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+        $sp_name = '';
+
+        if ($is_it_new_registration == 'true') {
+            $sp_name = 'sp_set_x_sense_on';
+            $query = "CALL sp_set_x_sense_on (true, '$id_service','$id_x_sense', '$off_percent', '$score_percent',
+                                                     '$cash_back_percent', '$creator_user_id',
+                                                     '$creator_user_ip',
+                                                     '$expire_at')";
+        } else if ($is_it_new_registration == 'false') {
+            $id_services_x_sense_junction = $request->id_services_x_sense_junction;
+            $cash_back_percent_or_value = $cash_back_value > $cash_back_percent ? $cash_back_value : $cash_back_percent;
+            $sp_name = 'sp_update_x_sense_on';
+            $query = "CALL sp_update_x_sense_on ('$id_services_x_sense_junction','$id_service','$id_x_sense', '$off_percent', '$score_percent',
+                                                     '$cash_back_percent_or_value', '$creator_user_id',
+                                                     '$creator_user_ip',
+                                                     '$expire_at')";
+        }
+
+        error_log($sp_name . ' -> $query = ' . $query);
+
+        try {
+            $queryResult = DB:: select(DB::raw($query));
+            return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
+        } catch (\Illuminate\Database\QueryException $ex) {
+//            dd($ex->getMessage());
+            error_log('query error = ' . $ex->getMessage());
+            error_log('query error code= ' . $ex->getCode());
+            return Response(['status' => 'error', 'code' => 2], 409);
+        }
+    }
+//****************************************************************************services-xsense-junction
+//****************************************************************************purchase
+    public function purchase()
+    {
+        return view('admin.financial.purchase');
+    }
+
+
+
+
+//****************************************************************************purchase
 //****************************************************************************Tools
     public function store(Request $request)
     {

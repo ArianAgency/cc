@@ -36,6 +36,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/admin-panel/xsenses"><i class="fa fa-building-o"></i>X-Sens </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/services_xsense "><i class="fa fa-building-o"></i>سرویس و
+                            X-sens</a>
+                    </li>
                 </ul>
             </li>
         @endif
@@ -66,6 +70,15 @@
                 </ul>
             </li>
         @endif
+
+        <li class="divider"></li>
+        <li class="nav-title">
+            تراکنش ها
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-success active btn-block " href="/admin-panel/purchase"><i
+                    class="fas fa-shopping-cart ml-2"></i>خرید</a>
+        </li>
 
 
     </ul>
