@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin-panel/serXsen/new', 'AdminController@services_xsense_new');
 
     Route::get('/admin-panel/purchase', 'AdminController@purchase');
+    Route::get('/admin-panel/purchase/get/{this}', 'AdminController@purchase_get_this');
 
     Route::post('/upload/user-img','AdminController@store');
 });

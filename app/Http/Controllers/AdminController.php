@@ -971,7 +971,7 @@ class AdminController extends Controller
         switch ($type) {
             case 'index':
                 $page = $request['page'];
-                $services_xsense = DB::table('v_get_SerXsen_table_data')->where('id_business','=',$id_business)->paginate(10);
+                $services_xsense = DB::table('v_get_SerXsen_table_data')->where('id_business', '=', $id_business)->paginate(10);
                 break;
             case 'all':
                 $services_xsense = X_sens::all();
@@ -1075,7 +1075,41 @@ class AdminController extends Controller
         return view('admin.financial.purchase');
     }
 
+    public function purchase_get_this(Request $request)
+    {
+//        error_log($request);
+        $get_this = $request['this'];
 
+        error_log('purchase_get_this -> ' . $get_this);
+        $response = array();
+        $response['status'] = 'Done';
+
+        switch ($get_this) {
+
+            case 'customerDetail':
+                $mobile = $request->mobile;
+                error_log('mobile = ');
+                error_log($mobile);
+                $customer_detail = DB::table('customers')->where('mobile', '=', $mobile)->get();
+                $response['customerDetail'] = $customer_detail;
+                break;
+            case 'purchaseList':
+
+                $id_user = Auth::user()->id_users;
+                $id_business = Auth::user()->businesse_id;
+
+                if ($id_user == '*') {
+                    $services = DB::table('v_get_services_list')->get();
+                } else {
+                    $services = DB::table('v_get_services_list')->where('id_business', '=', $id_business)->get();
+                }
+
+                $response['services'] = $services;
+                break;
+        }
+//        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
+        return Response($response, 200);
+    }
 
 
 //****************************************************************************purchase

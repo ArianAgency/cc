@@ -2313,13 +2313,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['userId'],
   data: function data() {
     return {
       csrf: "",
-      shoppingBasket: '',
-      services: ''
+      shoppingBasket: [],
+      services: '',
+      customerDetail: '',
+      mobile: ''
     };
   },
   methods: {
@@ -2328,10 +2346,77 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get(href).then(function (response) {
         _this.services = response.data.services;
+        console.log('this.services = ');
+        console.log(_this.services);
       })["catch"](function (e) {
         // this.errors.push(e)
         console.log(e);
       });
+    },
+    getUserData: function getUserData(event) {
+      var _this2 = this;
+
+      console.log('mobile = ');
+      console.log(this.mobile);
+      axios.get('http://127.0.0.1:8000/admin-panel/purchase/get/customerDetail?mobile=' + this.mobile).then(function (response) {
+        _this2.customerDetail = response.data.customerDetail[0];
+        console.log('this.customerDetail = ');
+        console.log(_this2.customerDetail);
+      })["catch"](function (e) {
+        // this.errors.push(e)
+        console.log(e);
+      });
+    },
+    basketController: function basketController(addOrRemove, serviceIndex) {
+      console.log('basketController = ');
+
+      switch (addOrRemove) {
+        case 'add':
+          // var unit = (event.target.value);
+          var serviceId = 'count_' + serviceIndex;
+          var isItNewAddOrAddOn = -1;
+          var unit = document.getElementById(serviceId).value;
+          document.getElementById(serviceId).value = 0;
+          console.log('unit = ');
+          console.log(unit);
+
+          if (unit > 0) {
+            var length = this.shoppingBasket.length;
+
+            for (var i = 0; i < length; i++) {
+              if (this.shoppingBasket[i].id_services === this.services[serviceIndex].id_services) {
+                isItNewAddOrAddOn = i;
+                break;
+              }
+            }
+
+            if (isItNewAddOrAddOn > -1) {
+              var index = Object.keys(this.shoppingBasket[isItNewAddOrAddOn]).indexOf('unit');
+              console.log('index unit = ');
+              console.log(index);
+              var newUnit = parseInt(this.shoppingBasket[isItNewAddOrAddOn].unit) + parseInt(unit); // this.shoppingBasket[0].splice(index, 1, newUnit)
+              // this.$set(this.shoppingBasket[isItNewAddOrAddOn],'unit', newUnit)
+
+              Vue["delete"](this.shoppingBasket[isItNewAddOrAddOn], 'unit');
+              Vue.set(this.shoppingBasket[isItNewAddOrAddOn], 'unit', newUnit);
+            } else {
+              var tempArray = [];
+              tempArray = this.services[serviceIndex];
+              tempArray['unit'] = unit;
+              this.shoppingBasket.push(this.services[serviceIndex]);
+            }
+          } else {
+            alert('لطفا مقدارمعتبری وارد کنید');
+          }
+
+          break;
+
+        case 'remove':
+          this.shoppingBasket.splice(serviceIndex, 1);
+          break;
+      }
+
+      console.log(this.shoppingBasket);
     }
   },
   mounted: function mounted() {
@@ -2340,7 +2425,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('Purchase SPA created.');
-    this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail');
+    this.getServiceData('/admin-panel/purchase/get/purchaseList');
   }
 });
 
@@ -81827,59 +81912,151 @@ var render = function() {
         _c("div", { staticClass: "card div-body " }, [
           _vm._m(0),
           _vm._v(" "),
-          _vm._m(1),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              _c(
-                "table",
-                { staticClass: "table table-responsive-sm table-striped " },
-                [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    { staticClass: "animated fadeIn" },
-                    _vm._l(_vm.shoppingBasket, function(service, index) {
-                      return _c("tr", [
-                        _c("td", [_vm._v(_vm._s(index + 1))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(service.service_name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(service.price))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(service.price * service.unit))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(service.unit))]),
-                        _vm._v(" "),
-                        _c("td", { on: { click: function($event) {} } }, [
-                          _vm._m(3, true)
-                        ])
+          _c("div", { staticClass: "form-group col-4 mt-2" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "controls" }, [
+                _c("div", { staticClass: "input-group" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("div", { staticClass: "input-group" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-group-prepend" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.mobile,
+                              expression: "mobile"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            id: "mobile",
+                            name: "mobile",
+                            placeholder: "شماره موبایل"
+                          },
+                          domProps: { value: _vm.mobile },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.mobile = $event.target.value
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-group-prepend" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.getUserData($event)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "برو!\n                                            "
+                            )
+                          ]
+                        )
                       ])
-                    }),
-                    0
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "  bg-dark text-white div-body p-2 " }, [
+            _c("div", { staticClass: "d-flex   justify-content-center" }, [
+              _c("div", { staticClass: "col-md " }, [
+                _c("label", [_vm._v("خریدار :")]),
+                _vm._v(" "),
+                _c("strong", [
+                  _vm._v(
+                    _vm._s(
+                      _vm.customerDetail.name
+                        ? _vm.customerDetail.name +
+                            " " +
+                            _vm.customerDetail.family
+                        : "-"
+                    )
                   )
-                ]
-              ),
+                ])
+              ]),
               _vm._v(" "),
+              _vm._m(2),
+              _vm._v(" "),
+              _vm._m(3),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md" }, [
+                _c("label", [_vm._v("کد اشتراک :")]),
+                _vm._v(" "),
+                _c("strong", [_vm._v(_vm._s(_vm.customerDetail.id_customers))])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md" }, [
+                _c("label", [_vm._v("کیف پول:")]),
+                _vm._v(" "),
+                _c("strong", [_vm._v(_vm._s(_vm.customerDetail.wallet))])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "table",
+              { staticClass: "table table-responsive-sm table-striped " },
               [
+                _vm._m(4),
+                _vm._v(" "),
                 _c(
-                  "vue-content-loading",
-                  { attrs: { width: 500, height: 5 } },
-                  [
-                    _c("rect", {
-                      attrs: { rx: "1.5", ry: "1.5", width: "500", height: "5" }
-                    })
-                  ]
+                  "tbody",
+                  { staticClass: "animated fadeIn" },
+                  _vm._l(_vm.shoppingBasket, function(service, index) {
+                    return _c("tr", [
+                      _c("td", [_vm._v(_vm._s(index + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.service_name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.price))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.unit))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.price * service.unit))]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.basketController(
+                                "remove",
+                                index,
+                                $event
+                              )
+                            }
+                          }
+                        },
+                        [_vm._m(5, true)]
+                      )
+                    ])
+                  }),
+                  0
                 )
               ]
-            ],
-            2
-          )
+            )
+          ])
         ]),
         _vm._v(" "),
         _c("div", {
@@ -81888,61 +82065,61 @@ var render = function() {
         }),
         _vm._v(" "),
         _c("div", { staticClass: "card div-body" }, [
-          _vm._m(4),
+          _vm._m(6),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              _c(
-                "table",
-                {
-                  staticClass: "table table-responsive-sm table-striped mytable"
-                },
-                [
-                  _vm._m(5),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    { staticClass: "animated fadeIn" },
-                    _vm._l(_vm.shoppingBasket, function(service, index) {
-                      return _c("tr", [
-                        _c("td", [_vm._v(_vm._s(index + 1))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(service.service_name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(service.price))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(_vm._s(service.price * service.unit))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(service.unit))]),
-                        _vm._v(" "),
-                        _c("td", { on: { click: function($event) {} } }, [
-                          _vm._m(6, true)
-                        ])
-                      ])
-                    }),
-                    0
-                  )
-                ]
-              ),
-              _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "table",
+              {
+                staticClass: "table table-responsive-sm table-striped mytable"
+              },
               [
+                _vm._m(7),
+                _vm._v(" "),
                 _c(
-                  "vue-content-loading",
-                  { attrs: { width: 500, height: 5 } },
-                  [
-                    _c("rect", {
-                      attrs: { rx: "1.5", ry: "1.5", width: "500", height: "5" }
-                    })
-                  ]
+                  "tbody",
+                  { staticClass: "animated fadeIn" },
+                  _vm._l(_vm.services, function(service, index) {
+                    return _c("tr", [
+                      _c("td", [_vm._v(_vm._s(index + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.service_name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.price))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("input", {
+                          staticClass: "form-control col-3",
+                          attrs: {
+                            id: "count_" + index,
+                            type: "number",
+                            min: "0",
+                            placeholder: "0"
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(service.expire_at))]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.basketController("add", index)
+                            }
+                          }
+                        },
+                        [_vm._m(8, true)]
+                      )
+                    ])
+                  }),
+                  0
                 )
               ]
-            ],
-            2
-          )
+            )
+          ])
         ])
       ])
     ])
@@ -81954,12 +82131,10 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header " }, [
-      _c("div", [
-        _c("div", { staticClass: "form-group" }, [
-          _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" "),
-          _c("span", [_vm._v("فاکتور فروش")])
-        ])
+      _c("div", { staticClass: "form-group" }, [
+        _c("i", { staticClass: "fa fa-align-justify" }),
+        _vm._v(" "),
+        _c("span", [_vm._v("فاکتور فروش")])
       ])
     ])
   },
@@ -81967,38 +82142,30 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "  bg-dark text-white div-body  " }, [
-      _c("div", { staticClass: "d-flex mt-3  justify-content-center" }, [
-        _c("div", { staticClass: "col-md " }, [
-          _c("label", [_vm._v("خریدار :")]),
-          _vm._v(" "),
-          _c("strong", [_vm._v("علی حاتمی کیا نسب")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md" }, [
-          _c("label", [_vm._v("تعداد اقلام :")]),
-          _vm._v(" "),
-          _c("strong", [_vm._v("234")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md" }, [
-          _c("label", [_vm._v("جمع کل :")]),
-          _vm._v(" "),
-          _c("strong", [_vm._v("342,000")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md" }, [
-          _c("label", [_vm._v("کد اشتراک :")]),
-          _vm._v(" "),
-          _c("strong", [_vm._v("3520")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md" }, [
-          _c("label", [_vm._v("مبداء :")]),
-          _vm._v(" "),
-          _c("strong", [_vm._v("Arian DG")])
-        ])
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text" }, [
+        _c("i", { staticClass: "fa fa-user" })
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md" }, [
+      _c("label", [_vm._v("تعداد اقلام :")]),
+      _vm._v(" "),
+      _c("strong", [_vm._v("234")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md" }, [
+      _c("label", [_vm._v("جمع کل :")]),
+      _vm._v(" "),
+      _c("strong", [_vm._v("342,000")])
     ])
   },
   function() {
@@ -82026,7 +82193,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("a", { attrs: { href: "#" } }, [
-      _c("i", { staticClass: "fa fa-plus" })
+      _c("i", { staticClass: "fas fa-trash-alt" })
     ])
   },
   function() {
