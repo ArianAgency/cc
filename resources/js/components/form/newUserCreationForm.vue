@@ -108,7 +108,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="far fa-id-card"></i></span>
                                             </div>
-                                            <input type="text" id="national_code" name="national_code"
+                                            <input type="text" id="national_code" name="national_code" maxlength="10"
                                                    v-bind:value="formItems.national_code"
                                                    class="form-control"
                                                    placeholder="کد ملی">
@@ -118,14 +118,14 @@
                                                 <input class="form-check-input" type="radio" id="single"
                                                        value="مجرد" name="marriage_status"
                                                        :checked="formItems.marriage_status==='مجرد'"
-                                                       v-on:click="married=0">
+                                                       v-on:click.prevent="married=0">
                                                 <label class="form-check-label" for="single">مجرد</label>
                                             </div>
                                             <div class="form-check form-check-inline mr-1">
                                                 <input class="form-check-input " type="radio" id="rel"
                                                        value="متاهل" name="marriage_status"
                                                        :checked="formItems.marriage_status==='متاهل'"
-                                                       v-on:click="married=1">
+                                                       v-on:click.prevent="married=1">
                                                 <label class="form-check-label" for="rel">متاهل</label>
                                             </div>
                                             <span class="input-group-addon"></span>
@@ -219,7 +219,9 @@
                                                 <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
                                             </div>
                                             <input type="text" id="card_number" name="card_number" class="form-control"
-                                                   v-bind:value="$parent.indexForEdit >= 0 ? $parent.splitedCardNumber(formItems.card_number,4) : $parent.splitedCardNumber(availableCardNumber,4)"
+                                                   v-bind:value="$parent.indexForEdit >= 0 ?
+                                                   $parent.splitedCardNumber(formItems.card_number,4) :
+                                                   $parent.splitedCardNumber(availableCardNumber,4)"
                                                    placeholder="شماره کارت" readonly>
                                         </div>
                                     </div>
@@ -243,14 +245,24 @@
                                         <div class="input-group-prepend ">
                                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                                             <div class="input-group">
-                                                <input type="text" id="business" name="business" class="form-control "
-                                                       v-bind:value="formItems.business.company_name"
+
+                                                <input v-if="businessesIndex.length<0" type="text" id="business" name="business" class="form-control "
+                                                       v-bind:value="$parent.indexForEdit > -1 ? formItems.business.company_name : user.business.brand_name"
                                                        placeholder="کسب و کار" readonly>
+
+                                                <select v-if="businessesIndex.length>0"  name="business" class="form-control h-100 ">
+                                                    <option value="0" selected="true">کسب و کار</option>
+                                                    <option v-for="business in businessesIndex" v-bind:value="business.id_businesses"
+                                                            >
+                                                        {{ business.brand_name }}
+                                                    </option>
+                                                </select>
+
                                                 <span class="input-group-addon"></span>
                                                 <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
                                                 <select id="role_id" name="role_id" class="form-control h-100 ">
                                                     <option value="0">سطح دسترسی</option>
-                                                    <option v-for="role in roles" v-bind:value="role.id_roles "
+                                                    <option v-for="role in roles" v-bind:value="role.id_roles"
                                                             :selected="formItems.role_id === role.id_roles">
                                                         {{ role.name_fa }}
                                                     </option>
@@ -319,6 +331,8 @@
                 formItems: [],
                 is_it_new_registration: 'true',
                 roles: '',
+                user: '',
+                businessesIndex:''
             }
         },
         methods: {
@@ -330,7 +344,7 @@
                     Object.assign(data, {[key]: val})
                 }
                 Object.assign(data, {'is_it_new_registration': this.is_it_new_registration})
-                axios.post('http://127.0.0.1:8000/admin-panel/user/new', data)
+                axios.post('/admin-panel/user/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
@@ -357,7 +371,7 @@
             getCardNumber(businessID) {
                 console.log('getCardNumber')
 
-                axios.get('http://127.0.0.1:8000/admin-panel/user/get/availableCardNumber?businessID = ' + businessID)
+                axios.get('/admin-panel/user/get/availableCardNumber?businessID = ' + businessID)
                     .then(response => {
                         console.log(response)
                         this.availableCardNumber = response.data.availableCardNumber
@@ -372,13 +386,16 @@
             getFormInitData(businessID) {
                 console.log('getFormInitData')
 
-                axios.get('http://127.0.0.1:8000/admin-panel/user/get/formInitData?businessID=' + businessID)
+                axios.get('/admin-panel/user/get/formInitData?businessID=' + businessID)
                     .then(response => {
-                        console.log(response)
-                        console.log('response.data.roles = ' + response.data.roles[0].name_en)
+                        // console.log('response.data.roles = ' + response.data.roles[0].name_en)
                         this.availableCardNumber = response.data.availableCardNumber
                         this.roles = response.data.roles
+                        this.user = response.data.user
+                        this.businessesIndex = response.data.businessesIndex
                         console.log('roles = ' + response.data.roles)
+                        console.log('user = ')
+                        console.log(response.data.user)
                         console.log('availableCardNumber = ' + this.availableCardNumber)
 
                     })
@@ -397,10 +414,11 @@
             setToNewForm() {
                 this.$parent.indexForEdit = -1
                 this.formItems = '';
-                this.$parent.getUserData(`http://127.0.0.1:8000/admin-panel/user/index?page=1`)
+                this.$parent.getUserData(`/admin-panel/user/index?page=1`)
             }
         },
         created: function () {
+            console.log('newUserCreation created.')
             this.data = this.$parent.data.data
         },
         mounted: function () {

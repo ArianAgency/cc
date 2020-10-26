@@ -218,7 +218,7 @@
                 // console.log('this.$parent.user = ')
                 // console.log(this.$parent.user.businesse_id)
 
-                axios.post('http://127.0.0.1:8000/admin-panel/xsens/new', data)
+                axios.post('/admin-panel/xsens/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
@@ -249,7 +249,7 @@
                 this.$parent.indexForEdit = -1
                 this.is_it_new_registration = "true"
                 this.lastNoteValue = '0'
-                this.$parent.getXsensData(`http://127.0.0.1:8000/admin-panel/xsens/index?page=1`)
+                this.$parent.getXsensData(`/admin-panel/xsens/index?page=1`)
             },
             handleChange(e) {
                 if (e.target.options.selectedIndex > 0) {

@@ -138,7 +138,7 @@
                 // console.log('label_id : ' + label_id);
                 // console.log('id_customer : ' + id_customer);
 
-                axios.post('http://127.0.0.1:8000/admin-panel/xsens', {
+                axios.post('/admin-panel/xsens', {
                     action: 'is_active',
                     id_xsens: id_xsens,
                     value: status
@@ -161,7 +161,7 @@
                     page = 1;
                 }
 
-               this.$parent.getXsensData('http://127.0.0.1:8000/admin-panel/xsens/index?page='+ page)
+               this.$parent.getXsensData('/admin-panel/xsens/index?page='+ page)
             }
         },
         created: function () {

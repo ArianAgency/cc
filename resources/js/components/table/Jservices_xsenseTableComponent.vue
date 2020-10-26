@@ -128,7 +128,7 @@
                 console.log('label_id : ' + label_id);
                 console.log('id : ' + id);
 
-                axios.post('http://127.0.0.1:8000/admin-panel/services_xsense', {
+                axios.post('/admin-panel/services_xsense', {
                     action: 'is_active',
                     id: id,
                     value: status

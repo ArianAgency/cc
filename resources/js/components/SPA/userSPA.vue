@@ -46,7 +46,7 @@
         data() {
             return {
                 view: 'list',
-                csrf:"",
+                csrf: "",
                 userID: this.userId,
                 data: '',
                 dataIsReady: false,
@@ -62,14 +62,15 @@
             splitedCardNumber: function (txt, num) {
                 var txt = String(txt)
                 var txtLength = String(txt).length;
-                // console.log('splitNChars + ' + txt)
-                // console.log('txt.length = ' + txtLength)
+                console.log('indexForEdit = ')
+                console.log(this.indexForEdit)
+
                 var result = '';
                 for (var i = 0; i < txtLength; i += num) {
                     if (i != 0) {
                         result = result + '-';
                     }
-                    result =  result + (txt.substr(i, num));
+                    result = result + (txt.substr(i, num));
                 }
                 console.log('splitedCardNumber result = ' + result)
                 return result;
@@ -94,7 +95,7 @@
         },
         created: function () {
             console.log('User SPA created.')
-            this.getUserData(`http://127.0.0.1:8000/admin-panel/user/index?page=1`)
+            this.getUserData(`/admin-panel/user/index?page=1`)
         },
     }
 
@@ -102,7 +103,7 @@
 </script>
 
 
-<style >
+<style>
     .div-body {
         margin: 15px;
     }

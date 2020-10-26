@@ -173,7 +173,7 @@
                 // console.log('this.$parent.user = ')
                 // console.log(this.$parent.user.businesse_id)
 
-                axios.post('http://127.0.0.1:8000/admin-panel/service/new', data)
+                axios.post('/admin-panel/service/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
@@ -200,7 +200,7 @@
             getAllDataForServiceEdit(businessID, userID) {
                 console.log('getAllDataForServiceEdit')
                 this.getAllDataForServiceEditReady = false
-                axios.get('http://127.0.0.1:8000/admin-panel/service/get/getAllDataForServiceEdit?businessID=' + businessID + '&userID=' + userID)
+                axios.get('/admin-panel/service/get/getAllDataForServiceEdit?businessID=' + businessID + '&userID=' + userID)
                     .then(response => {
                         console.log('response = ' + response)
                         this.formItems.business = response.data.business
@@ -233,7 +233,7 @@
                 this.$parent.indexForEdit = -1
                 this.formItems = '';
                 this.is_it_new_registration = "true"
-                this.$parent.getServiceData(`http://127.0.0.1:8000/admin-panel/service/index?page=1`)
+                this.$parent.getServiceData(`/admin-panel/service/index?page=1`)
             },
             getNow: function () {
                 const today = new Date();

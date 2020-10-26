@@ -139,7 +139,7 @@
                 console.log('label_id : ' + label_id);
                 console.log('id_user : ' + id_user);
 
-                axios.post('http://127.0.0.1:8000/admin-panel/user', {
+                axios.post('/admin-panel/user', {
                     action: 'is_active',
                     id_user: id_user,
                     value: status

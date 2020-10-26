@@ -139,7 +139,7 @@
 
                                 </div>
                                 <div class="form-group  ">
-                                    <!--                                    server="http://127.0.0.1:8000/upload/user-img"-->
+                                    <!--                                    server="/upload/user-img"-->
                                     <file-pond
                                         :metadata=" {
                                         poster: 'https://pqina.nl/filepond/static/assets/social-square.png'
@@ -152,7 +152,7 @@
 
                                         :server="{
                                                process: {
-                                                      url: 'http://127.0.0.1:8000/upload/user-img',
+                                                      url: '/upload/user-img',
                                                       method: 'POST',
                                                       headers: {
                                                      'X-CSRF-TOKEN': this.csrf
@@ -354,7 +354,7 @@
 
             getCardPreNumber() {
                 console.log('getCardPreNumber')
-                axios.get('http://127.0.0.1:8000/admin-panel/business/get/availableCardPreNumber')
+                axios.get('/admin-panel/business/get/availableCardPreNumber')
                     .then(response => {
                         console.log(response)
                         this.availableCardPreNumber = response.data.availableCardPreNumber
@@ -384,7 +384,7 @@
                 console.log('business_new_form_submit => ' + data.logo_address)
                 data.image = (Object.keys(data.image).length > 0 ? data.image : '---')
 
-                axios.post('http://127.0.0.1:8000/admin-panel/business/new', data)
+                axios.post('/admin-panel/business/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
@@ -408,7 +408,7 @@
             getFormInitData(businessID) {
                 console.log('getFormInitData')
 
-                axios.get('http://127.0.0.1:8000/admin-panel/user/get/formInitData?businessID=' + businessID)
+                axios.get('/admin-panel/user/get/formInitData?businessID=' + businessID)
                     .then(response => {
                         console.log(response)
                         console.log('response.data.roles = ' + response.data.roles[0].name_en)
@@ -433,7 +433,7 @@
             setToNewForm() {
                 this.$parent.indexForEdit = -1
                 this.formItems = '';
-                this.$parent.getUserData(`http://127.0.0.1:8000/admin-panel/user/index?page=1`)
+                this.$parent.getUserData(`/admin-panel/user/index?page=1`)
             }
         },
         created: function () {

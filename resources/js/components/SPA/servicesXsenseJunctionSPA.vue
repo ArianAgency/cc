@@ -79,8 +79,8 @@
         },
         created: function () {
             console.log('servicesXsenseJunction SPA created.')
-            this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail')
-            this.getSerXsenData(`http://127.0.0.1:8000/admin-panel/serXsen/index?page=1`)
+            this.getUserData('/admin-panel/user/get/detail')
+            this.getSerXsenData(`/admin-panel/serXsen/index?page=1`)
         },
         watch: {
             indexForEdit: function () {

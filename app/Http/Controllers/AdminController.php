@@ -290,7 +290,19 @@ class AdminController extends Controller
                 }
 
                 //                $roles = DB::table('roles')->get();
-                $roles = DB::table('roles')->where('id_roles', '>', 1)->get();
+                $userDetail = Auth::user();
+                $roles = DB::table('roles')->where('id_roles', '>', $userDetail->role_id)->get();
+                //                error_log($userDetail->name);
+                $business = DB::table('businesses')->where('id_businesses', '=', $userDetail->businesse_id)->get();
+                $userDetail['business'] = $business[0];
+
+                if ($userDetail->role_id <= 1) {
+                    $businessesIndex = DB::table('businesses')->get();
+                } else {
+                    $businessesIndex = array();
+                }
+
+
                 break;
             case 'detail':
                 $userDetail = Auth::user();
@@ -302,7 +314,8 @@ class AdminController extends Controller
                 break;
         }
         error_log('End of user_get_this -');
-        return Response(['status' => 'Done', 'roles' => $roles, 'availableCardNumber' => $availableCardNumber], 200);
+        return Response(['status' => 'Done', 'roles' => $roles, 'availableCardNumber' => $availableCardNumber,
+            'user' => $userDetail, 'businessesIndex' => $businessesIndex], 200);
     }
 
     public function user_new(Request $request)
@@ -374,7 +387,6 @@ class AdminController extends Controller
             $businesse_id = 1;
         }
 
-
         if (strlen($card_number) == 0) {
             $lastCardNumber = DB::table('customers')->where('card_number', 'like', '90%')
                 ->orderBy('created_at', 'desc')->get('card_number');
@@ -390,7 +402,7 @@ class AdminController extends Controller
             }
         }
         if ($role_id == 0) {
-            $role_id = 5;
+            $role_id = 1;
         }
 
 
@@ -1109,6 +1121,47 @@ class AdminController extends Controller
         }
 //        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
         return Response($response, 200);
+    }
+
+    public function doPurchase(Request $request)
+    {
+        error_log('*****************************');
+        error_log($request);
+        error_log('*****************************');
+        $req = $request->getContent();
+        $req = json_decode($req);
+        error_log('$req = ' . $req->services[0]->price);
+        error_log('count = ' . count($req->services));
+
+        $id_customer = $req->customer->id_customers;
+        $invoice_total_items = $req->invoiceTotalItems;
+        $preferred_score_usage_in_percent = $req->preferredPercents->score;
+        $preferred_wallet_usage_in_percent = $req->preferredPercents->wallet;
+        $sale_user_id = Auth::user()->id_users;
+        $sale_user_ip = $_SERVER['REMOTE_ADDR'];
+
+        for ($x = 0; $x <= $req->invoiceTotalItems; $x++) {
+
+            $id_service = $req->services[$x]->id_services;
+            $count = $req->services[$x]->unit;
+
+            $query = "CALL sp_do_buy_process('$id_customer', '$id_service','$count',
+                                   '$invoice_total_items', '$preferred_score_usage_in_percent',
+                                  '$preferred_wallet_usage_in_percent',
+                                  '$sale_user_id', '$sale_user_ip')";
+
+            try {
+                $queryResult = DB:: select(DB::raw($query));
+                return Response(['status' => 'done', 'code' => 1, 'data' => 'data'], 200);
+            } catch (\Illuminate\Database\QueryException $ex) {
+//            dd($ex->getMessage());
+                error_log('query error = ' . $ex->getMessage());
+                error_log('query error code= ' . $ex->getCode());
+                return Response(['status' => 'error', 'code' => 2], 409);
+            }
+
+        }
+
     }
 
 

@@ -94,7 +94,7 @@
         },
         created: function () {
             console.log('Customer SPA created.')
-            this.getCustomerData(`http://127.0.0.1:8000/admin-panel/customer/index?page=1`)
+            this.getCustomerData(`/admin-panel/customer/index?page=1`)
         },
 
     }

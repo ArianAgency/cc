@@ -96,7 +96,7 @@
         },
         created: function () {
             console.log('Business SPA created.')
-            this.getBusinessData(`http://127.0.0.1:8000/admin-panel/business/index?page=1`)
+            this.getBusinessData(`/admin-panel/business/index?page=1`)
 
         },
     }

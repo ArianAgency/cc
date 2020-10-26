@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/admin-panel/purchase', 'AdminController@purchase');
     Route::get('/admin-panel/purchase/get/{this}', 'AdminController@purchase_get_this');
+    Route::post('/admin-panel/purchase/doPurchase', 'AdminController@doPurchase');
 
     Route::post('/upload/user-img','AdminController@store');
 });

@@ -92,8 +92,8 @@
         },
         created: function () {
             console.log('Product SPA created.')
-            this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail')
-            this.getServiceData(`http://127.0.0.1:8000/admin-panel/service/index?page=1`)
+            this.getUserData('/admin-panel/user/get/detail')
+            this.getServiceData(`/admin-panel/service/index?page=1`)
         },
     }
 

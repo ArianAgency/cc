@@ -2040,7 +2040,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('Business SPA created.');
-    this.getBusinessData("http://127.0.0.1:8000/admin-panel/business/index?page=1");
+    this.getBusinessData("/admin-panel/business/index?page=1");
   }
 });
 
@@ -2151,7 +2151,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('Customer SPA created.');
-    this.getCustomerData("http://127.0.0.1:8000/admin-panel/customer/index?page=1");
+    this.getCustomerData("/admin-panel/customer/index?page=1");
   }
 });
 
@@ -2329,6 +2329,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['userId'],
   data: function data() {
@@ -2337,7 +2358,12 @@ __webpack_require__.r(__webpack_exports__);
       shoppingBasket: [],
       services: '',
       customerDetail: '',
-      mobile: ''
+      mobile: '',
+      totalPrice: [],
+      preferredPercents: {
+        score: 0,
+        wallet: 0
+      }
     };
   },
   methods: {
@@ -2358,7 +2384,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log('mobile = ');
       console.log(this.mobile);
-      axios.get('http://127.0.0.1:8000/admin-panel/purchase/get/customerDetail?mobile=' + this.mobile).then(function (response) {
+      axios.get('/admin-panel/purchase/get/customerDetail?mobile=' + this.mobile).then(function (response) {
         _this2.customerDetail = response.data.customerDetail[0];
         console.log('this.customerDetail = ');
         console.log(_this2.customerDetail);
@@ -2376,6 +2402,7 @@ __webpack_require__.r(__webpack_exports__);
           var serviceId = 'count_' + serviceIndex;
           var isItNewAddOrAddOn = -1;
           var unit = document.getElementById(serviceId).value;
+          var total = '';
           document.getElementById(serviceId).value = 0;
           console.log('unit = ');
           console.log(unit);
@@ -2399,12 +2426,18 @@ __webpack_require__.r(__webpack_exports__);
 
               Vue["delete"](this.shoppingBasket[isItNewAddOrAddOn], 'unit');
               Vue.set(this.shoppingBasket[isItNewAddOrAddOn], 'unit', newUnit);
+              Vue["delete"](this.shoppingBasket[isItNewAddOrAddOn], 'total');
+              Vue.set(this.shoppingBasket[isItNewAddOrAddOn], 'total', unit * this.services[serviceIndex].price);
             } else {
               var tempArray = [];
               tempArray = this.services[serviceIndex];
               tempArray['unit'] = unit;
+              total = unit * this.services[serviceIndex].price;
+              tempArray['total'] = total;
               this.shoppingBasket.push(this.services[serviceIndex]);
             }
+
+            this.calculateTotalPrice();
           } else {
             alert('لطفا مقدارمعتبری وارد کنید');
           }
@@ -2417,6 +2450,45 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       console.log(this.shoppingBasket);
+    },
+    calculateTotalPrice: function calculateTotalPrice() {
+      var t = 0;
+      var i;
+
+      for (i = 0; i < this.shoppingBasket.length; i++) {
+        t += this.shoppingBasket[i].total;
+      }
+
+      this.totalPrice["int"] = t;
+      this.totalPrice.string = this.numberWithCommas(t);
+      return t;
+    },
+    numberWithCommas: function numberWithCommas(string) {
+      return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    confirmPurchaseAndSendData: function confirmPurchaseAndSendData() {
+      var _this3 = this;
+
+      var purchaseData = {};
+      purchaseData.services = this.shoppingBasket;
+      purchaseData.customer = this.customerDetail;
+      purchaseData.invoiceTotalItems = this.shoppingBasket.length;
+      purchaseData.preferredPercents = this.preferredPercents;
+      axios.post('/admin-panel/purchase/doPurchase', JSON.stringify(purchaseData)).then(function (response) {
+        alert('با موفقیت انجام شد');
+
+        _this3.clearItems();
+      })["catch"](function (e) {
+        // this.errors.push(e)
+        console.log(e);
+      });
+    },
+    clearItems: function clearItems() {
+      this.shoppingBasket = [];
+      this.customerDetail = [];
+      this.preferredPercents.score = 0;
+      this.preferredPercents.wallet = 0;
+      this.totalPrice = 0;
     }
   },
   mounted: function mounted() {
@@ -2530,8 +2602,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('Product SPA created.');
-    this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail');
-    this.getServiceData("http://127.0.0.1:8000/admin-panel/service/index?page=1");
+    this.getUserData('/admin-panel/user/get/detail');
+    this.getServiceData("/admin-panel/service/index?page=1");
   }
 });
 
@@ -2624,8 +2696,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('servicesXsenseJunction SPA created.');
-    this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail');
-    this.getSerXsenData("http://127.0.0.1:8000/admin-panel/serXsen/index?page=1");
+    this.getUserData('/admin-panel/user/get/detail');
+    this.getSerXsenData("/admin-panel/serXsen/index?page=1");
   },
   watch: {
     indexForEdit: function indexForEdit() {}
@@ -2703,9 +2775,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     splitedCardNumber: function splitedCardNumber(txt, num) {
       var txt = String(txt);
-      var txtLength = String(txt).length; // console.log('splitNChars + ' + txt)
-      // console.log('txt.length = ' + txtLength)
-
+      var txtLength = String(txt).length;
+      console.log('indexForEdit = ');
+      console.log(this.indexForEdit);
       var result = '';
 
       for (var i = 0; i < txtLength; i += num) {
@@ -2739,7 +2811,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('User SPA created.');
-    this.getUserData("http://127.0.0.1:8000/admin-panel/user/index?page=1");
+    this.getUserData("/admin-panel/user/index?page=1");
   }
 });
 
@@ -2838,8 +2910,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log('Xsens SPA created.');
-    this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail');
-    this.getXsensData("http://127.0.0.1:8000/admin-panel/xsens/index?page=1");
+    this.getUserData('/admin-panel/user/get/detail');
+    this.getXsensData("/admin-panel/xsens/index?page=1");
   }
 });
 
@@ -3238,7 +3310,7 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()(filepond_plug
       var _this = this;
 
       console.log('getCardPreNumber');
-      axios.get('http://127.0.0.1:8000/admin-panel/business/get/availableCardPreNumber').then(function (response) {
+      axios.get('/admin-panel/business/get/availableCardPreNumber').then(function (response) {
         console.log(response);
         _this.availableCardPreNumber = response.data.availableCardPreNumber;
         console.log('availableCardPreNumber = ' + _this.availableCardPreNumber);
@@ -3283,7 +3355,7 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()(filepond_plug
       console.log('business_new_form_submit => ' + Object.keys(data.image).length);
       console.log('business_new_form_submit => ' + data.logo_address);
       data.image = Object.keys(data.image).length > 0 ? data.image : '---';
-      axios.post('http://127.0.0.1:8000/admin-panel/business/new', data).then(function (response) {
+      axios.post('/admin-panel/business/new', data).then(function (response) {
         console.log(response);
         alert('با موفقیت ثبت شد');
         var self = _this2;
@@ -3305,7 +3377,7 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()(filepond_plug
       var _this3 = this;
 
       console.log('getFormInitData');
-      axios.get('http://127.0.0.1:8000/admin-panel/user/get/formInitData?businessID=' + businessID).then(function (response) {
+      axios.get('/admin-panel/user/get/formInitData?businessID=' + businessID).then(function (response) {
         console.log(response);
         console.log('response.data.roles = ' + response.data.roles[0].name_en);
         _this3.availableCardNumber = response.data.availableCardNumber;
@@ -3328,7 +3400,7 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()(filepond_plug
     setToNewForm: function setToNewForm() {
       this.$parent.indexForEdit = -1;
       this.formItems = '';
-      this.$parent.getUserData("http://127.0.0.1:8000/admin-panel/user/index?page=1");
+      this.$parent.getUserData("/admin-panel/user/index?page=1");
     }
   },
   created: function created() {
@@ -3703,7 +3775,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       Object.assign(data, {
         'is_it_new_registration': this.is_it_new_registration
       });
-      axios.post('http://127.0.0.1:8000/admin-panel/customer/new', data).then(function (response) {
+      axios.post('/admin-panel/customer/new', data).then(function (response) {
         console.log(response);
         alert('با موفقیت ثبت شد');
 
@@ -3723,7 +3795,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this2 = this;
 
       console.log('getCardNumber');
-      axios.get('http://127.0.0.1:8000/admin-panel/customer/get/availableCardNumber?businessID = ' + businessID).then(function (response) {
+      axios.get('/admin-panel/customer/get/availableCardNumber?businessID = ' + businessID).then(function (response) {
         console.log(response);
         _this2.availableCardNumber = response.data.availableCardNumber;
         console.log('availableCardNumber = ' + _this2.availableCardNumber);
@@ -3743,7 +3815,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     setToNewForm: function setToNewForm() {
       this.$parent.indexForEdit = -1;
       this.formItems = '';
-      this.$parent.getCustomerData("http://127.0.0.1:8000/admin-panel/customer/index?page=1");
+      this.$parent.getCustomerData("/admin-panel/customer/index?page=1");
     }
   },
   created: function created() {
@@ -4016,7 +4088,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // console.log('this.$parent.user = ')
       // console.log(this.$parent.user.businesse_id)
 
-      axios.post('http://127.0.0.1:8000/admin-panel/serXsen/new', data).then(function (response) {
+      axios.post('/admin-panel/serXsen/new', data).then(function (response) {
         console.log(response);
         alert('با موفقیت ثبت شد');
 
@@ -4045,7 +4117,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.NewformItems = [];
       this.$parent.indexForEdit = -1;
       this.is_it_new_registration = "true";
-      this.$parent.getSerXsenData("http://127.0.0.1:8000/admin-panel/serXsen/index?page=1");
+      this.$parent.getSerXsenData("/admin-panel/serXsen/index?page=1");
     },
     get_services_and_xsens_list: function get_services_and_xsens_list() {
       var _this2 = this;
@@ -4330,7 +4402,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // console.log('this.$parent.user = ')
       // console.log(this.$parent.user.businesse_id)
 
-      axios.post('http://127.0.0.1:8000/admin-panel/service/new', data).then(function (response) {
+      axios.post('/admin-panel/service/new', data).then(function (response) {
         console.log(response);
         alert('با موفقیت ثبت شد');
 
@@ -4357,7 +4429,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       console.log('getAllDataForServiceEdit');
       this.getAllDataForServiceEditReady = false;
-      axios.get('http://127.0.0.1:8000/admin-panel/service/get/getAllDataForServiceEdit?businessID=' + businessID + '&userID=' + userID).then(function (response) {
+      axios.get('/admin-panel/service/get/getAllDataForServiceEdit?businessID=' + businessID + '&userID=' + userID).then(function (response) {
         console.log('response = ' + response);
         _this2.formItems.business = response.data.business;
         _this2.formItems.user = response.data.user;
@@ -4388,7 +4460,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.$parent.indexForEdit = -1;
       this.formItems = '';
       this.is_it_new_registration = "true";
-      this.$parent.getServiceData("http://127.0.0.1:8000/admin-panel/service/index?page=1");
+      this.$parent.getServiceData("/admin-panel/service/index?page=1");
     },
     getNow: function getNow() {
       var today = new Date();
@@ -4757,6 +4829,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4776,7 +4860,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       married: false,
       formItems: [],
       is_it_new_registration: 'true',
-      roles: ''
+      roles: '',
+      user: '',
+      businessesIndex: ''
     };
   },
   methods: {
@@ -4808,7 +4894,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       Object.assign(data, {
         'is_it_new_registration': this.is_it_new_registration
       });
-      axios.post('http://127.0.0.1:8000/admin-panel/user/new', data).then(function (response) {
+      axios.post('/admin-panel/user/new', data).then(function (response) {
         console.log(response);
         alert('با موفقیت ثبت شد');
 
@@ -4832,7 +4918,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this2 = this;
 
       console.log('getCardNumber');
-      axios.get('http://127.0.0.1:8000/admin-panel/user/get/availableCardNumber?businessID = ' + businessID).then(function (response) {
+      axios.get('/admin-panel/user/get/availableCardNumber?businessID = ' + businessID).then(function (response) {
         console.log(response);
         _this2.availableCardNumber = response.data.availableCardNumber;
         console.log('availableCardNumber = ' + _this2.availableCardNumber);
@@ -4846,12 +4932,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this3 = this;
 
       console.log('getFormInitData');
-      axios.get('http://127.0.0.1:8000/admin-panel/user/get/formInitData?businessID=' + businessID).then(function (response) {
-        console.log(response);
-        console.log('response.data.roles = ' + response.data.roles[0].name_en);
+      axios.get('/admin-panel/user/get/formInitData?businessID=' + businessID).then(function (response) {
+        // console.log('response.data.roles = ' + response.data.roles[0].name_en)
         _this3.availableCardNumber = response.data.availableCardNumber;
         _this3.roles = response.data.roles;
+        _this3.user = response.data.user;
+        _this3.businessesIndex = response.data.businessesIndex;
         console.log('roles = ' + response.data.roles);
+        console.log('user = ');
+        console.log(response.data.user);
         console.log('availableCardNumber = ' + _this3.availableCardNumber);
       })["catch"](function (e) {
         _this3.errors.push(e);
@@ -4869,10 +4958,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     setToNewForm: function setToNewForm() {
       this.$parent.indexForEdit = -1;
       this.formItems = '';
-      this.$parent.getUserData("http://127.0.0.1:8000/admin-panel/user/index?page=1");
+      this.$parent.getUserData("/admin-panel/user/index?page=1");
     }
   },
   created: function created() {
+    console.log('newUserCreation created.');
     this.data = this.$parent.data.data;
   },
   mounted: function mounted() {
@@ -5161,7 +5251,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // console.log('this.$parent.user = ')
       // console.log(this.$parent.user.businesse_id)
 
-      axios.post('http://127.0.0.1:8000/admin-panel/xsens/new', data).then(function (response) {
+      axios.post('/admin-panel/xsens/new', data).then(function (response) {
         console.log(response);
         alert('با موفقیت ثبت شد');
 
@@ -5191,7 +5281,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.$parent.indexForEdit = -1;
       this.is_it_new_registration = "true";
       this.lastNoteValue = '0';
-      this.$parent.getXsensData("http://127.0.0.1:8000/admin-panel/xsens/index?page=1");
+      this.$parent.getXsensData("/admin-panel/xsens/index?page=1");
     },
     handleChange: function handleChange(e) {
       if (e.target.options.selectedIndex > 0) {
@@ -5393,7 +5483,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_progressive_image__WEBPACK_IM
       var label_id = event.target.id.substring(0, 3) + 'lb_' + id_business;
       console.log('label_id : ' + label_id);
       console.log('id_user : ' + id_business);
-      axios.post('http://127.0.0.1:8000/admin-panel/business', {
+      axios.post('/admin-panel/business', {
         action: 'is_active',
         business_id: id_business,
         value: status
@@ -5568,7 +5658,7 @@ __webpack_require__.r(__webpack_exports__);
       var label_id = event.target.id.substring(0, 3) + 'lb_' + id_customer; // console.log('label_id : ' + label_id);
       // console.log('id_customer : ' + id_customer);
 
-      axios.post('http://127.0.0.1:8000/admin-panel/customer', {
+      axios.post('/admin-panel/customer', {
         action: 'is_active',
         id_customer: id_customer,
         value: status
@@ -5734,7 +5824,7 @@ __webpack_require__.r(__webpack_exports__);
       var label_id = event.target.id.substring(0, 3) + 'lb_' + id;
       console.log('label_id : ' + label_id);
       console.log('id : ' + id);
-      axios.post('http://127.0.0.1:8000/admin-panel/services_xsense', {
+      axios.post('/admin-panel/services_xsense', {
         action: 'is_active',
         id: id,
         value: status
@@ -5909,7 +5999,7 @@ __webpack_require__.r(__webpack_exports__);
       var label_id = event.target.id.substring(0, 3) + 'lb_' + id_service; // console.log('label_id : ' + label_id);
       // console.log('id_customer : ' + id_customer);
 
-      axios.post('http://127.0.0.1:8000/admin-panel/service', {
+      axios.post('/admin-panel/service', {
         action: 'is_active',
         id_service: id_service,
         value: status
@@ -6089,7 +6179,7 @@ __webpack_require__.r(__webpack_exports__);
       var label_id = event.target.id.substring(0, 3) + 'lb_' + id_user;
       console.log('label_id : ' + label_id);
       console.log('id_user : ' + id_user);
-      axios.post('http://127.0.0.1:8000/admin-panel/user', {
+      axios.post('/admin-panel/user', {
         action: 'is_active',
         id_user: id_user,
         value: status
@@ -6265,7 +6355,7 @@ __webpack_require__.r(__webpack_exports__);
       var label_id = event.target.id.substring(0, 3) + 'lb_' + id_xsens; // console.log('label_id : ' + label_id);
       // console.log('id_customer : ' + id_customer);
 
-      axios.post('http://127.0.0.1:8000/admin-panel/xsens', {
+      axios.post('/admin-panel/xsens', {
         action: 'is_active',
         id_xsens: id_xsens,
         value: status
@@ -6286,7 +6376,7 @@ __webpack_require__.r(__webpack_exports__);
         page = 1;
       }
 
-      this.$parent.getXsensData('http://127.0.0.1:8000/admin-panel/xsens/index?page=' + page);
+      this.$parent.getXsensData('/admin-panel/xsens/index?page=' + page);
     }
   },
   created: function created() {
@@ -81912,66 +82002,164 @@ var render = function() {
         _c("div", { staticClass: "card div-body " }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "form-group col-4 mt-2" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "controls" }, [
-                _c("div", { staticClass: "input-group" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("div", { staticClass: "input-group" }, [
-                      _vm._m(1),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "input-group-prepend" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.mobile,
-                              expression: "mobile"
+          _c("div", { staticClass: "row justify-content-between" }, [
+            _c("div", { staticClass: "form-group col-7 mt-2 mr-2" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "controls" }, [
+                  _c("div", { staticClass: "input-group" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-group-prepend" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.mobile,
+                            expression: "mobile"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          id: "mobile",
+                          name: "mobile",
+                          placeholder: "شماره موبایل"
+                        },
+                        domProps: { value: _vm.mobile },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
                             }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "mobile",
-                            name: "mobile",
-                            placeholder: "شماره موبایل"
-                          },
-                          domProps: { value: _vm.mobile },
+                            _vm.mobile = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-group-prepend" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success",
+                          attrs: { type: "button" },
                           on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.mobile = $event.target.value
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.getUserData($event)
                             }
                           }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "input-group-prepend" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-success",
-                            attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.getUserData($event)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "برو!\n                                            "
-                            )
-                          ]
-                        )
-                      ])
-                    ])
+                        },
+                        [
+                          _vm._v(
+                            "برو!\n                                        "
+                          )
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "input-group-addon" }),
+                    _vm._v(" "),
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.preferredPercents.wallet,
+                          expression: "preferredPercents.wallet"
+                        }
+                      ],
+                      staticClass: "form-control ",
+                      attrs: {
+                        type: "number",
+                        min: "0",
+                        id: "wallet_percent",
+                        name: "wallet_percent",
+                        placeholder: "درصد ترجیحی از کیف پول"
+                      },
+                      domProps: { value: _vm.preferredPercents.wallet },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.preferredPercents,
+                            "wallet",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "input-group-addon" }),
+                    _vm._v(" "),
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.preferredPercents.score,
+                          expression: "preferredPercents.score"
+                        }
+                      ],
+                      staticClass: "form-control ",
+                      attrs: {
+                        type: "number",
+                        min: "0",
+                        id: "score_percent",
+                        name: "score_percent",
+                        placeholder: "درصد ترجیحی از امتیاز"
+                      },
+                      domProps: { value: _vm.preferredPercents.score },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.preferredPercents,
+                            "score",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(5)
                   ])
                 ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group " }, [
+              _c("div", { staticClass: "controls" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary mt-2 ml-5",
+                    attrs: {
+                      type: "button",
+                      disabled:
+                        _vm.shoppingBasket.length === 0 ||
+                        _vm.customerDetail.length === 0
+                    },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.confirmPurchaseAndSendData()
+                      }
+                    }
+                  },
+                  [_vm._v("نهایی شدن خرید\n                            ")]
+                )
               ])
             ])
           ]),
@@ -81994,9 +82182,17 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(2),
+              _c("div", { staticClass: "col-md" }, [
+                _c("label", [_vm._v("تعداد اقلام :")]),
+                _vm._v(" "),
+                _c("strong", [_vm._v(_vm._s(_vm.shoppingBasket.length))])
+              ]),
               _vm._v(" "),
-              _vm._m(3),
+              _c("div", { staticClass: "col-md" }, [
+                _c("label", [_vm._v("جمع کل :")]),
+                _vm._v(" "),
+                _c("strong", [_vm._v(_vm._s(_vm.totalPrice.string))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md" }, [
                 _c("label", [_vm._v("کد اشتراک :")]),
@@ -82007,7 +82203,15 @@ var render = function() {
               _c("div", { staticClass: "col-md" }, [
                 _c("label", [_vm._v("کیف پول:")]),
                 _vm._v(" "),
-                _c("strong", [_vm._v(_vm._s(_vm.customerDetail.wallet))])
+                _c("strong", [
+                  _vm._v(
+                    _vm._s(
+                      _vm.customerDetail.wallet > 0
+                        ? _vm.numberWithCommas(_vm.customerDetail.wallet)
+                        : "-"
+                    )
+                  )
+                ])
               ])
             ])
           ]),
@@ -82017,7 +82221,7 @@ var render = function() {
               "table",
               { staticClass: "table table-responsive-sm table-striped " },
               [
-                _vm._m(4),
+                _vm._m(6),
                 _vm._v(" "),
                 _c(
                   "tbody",
@@ -82048,7 +82252,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._m(5, true)]
+                        [_vm._m(7, true)]
                       )
                     ])
                   }),
@@ -82065,7 +82269,7 @@ var render = function() {
         }),
         _vm._v(" "),
         _c("div", { staticClass: "card div-body" }, [
-          _vm._m(6),
+          _vm._m(8),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c(
@@ -82074,7 +82278,7 @@ var render = function() {
                 staticClass: "table table-responsive-sm table-striped mytable"
               },
               [
-                _vm._m(7),
+                _vm._m(9),
                 _vm._v(" "),
                 _c(
                   "tbody",
@@ -82111,7 +82315,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._m(8, true)]
+                        [_vm._m(10, true)]
                       )
                     ])
                   }),
@@ -82152,20 +82356,32 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md" }, [
-      _c("label", [_vm._v("تعداد اقلام :")]),
-      _vm._v(" "),
-      _c("strong", [_vm._v("234")])
+    return _c("span", { staticClass: "input-group-text" }, [
+      _c("i", { staticClass: "fas fa-percent" })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md" }, [
-      _c("label", [_vm._v("جمع کل :")]),
-      _vm._v(" "),
-      _c("strong", [_vm._v("342,000")])
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("کیف پول")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-text" }, [
+      _c("i", { staticClass: "fas fa-percent" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("امتیاز")])
     ])
   },
   function() {
@@ -82887,7 +83103,7 @@ var render = function() {
                             "accepted-file-types": "image/jpeg, image/png",
                             server: {
                               process: {
-                                url: "http://127.0.0.1:8000/upload/user-img",
+                                url: "/upload/user-img",
                                 method: "POST",
                                 headers: {
                                   "X-CSRF-TOKEN": this.csrf
@@ -86028,6 +86244,7 @@ var render = function() {
                             type: "text",
                             id: "national_code",
                             name: "national_code",
+                            maxlength: "10",
                             placeholder: "کد ملی"
                           },
                           domProps: { value: _vm.formItems.national_code }
@@ -86055,6 +86272,7 @@ var render = function() {
                               },
                               on: {
                                 click: function($event) {
+                                  $event.preventDefault()
                                   _vm.married = 0
                                 }
                               }
@@ -86089,6 +86307,7 @@ var render = function() {
                               },
                               on: {
                                 click: function($event) {
+                                  $event.preventDefault()
                                   _vm.married = 1
                                 }
                               }
@@ -86438,19 +86657,62 @@ var render = function() {
                         _vm._m(21),
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
-                          _c("input", {
-                            staticClass: "form-control ",
-                            attrs: {
-                              type: "text",
-                              id: "business",
-                              name: "business",
-                              placeholder: "کسب و کار",
-                              readonly: ""
-                            },
-                            domProps: {
-                              value: _vm.formItems.business.company_name
-                            }
-                          }),
+                          _vm.businessesIndex.length < 0
+                            ? _c("input", {
+                                staticClass: "form-control ",
+                                attrs: {
+                                  type: "text",
+                                  id: "business",
+                                  name: "business",
+                                  placeholder: "کسب و کار",
+                                  readonly: ""
+                                },
+                                domProps: {
+                                  value:
+                                    _vm.$parent.indexForEdit > -1
+                                      ? _vm.formItems.business.company_name
+                                      : _vm.user.business.brand_name
+                                }
+                              })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.businessesIndex.length > 0
+                            ? _c(
+                                "select",
+                                {
+                                  staticClass: "form-control h-100 ",
+                                  attrs: { name: "business" }
+                                },
+                                [
+                                  _c(
+                                    "option",
+                                    { attrs: { value: "0", selected: "true" } },
+                                    [_vm._v("کسب و کار")]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.businessesIndex, function(
+                                    business
+                                  ) {
+                                    return _c(
+                                      "option",
+                                      {
+                                        domProps: {
+                                          value: business.id_businesses
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                                    " +
+                                            _vm._s(business.brand_name) +
+                                            "\n                                                "
+                                        )
+                                      ]
+                                    )
+                                  })
+                                ],
+                                2
+                              )
+                            : _vm._e(),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
                           _vm._v(" "),

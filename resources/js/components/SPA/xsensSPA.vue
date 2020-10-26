@@ -84,8 +84,8 @@
         },
         created: function () {
             console.log('Xsens SPA created.')
-            this.getUserData('http://127.0.0.1:8000/admin-panel/user/get/detail')
-            this.getXsensData(`http://127.0.0.1:8000/admin-panel/xsens/index?page=1`)
+            this.getUserData('/admin-panel/user/get/detail')
+            this.getXsensData(`/admin-panel/xsens/index?page=1`)
         },
     }
 

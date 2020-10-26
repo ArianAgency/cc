@@ -148,7 +148,7 @@
                 console.log('label_id : ' + label_id);
                 console.log('id_user : ' + id_business);
 
-                axios.post('http://127.0.0.1:8000/admin-panel/business', {
+                axios.post('/admin-panel/business', {
                     action: 'is_active',
                     business_id: id_business,
                     value: status

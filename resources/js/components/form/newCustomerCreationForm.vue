@@ -304,7 +304,7 @@
                     Object.assign(data, {[key]: val})
                 }
                 Object.assign(data, {'is_it_new_registration': this.is_it_new_registration})
-                axios.post('http://127.0.0.1:8000/admin-panel/customer/new', data)
+                axios.post('/admin-panel/customer/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
@@ -328,7 +328,7 @@
             getCardNumber(businessID) {
                 console.log('getCardNumber')
 
-                axios.get('http://127.0.0.1:8000/admin-panel/customer/get/availableCardNumber?businessID = ' + businessID)
+                axios.get('/admin-panel/customer/get/availableCardNumber?businessID = ' + businessID)
                     .then(response => {
                         console.log(response)
                         this.availableCardNumber = response.data.availableCardNumber
@@ -353,7 +353,7 @@
             setToNewForm() {
                 this.$parent.indexForEdit = -1
                 this.formItems = '';
-                this.$parent.getCustomerData(`http://127.0.0.1:8000/admin-panel/customer/index?page=1`)
+                this.$parent.getCustomerData(`/admin-panel/customer/index?page=1`)
             }
         },
         created: function () {

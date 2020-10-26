@@ -200,7 +200,7 @@
                 // console.log('this.$parent.user = ')
                 // console.log(this.$parent.user.businesse_id)
 
-                axios.post('http://127.0.0.1:8000/admin-panel/serXsen/new', data)
+                axios.post('/admin-panel/serXsen/new', data)
                     .then(response => {
                         console.log(response)
                         alert('با موفقیت ثبت شد')
@@ -230,7 +230,7 @@
                 this.NewformItems = []
                 this.$parent.indexForEdit = -1
                 this.is_it_new_registration = "true"
-                this.$parent.getSerXsenData(`http://127.0.0.1:8000/admin-panel/serXsen/index?page=1`)
+                this.$parent.getSerXsenData(`/admin-panel/serXsen/index?page=1`)
             },
             get_services_and_xsens_list() {
                 axios.get('/admin-panel/serXsen/get/serXsenList')
