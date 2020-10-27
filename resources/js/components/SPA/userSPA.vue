@@ -17,8 +17,8 @@
             </div>
         </template>
     </user-table-component>
-    <new-user-creation-form v-else-if="view==='add'">
 
+    <new-user-creation-form v-else-if="view==='add'">
         <template slot="header">
             <div class="card-header">
                 <div class="mytitle">
@@ -42,12 +42,12 @@
 <script>
 
     export default {
-        props: ['userId'],
+        props: ['user'],
         data() {
             return {
                 view: 'list',
                 csrf: "",
-                userID: this.userId,
+                userID: this.user.id_users,
                 data: '',
                 dataIsReady: false,
                 indexForEdit: -1,
@@ -62,8 +62,6 @@
             splitedCardNumber: function (txt, num) {
                 var txt = String(txt)
                 var txtLength = String(txt).length;
-                console.log('indexForEdit = ')
-                console.log(this.indexForEdit)
 
                 var result = '';
                 for (var i = 0; i < txtLength; i += num) {
@@ -92,6 +90,8 @@
         mounted: function () {
             console.log('User SPA mounted.')
             this.csrf = window.Laravel.csrfToken;
+            console.log(' props: [user] = ')
+            console.log(this.user)
         },
         created: function () {
             console.log('User SPA created.')

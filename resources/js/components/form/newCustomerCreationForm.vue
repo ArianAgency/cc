@@ -54,7 +54,7 @@
                                         <span class="input-group-text"><i class="fa fa-mobile"></i></span>
                                         <div class="input-group">
                                             <input type="text" id="mobile" name="mobile" class="form-control"
-                                                   v-bind:value="formItems.mobile"
+                                                   v-bind:value="formItems.mobile" maxlength="11"
                                                    placeholder="شماره موبایل">
                                             <span class="input-group-text bg-warning text-dark ">
                                                 <i class="fa fa-exclamation-triangle "></i></span>

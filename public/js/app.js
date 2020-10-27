@@ -2757,12 +2757,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['userId'],
+  props: ['user'],
   data: function data() {
     return {
       view: 'list',
       csrf: "",
-      userID: this.userId,
+      userID: this.user.id_users,
       data: '',
       dataIsReady: false,
       indexForEdit: -1,
@@ -2776,8 +2776,6 @@ __webpack_require__.r(__webpack_exports__);
     splitedCardNumber: function splitedCardNumber(txt, num) {
       var txt = String(txt);
       var txtLength = String(txt).length;
-      console.log('indexForEdit = ');
-      console.log(this.indexForEdit);
       var result = '';
 
       for (var i = 0; i < txtLength; i += num) {
@@ -2808,6 +2806,8 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('User SPA mounted.');
     this.csrf = window.Laravel.csrfToken;
+    console.log(' props: [user] = ');
+    console.log(this.user);
   },
   created: function created() {
     console.log('User SPA created.');
@@ -3410,8 +3410,9 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()(filepond_plug
     console.log('newBusinessCreation mounted.');
     console.log('parent.indexForEdit = ' + this.$parent.indexForEdit);
     console.log(this.data);
-    this.csrf = window.Laravel.csrfToken;
-    this.getFormInitData(0);
+    this.csrf = window.Laravel.csrfToken; // this.getFormInitData(0);
+
+    this.getCardPreNumber();
     this.populateFormInputIfIsForEdit();
 
     if (this.$parent.indexForEdit >= 0) {
@@ -4841,6 +4842,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4862,7 +4870,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       is_it_new_registration: 'true',
       roles: '',
       user: '',
-      businessesIndex: ''
+      businessesList: ''
     };
   },
   methods: {
@@ -4918,8 +4926,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this2 = this;
 
       console.log('getCardNumber');
-      axios.get('/admin-panel/user/get/availableCardNumber?businessID = ' + businessID).then(function (response) {
+      axios.get('/admin-panel/user/get/availableCardNumber?businessID=' + businessID).then(function (response) {
         console.log(response);
+        console.log('getCardNumber = ' + response);
         _this2.availableCardNumber = response.data.availableCardNumber;
         console.log('availableCardNumber = ' + _this2.availableCardNumber);
       })["catch"](function (e) {
@@ -4928,16 +4937,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         console.log(e);
       });
     },
-    getFormInitData: function getFormInitData(businessID) {
+    getFormInitData: function getFormInitData() {
       var _this3 = this;
 
       console.log('getFormInitData');
+      var businessID = this.$parent.user.businesse_id;
       axios.get('/admin-panel/user/get/formInitData?businessID=' + businessID).then(function (response) {
-        // console.log('response.data.roles = ' + response.data.roles[0].name_en)
+        console.log(response);
         _this3.availableCardNumber = response.data.availableCardNumber;
         _this3.roles = response.data.roles;
         _this3.user = response.data.user;
-        _this3.businessesIndex = response.data.businessesIndex;
+        _this3.businessesList = response.data.businessesIndex;
         console.log('roles = ' + response.data.roles);
         console.log('user = ');
         console.log(response.data.user);
@@ -4950,8 +4960,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     populateFormInputIfIsForEdit: function populateFormInputIfIsForEdit() {
       if (this.$parent.indexForEdit >= 0) {
-        // console.log('populateFormInputIfIsForEdit = ')
-        // console.log(this.data[0])
+        console.log('populateFormInputIfIsForEdit = ');
+        console.log(this.data[this.$parent.indexForEdit]);
         this.formItems = this.data[this.$parent.indexForEdit];
       }
     },
@@ -4969,11 +4979,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     console.log('newUserCreation mounted.');
     console.log('parent.indexForEdit = ' + this.$parent.indexForEdit);
     this.csrf = window.Laravel.csrfToken;
-    this.getFormInitData(0);
+    this.getFormInitData();
     this.populateFormInputIfIsForEdit();
 
     if (this.$parent.indexForEdit >= 0) {
       this.is_it_new_registration = 'false';
+    }
+  },
+  watch: {
+    formItems: function formItems() {
+      console.log('formItems  = ');
+      console.log(this.formItems);
     }
   }
 });
@@ -6040,6 +6056,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_content_loading__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-content-loading */ "./node_modules/vue-content-loading/dist/vuecontentloading.js");
 /* harmony import */ var vue_content_loading__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_content_loading__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
 //
 //
 //
@@ -82794,6 +82812,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.brand_name,
+                                expression: "formItems.brand_name",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -82801,12 +82828,33 @@ var render = function() {
                               name: "brand_name",
                               placeholder: "نام برند"
                             },
-                            domProps: { value: _vm.formItems.brand_name }
+                            domProps: { value: _vm.formItems.brand_name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "brand_name",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.company_name,
+                                expression: "formItems.company_name",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -82814,7 +82862,19 @@ var render = function() {
                               name: "company_name",
                               placeholder: " نام شرکت"
                             },
-                            domProps: { value: _vm.formItems.company_name }
+                            domProps: { value: _vm.formItems.company_name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "company_name",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -82826,6 +82886,14 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.formItems.register_code,
+                                expression: "formItems.register_code"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -82833,7 +82901,19 @@ var render = function() {
                               name: "register_code",
                               placeholder: "شماره ثبت"
                             },
-                            domProps: { value: _vm.formItems.register_code }
+                            domProps: { value: _vm.formItems.register_code },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "register_code",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -82841,6 +82921,15 @@ var render = function() {
                           _vm._m(2),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.national_code,
+                                expression: "formItems.national_code",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -82848,7 +82937,19 @@ var render = function() {
                               name: "national_code",
                               placeholder: " شناسه ملی"
                             },
-                            domProps: { value: _vm.formItems.national_code }
+                            domProps: { value: _vm.formItems.national_code },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "national_code",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -82856,6 +82957,15 @@ var render = function() {
                           _vm._m(3),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.financial_code,
+                                expression: "formItems.financial_code",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -82863,7 +82973,19 @@ var render = function() {
                               name: "financial_code",
                               placeholder: "کد اقتصادی"
                             },
-                            domProps: { value: _vm.formItems.financial_code }
+                            domProps: { value: _vm.formItems.financial_code },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "financial_code",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -82882,12 +83004,8 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value:
-                                    _vm.foundationDate.length > 0
-                                      ? _vm.foundationDate
-                                      : _vm.formItems.foundation_date,
-                                  expression:
-                                    "foundationDate.length > 0 ? foundationDate : formItems.foundation_date"
+                                  value: _vm.formItems.foundation_date,
+                                  expression: "formItems.foundation_date"
                                 }
                               ],
                               staticClass: "form-control",
@@ -82898,10 +83016,7 @@ var render = function() {
                                 placeholder: "تاریخ ثبت"
                               },
                               domProps: {
-                                value:
-                                  _vm.foundationDate.length > 0
-                                    ? _vm.foundationDate
-                                    : _vm.formItems.foundation_date
+                                value: _vm.formItems.foundation_date
                               },
                               on: {
                                 input: function($event) {
@@ -82909,9 +83024,7 @@ var render = function() {
                                     return
                                   }
                                   _vm.$set(
-                                    _vm.foundationDate.length > 0
-                                      ? _vm.foundationDate
-                                      : _vm.formItems,
+                                    _vm.formItems,
                                     "foundation_date",
                                     $event.target.value
                                   )
@@ -82925,11 +83038,15 @@ var render = function() {
                                 format: "YYYY-MM-DD"
                               },
                               model: {
-                                value: _vm.foundationDate,
+                                value: _vm.formItems.foundation_date,
                                 callback: function($$v) {
-                                  _vm.foundationDate = $$v
+                                  _vm.$set(
+                                    _vm.formItems,
+                                    "foundation_date",
+                                    $$v
+                                  )
                                 },
-                                expression: "foundationDate"
+                                expression: "formItems.foundation_date"
                               }
                             })
                           ],
@@ -82941,6 +83058,15 @@ var render = function() {
                         _vm._m(5),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.company_field,
+                              expression: "formItems.company_field",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
@@ -82948,7 +83074,19 @@ var render = function() {
                             name: "company_field",
                             placeholder: "نوع فعالیت"
                           },
-                          domProps: { value: _vm.formItems.company_field }
+                          domProps: { value: _vm.formItems.company_field },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "company_field",
+                                $event.target.value
+                              )
+                            }
+                          }
                         })
                       ])
                     ]),
@@ -82958,6 +83096,15 @@ var render = function() {
                         _vm._m(6),
                         _vm._v(" "),
                         _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.address,
+                              expression: "formItems.address",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control flex-fill",
                           attrs: {
                             id: "address",
@@ -82965,7 +83112,19 @@ var render = function() {
                             name: "address",
                             rows: "2"
                           },
-                          domProps: { value: _vm.formItems.address }
+                          domProps: { value: _vm.formItems.address },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "address",
+                                $event.target.value
+                              )
+                            }
+                          }
                         })
                       ])
                     ]),
@@ -82976,6 +83135,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.mobile,
+                                expression: "formItems.mobile",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -82983,7 +83151,19 @@ var render = function() {
                               name: "mobile",
                               placeholder: "شماره موبایل"
                             },
-                            domProps: { value: _vm.formItems.mobile }
+                            domProps: { value: _vm.formItems.mobile },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "mobile",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _vm._m(8),
@@ -82993,6 +83173,15 @@ var render = function() {
                           _vm._m(9),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.phone,
+                                expression: "formItems.phone",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -83000,7 +83189,19 @@ var render = function() {
                               name: "phone",
                               placeholder: "تلفن"
                             },
-                            domProps: { value: _vm.formItems.phone }
+                            domProps: { value: _vm.formItems.phone },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "phone",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -83008,6 +83209,15 @@ var render = function() {
                           _vm._m(10),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.support_phone,
+                                expression: "formItems.support_phone",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -83015,7 +83225,19 @@ var render = function() {
                               name: "support_phone",
                               placeholder: "تلفن پشتیبانی"
                             },
-                            domProps: { value: _vm.formItems.support_phone }
+                            domProps: { value: _vm.formItems.support_phone },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "support_phone",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -83027,6 +83249,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.email,
+                                expression: "formItems.email",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "email",
@@ -83034,7 +83265,19 @@ var render = function() {
                               name: "email",
                               placeholder: "example@domain.com"
                             },
-                            domProps: { value: _vm.formItems.email }
+                            domProps: { value: _vm.formItems.email },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "email",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _vm._m(12),
@@ -83044,6 +83287,15 @@ var render = function() {
                           _vm._m(13),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.work_time,
+                                expression: "formItems.work_time",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -83051,7 +83303,19 @@ var render = function() {
                               name: "work_time",
                               placeholder: "ساعت کاری"
                             },
-                            domProps: { value: _vm.formItems.work_time }
+                            domProps: { value: _vm.formItems.work_time },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "work_time",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -83126,6 +83390,15 @@ var render = function() {
                         _vm._m(15),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.social,
+                              expression: "formItems.social",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
@@ -83133,7 +83406,19 @@ var render = function() {
                             name: "social",
                             placeholder: "اینستاگرام"
                           },
-                          domProps: { value: _vm.formItems.social }
+                          domProps: { value: _vm.formItems.social },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "social",
+                                $event.target.value
+                              )
+                            }
+                          }
                         }),
                         _vm._v(" "),
                         _c("span", { staticClass: "input-group-addon" }),
@@ -83264,6 +83549,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.orgin,
+                                expression: "formItems.orgin",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control ",
                             attrs: {
                               type: "text",
@@ -83272,7 +83566,19 @@ var render = function() {
                               placeholder: "محل ثبت نام",
                               readonly: ""
                             },
-                            domProps: { value: _vm.formItems.orgin }
+                            domProps: { value: _vm.formItems.orgin },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "orgin",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -83280,6 +83586,15 @@ var render = function() {
                           _vm._m(18),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.website,
+                                expression: "formItems.website",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -83287,7 +83602,19 @@ var render = function() {
                               name: "website",
                               placeholder: "وبسایت"
                             },
-                            domProps: { value: _vm.formItems.website }
+                            domProps: { value: _vm.formItems.website },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "website",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -83299,6 +83626,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.bank_account,
+                                expression: "formItems.bank_account",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -83306,7 +83642,19 @@ var render = function() {
                               name: "bank_account",
                               placeholder: " شماره حساب"
                             },
-                            domProps: { value: _vm.formItems.bank_account }
+                            domProps: { value: _vm.formItems.bank_account },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "bank_account",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -83339,6 +83687,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.wallet,
+                                expression: "formItems.wallet",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control ",
                             attrs: {
                               type: "number",
@@ -83346,7 +83703,19 @@ var render = function() {
                               name: "wallet",
                               placeholder: "کیف پول"
                             },
-                            domProps: { value: _vm.formItems.wallet }
+                            domProps: { value: _vm.formItems.wallet },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "wallet",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -83354,6 +83723,15 @@ var render = function() {
                           _vm._m(22),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.score,
+                                expression: "formItems.score",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "number",
@@ -83361,7 +83739,19 @@ var render = function() {
                               name: "score",
                               placeholder: "امتیاز"
                             },
-                            domProps: { value: _vm.formItems.score }
+                            domProps: { value: _vm.formItems.score },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "score",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -83369,6 +83759,15 @@ var render = function() {
                           _vm._m(23),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.score_limit,
+                                expression: "formItems.score_limit",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "number",
@@ -83376,7 +83775,19 @@ var render = function() {
                               name: "score_limit",
                               placeholder: "سقف امتیاز"
                             },
-                            domProps: { value: _vm.formItems.score_limit }
+                            domProps: { value: _vm.formItems.score_limit },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "score_limit",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -85985,6 +86396,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.name,
+                                expression: "formItems.name",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -85992,12 +86412,33 @@ var render = function() {
                               name: "name",
                               placeholder: "نام"
                             },
-                            domProps: { value: _vm.formItems.name }
+                            domProps: { value: _vm.formItems.name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "name",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.family,
+                                expression: "formItems.family",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -86005,7 +86446,19 @@ var render = function() {
                               name: "family",
                               placeholder: " نام خوانوادگی"
                             },
-                            domProps: { value: _vm.formItems.family }
+                            domProps: { value: _vm.formItems.family },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "family",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -86017,6 +86470,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.father_name,
+                                expression: "formItems.father_name",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -86024,7 +86486,19 @@ var render = function() {
                               name: "father_name",
                               placeholder: " نام پدر"
                             },
-                            domProps: { value: _vm.formItems.father_name }
+                            domProps: { value: _vm.formItems.father_name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "father_name",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -86101,6 +86575,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.mobile,
+                                expression: "formItems.mobile",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -86108,7 +86591,19 @@ var render = function() {
                               name: "mobile",
                               placeholder: "شماره موبایل"
                             },
-                            domProps: { value: _vm.formItems.mobile }
+                            domProps: { value: _vm.formItems.mobile },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "mobile",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _vm._m(4),
@@ -86118,6 +86613,15 @@ var render = function() {
                           _vm._m(5),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.phone,
+                                expression: "formItems.phone",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -86125,7 +86629,19 @@ var render = function() {
                               name: "phone",
                               placeholder: "تلفن"
                             },
-                            domProps: { value: _vm.formItems.phone }
+                            domProps: { value: _vm.formItems.phone },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "phone",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -86136,6 +86652,15 @@ var render = function() {
                         _vm._m(6),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.email,
+                              expression: "formItems.email",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "email",
@@ -86143,7 +86668,19 @@ var render = function() {
                             name: "email",
                             placeholder: "ایمیل"
                           },
-                          domProps: { value: _vm.formItems.email }
+                          domProps: { value: _vm.formItems.email },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "email",
+                                $event.target.value
+                              )
+                            }
+                          }
                         }),
                         _vm._v(" "),
                         _vm._m(7)
@@ -86155,6 +86692,15 @@ var render = function() {
                         _vm._m(8),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.social,
+                              expression: "formItems.social",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
@@ -86162,7 +86708,19 @@ var render = function() {
                             name: "social",
                             placeholder: "اینستاگرام"
                           },
-                          domProps: { value: _vm.formItems.social }
+                          domProps: { value: _vm.formItems.social },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "social",
+                                $event.target.value
+                              )
+                            }
+                          }
                         }),
                         _vm._v(" "),
                         _c("span", { staticClass: "input-group-addon" }),
@@ -86178,12 +86736,8 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value:
-                                    _vm.birthday.length > 0
-                                      ? _vm.birthday
-                                      : _vm.formItems.birthday,
-                                  expression:
-                                    "birthday.length > 0 ? birthday : formItems.birthday"
+                                  value: _vm.formItems.birthday,
+                                  expression: "formItems.birthday"
                                 }
                               ],
                               staticClass: "form-control",
@@ -86193,21 +86747,14 @@ var render = function() {
                                 name: "birthday",
                                 placeholder: "تاریخ تولد"
                               },
-                              domProps: {
-                                value:
-                                  _vm.birthday.length > 0
-                                    ? _vm.birthday
-                                    : _vm.formItems.birthday
-                              },
+                              domProps: { value: _vm.formItems.birthday },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return
                                   }
                                   _vm.$set(
-                                    _vm.birthday.length > 0
-                                      ? _vm.birthday
-                                      : _vm.formItems,
+                                    _vm.formItems,
                                     "birthday",
                                     $event.target.value
                                   )
@@ -86221,11 +86768,11 @@ var render = function() {
                                 format: "YYYY-MM-DD"
                               },
                               model: {
-                                value: _vm.birthday,
+                                value: _vm.formItems.birthday,
                                 callback: function($$v) {
-                                  _vm.birthday = $$v
+                                  _vm.$set(_vm.formItems, "birthday", $$v)
                                 },
-                                expression: "birthday"
+                                expression: "formItems.birthday"
                               }
                             })
                           ],
@@ -86239,6 +86786,15 @@ var render = function() {
                         _vm._m(10),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.national_code,
+                              expression: "formItems.national_code",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
@@ -86247,7 +86803,19 @@ var render = function() {
                             maxlength: "10",
                             placeholder: "کد ملی"
                           },
-                          domProps: { value: _vm.formItems.national_code }
+                          domProps: { value: _vm.formItems.national_code },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "national_code",
+                                $event.target.value
+                              )
+                            }
+                          }
                         }),
                         _vm._v(" "),
                         _c("span", { staticClass: "input-group-addon" }),
@@ -86272,7 +86840,6 @@ var render = function() {
                               },
                               on: {
                                 click: function($event) {
-                                  $event.preventDefault()
                                   _vm.married = 0
                                 }
                               }
@@ -86307,7 +86874,6 @@ var render = function() {
                               },
                               on: {
                                 click: function($event) {
-                                  $event.preventDefault()
                                   _vm.married = 1
                                 }
                               }
@@ -86337,8 +86903,8 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.marriageDate,
-                                  expression: "marriageDate"
+                                  value: _vm.formItems.wedding_anniversary,
+                                  expression: "formItems.wedding_anniversary"
                                 }
                               ],
                               staticClass: "form-control",
@@ -86349,13 +86915,19 @@ var render = function() {
                                 placeholder: "تاریخ ازدواج",
                                 readonly: _vm.married != 1
                               },
-                              domProps: { value: _vm.marriageDate },
+                              domProps: {
+                                value: _vm.formItems.wedding_anniversary
+                              },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return
                                   }
-                                  _vm.marriageDate = $event.target.value
+                                  _vm.$set(
+                                    _vm.formItems,
+                                    "wedding_anniversary",
+                                    $event.target.value
+                                  )
                                 }
                               }
                             }),
@@ -86366,21 +86938,15 @@ var render = function() {
                                 disabled: _vm.married != 1
                               },
                               model: {
-                                value:
-                                  _vm.married.length > 0
-                                    ? _vm.marriageDate
-                                    : _vm.formItems.wedding_anniversary,
+                                value: _vm.formItems.wedding_anniversary,
                                 callback: function($$v) {
                                   _vm.$set(
-                                    _vm.married.length > 0
-                                      ? _vm.marriageDate
-                                      : _vm.formItems,
+                                    _vm.formItems,
                                     "wedding_anniversary",
                                     $$v
                                   )
                                 },
-                                expression:
-                                  "married.length > 0 ? marriageDate : formItems.wedding_anniversary"
+                                expression: " formItems.wedding_anniversary"
                               }
                             })
                           ],
@@ -86521,6 +87087,15 @@ var render = function() {
                         _vm._m(14),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.field,
+                              expression: "formItems.field",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
@@ -86528,7 +87103,19 @@ var render = function() {
                             name: "field",
                             placeholder: "رشته"
                           },
-                          domProps: { value: _vm.formItems.field }
+                          domProps: { value: _vm.formItems.field },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "field",
+                                $event.target.value
+                              )
+                            }
+                          }
                         })
                       ])
                     ]),
@@ -86538,6 +87125,15 @@ var render = function() {
                         _vm._m(15),
                         _vm._v(" "),
                         _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value: _vm.formItems.address,
+                              expression: "formItems.address",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control flex-fill",
                           attrs: {
                             id: "address",
@@ -86545,7 +87141,19 @@ var render = function() {
                             name: "address",
                             rows: "2"
                           },
-                          domProps: { value: _vm.formItems.address }
+                          domProps: { value: _vm.formItems.address },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formItems,
+                                "address",
+                                $event.target.value
+                              )
+                            }
+                          }
                         })
                       ])
                     ]),
@@ -86556,6 +87164,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.orgin,
+                                expression: "formItems.orgin",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control ",
                             attrs: {
                               type: "text",
@@ -86564,7 +87181,19 @@ var render = function() {
                               placeholder: "محل ثبت نام",
                               readonly: ""
                             },
-                            domProps: { value: _vm.formItems.orgin }
+                            domProps: { value: _vm.formItems.orgin },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "orgin",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -86572,6 +87201,15 @@ var render = function() {
                           _vm._m(17),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.website,
+                                expression: "formItems.website",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "text",
@@ -86579,7 +87217,19 @@ var render = function() {
                               name: "website",
                               placeholder: "وبسایت"
                             },
-                            domProps: { value: _vm.formItems.website }
+                            domProps: { value: _vm.formItems.website },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "website",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -86594,6 +87244,25 @@ var render = function() {
                         _vm._m(18),
                         _vm._v(" "),
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model:value",
+                              value:
+                                _vm.$parent.indexForEdit >= 0
+                                  ? _vm.$parent.splitedCardNumber(
+                                      _vm.formItems.card_number,
+                                      4
+                                    )
+                                  : _vm.$parent.splitedCardNumber(
+                                      _vm.availableCardNumber,
+                                      4
+                                    ),
+                              expression:
+                                "$parent.indexForEdit >= 0 ?\n                                               $parent.splitedCardNumber(formItems.card_number,4) :\n                                               $parent.splitedCardNumber(availableCardNumber,4)",
+                              arg: "value"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "text",
@@ -86613,6 +87282,23 @@ var render = function() {
                                     _vm.availableCardNumber,
                                     4
                                   )
+                          },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.$parent.indexForEdit >= 0
+                                  ? _vm.$parent.splitedCardNumber(
+                                      _vm.formItems.card_number,
+                                      4
+                                    )
+                                  : _vm.$parent,
+                                "splitedCardNumber(availableCardNumber,4)",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ])
@@ -86624,6 +87310,15 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.wallet,
+                                expression: "formItems.wallet",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control ",
                             attrs: {
                               type: "number",
@@ -86631,7 +87326,19 @@ var render = function() {
                               name: "wallet",
                               placeholder: "کیف پول"
                             },
-                            domProps: { value: _vm.formItems.wallet }
+                            domProps: { value: _vm.formItems.wallet },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "wallet",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "input-group-addon" }),
@@ -86639,6 +87346,15 @@ var render = function() {
                           _vm._m(20),
                           _vm._v(" "),
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model:value",
+                                value: _vm.formItems.score,
+                                expression: "formItems.score",
+                                arg: "value"
+                              }
+                            ],
                             staticClass: "form-control",
                             attrs: {
                               type: "number",
@@ -86646,7 +87362,19 @@ var render = function() {
                               name: "score",
                               placeholder: "امتیاز"
                             },
-                            domProps: { value: _vm.formItems.score }
+                            domProps: { value: _vm.formItems.score },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.formItems,
+                                  "score",
+                                  $event.target.value
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
@@ -86657,8 +87385,21 @@ var render = function() {
                         _vm._m(21),
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
-                          _vm.businessesIndex.length < 0
+                          _vm.businessesList.length <= 0
                             ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model:value",
+                                    value:
+                                      _vm.$parent.indexForEdit > -1
+                                        ? _vm.formItems.business.brand_name
+                                        : _vm.user.business.brand_name,
+                                    expression:
+                                      "$parent.indexForEdit > -1 ? formItems.business.brand_name : user.business.brand_name",
+                                    arg: "value"
+                                  }
+                                ],
                                 staticClass: "form-control ",
                                 attrs: {
                                   type: "text",
@@ -86670,18 +87411,39 @@ var render = function() {
                                 domProps: {
                                   value:
                                     _vm.$parent.indexForEdit > -1
-                                      ? _vm.formItems.business.company_name
+                                      ? _vm.formItems.business.brand_name
                                       : _vm.user.business.brand_name
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.$parent.indexForEdit > -1
+                                        ? _vm.formItems.business.brand_name
+                                        : _vm.user.business,
+                                      "brand_name",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
                               })
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.businessesIndex.length > 0
+                          _vm.businessesList.length > 0
                             ? _c(
                                 "select",
                                 {
                                   staticClass: "form-control h-100 ",
-                                  attrs: { name: "business" }
+                                  attrs: { name: "business" },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.getCardNumber(
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
                                 },
                                 [
                                   _c(
@@ -86690,14 +87452,19 @@ var render = function() {
                                     [_vm._v("کسب و کار")]
                                   ),
                                   _vm._v(" "),
-                                  _vm._l(_vm.businessesIndex, function(
+                                  _vm._l(_vm.businessesList, function(
                                     business
                                   ) {
                                     return _c(
                                       "option",
                                       {
                                         domProps: {
-                                          value: business.id_businesses
+                                          value: business.id_businesses,
+                                          selected:
+                                            (_vm.$parent.indexForEdit > -1
+                                              ? _vm.formItems.businesse_id
+                                              : _vm.user.businesse_id) ===
+                                            business.id_businesses
                                         }
                                       },
                                       [
@@ -86734,9 +87501,15 @@ var render = function() {
                                   "option",
                                   {
                                     domProps: {
-                                      value: role.id_roles,
                                       selected:
                                         _vm.formItems.role_id === role.id_roles
+                                    },
+                                    model: {
+                                      value: role.id_roles,
+                                      callback: function($$v) {
+                                        _vm.$set(role, "id_roles", $$v)
+                                      },
+                                      expression: "role.id_roles"
                                     }
                                   },
                                   [
@@ -89366,20 +90139,22 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _c(
-                          "th",
-                          {
-                            on: {
-                              click: function($event) {
-                                ;(_vm.$parent.indexForEdit = index),
-                                  (_vm.$parent.view = "add"),
-                                  (_vm.$parent.pageTitle =
-                                    "ویرایش اطلاعات کاربر")
-                              }
-                            }
-                          },
-                          [_vm._m(1, true)]
-                        )
+                        _vm.$parent.user.role_id < user.role_id
+                          ? _c(
+                              "th",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    ;(_vm.$parent.indexForEdit = index),
+                                      (_vm.$parent.view = "add"),
+                                      (_vm.$parent.pageTitle =
+                                        "ویرایش اطلاعات کاربر")
+                                  }
+                                }
+                              },
+                              [_vm._m(1, true)]
+                            )
+                          : _c("th", [_c("i", { staticClass: "fa fa-edit" })])
                       ])
                     }),
                     0

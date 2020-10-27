@@ -101,11 +101,13 @@ class AdminController extends Controller
 //                $availableCardPreNumber = 5000;
                 $availableCardPreNumber = DB::table('businesses')->latest('card_pre_number')->first();
                 $availableCardPreNumber = ($availableCardPreNumber->card_pre_number) + 1;
-
+                error_log('$availableCardPreNumber  = ');
+                error_log($availableCardPreNumber);
                 break;
         }
 
         return Response(['status' => 'Done', 'availableCardPreNumber' => $availableCardPreNumber], 200);
+
     }
 
     public function business_new(Request $request)
@@ -253,16 +255,18 @@ class AdminController extends Controller
     {
         error_log('user_get_this - ');
         $get_this = $request['this'];
-        $availableCardPreNumber = '';
+        $availableCardNumber = '';
+        $userDetail='';
+        $businessesIndex='';
         error_log('$get_this = ' . $get_this);
 
         switch ($get_this) {
             case 'availableCardNumber':
-                $businessID = '';
+                $businessID = $request['businessID'];
                 if ($request['businessID'] == 0) {
                     $businessID = '90';
                 }
-                $lastCardNumber = DB::table('users')->where('card_number', 'like', $request['businessID'] . '%')
+                $lastCardNumber = DB::table('users')->where('card_number', 'like', $businessID . '%')
                     ->orderBy('created_at', 'desc')->get('card_number');
 
                 error_log('$lastCardNumber = ' . $lastCardNumber);
@@ -270,7 +274,11 @@ class AdminController extends Controller
                 if (count($lastCardNumber) > 0) {
                     $availableCardNumber = $lastCardNumber[0]->card_number + 1;
                 } else {
-                    $availableCardNumber = '9009000000000001';
+                    $cardPreNumberOfBusiness = DB::table('businesses')->where('id_businesses','=',$businessID)
+                        ->get('card_pre_number');
+                    $cardPreNumberOfBusiness = $cardPreNumberOfBusiness[0]->card_pre_number;
+                    error_log('$cardPreNumberOfBusiness  = '.$cardPreNumberOfBusiness);
+                    $availableCardNumber = $cardPreNumberOfBusiness.'000000000001';
                 }
 
                 break;
@@ -313,9 +321,9 @@ class AdminController extends Controller
                 return Response(['status' => 'Done', 'user' => $userDetail], 200);
                 break;
         }
-        error_log('End of user_get_this -');
-        return Response(['status' => 'Done', 'roles' => $roles, 'availableCardNumber' => $availableCardNumber,
-            'user' => $userDetail, 'businessesIndex' => $businessesIndex], 200);
+        error_log('End of user_get_this - '.$get_this);
+        error_log('$availableCardNumber = '.$availableCardNumber);
+        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber,'user' => $userDetail, 'businessesIndex' => $businessesIndex], 200);
     }
 
     public function user_new(Request $request)

@@ -12,12 +12,12 @@
                                         <span class="input-group-text"><i class="far fa-building"></i></span>
                                         <div class="input-group">
                                             <input type="text" id="brand_name" name="brand_name" class="form-control"
-                                                   v-bind:value="formItems.brand_name"
+                                                   v-model:value="formItems.brand_name"
                                                    placeholder="نام برند">
                                             <span class="input-group-addon"> </span>
                                             <input type="text" id="company_name" name="company_name"
                                                    class="form-control"
-                                                   v-bind:value="formItems.company_name"
+                                                   v-model:value="formItems.company_name"
                                                    placeholder=" نام شرکت">
                                         </div>
                                     </div>
@@ -27,21 +27,21 @@
                                         <span class="input-group-text"><i class="far fa-file-excel"></i></span>
                                         <div class="input-group">
                                             <input type="text" id="register_code" name="register_code"
-                                                   class="form-control" v-bind:value="formItems.register_code"
+                                                   class="form-control" v-model="formItems.register_code"
                                                    placeholder="شماره ثبت">
 
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fas fa-passport"></i></span>
 
                                             <input type="text" id="national_code" name="national_code"
-                                                   class="form-control" v-bind:value="formItems.national_code"
+                                                   class="form-control" v-model:value="formItems.national_code"
                                                    placeholder=" شناسه ملی">
 
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fas fa-money-check-alt"></i></span>
 
                                             <input type="text" id="financial_code" name="financial_code"
-                                                   class="form-control" v-bind:value="formItems.financial_code"
+                                                   class="form-control" v-model:value="formItems.financial_code"
                                                    placeholder="کد اقتصادی">
                                         </div>
                                     </div>
@@ -54,9 +54,9 @@
                                                <i class="far fa-calendar-check"></i></span>
                                             <input type="text" id="foundation_date" name="foundation_date"
                                                    class="form-control"
-                                                   v-model="foundationDate.length > 0 ? foundationDate : formItems.foundation_date"
+                                                   v-model="formItems.foundation_date"
                                                    placeholder="تاریخ ثبت">
-                                            <date-picker v-model="foundationDate" element="foundation_date"
+                                            <date-picker v-model="formItems.foundation_date" element="foundation_date"
                                                          format="YYYY-MM-DD"></date-picker>
                                         </div>
                                         <span class="input-group-addon"></span>
@@ -64,7 +64,7 @@
                                             <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
                                         </div>
                                         <input type="text" id="company_field" name="company_field" class="form-control"
-                                               v-bind:value="formItems.company_field" placeholder="نوع فعالیت">
+                                               v-model:value="formItems.company_field" placeholder="نوع فعالیت">
 
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                         </div>
                                         <textarea class="form-control flex-fill" id="address" placeholder="آدرس"
                                                   name="address" rows="2"
-                                                  v-bind:value="formItems.address"
+                                                  v-model:value="formItems.address"
                                         />
                                     </div>
                                 </div>
@@ -85,20 +85,20 @@
                                     <div class="input-group-prepend ">
                                         <span class="input-group-text"><i class="fa fa-mobile-alt"></i></span>
                                         <div class="input-group">
-                                            <input type="text" id="mobile" name="mobile" class="form-control"
-                                                   v-bind:value="formItems.mobile"
+                                            <input type="text" id="mobile" name="mobile" class="form-control" maxlength="11"
+                                                   v-model:value="formItems.mobile"
                                                    placeholder="شماره موبایل">
                                             <span class="input-group-text bg-warning text-dark ">
                                                 <i class="fa fa-exclamation-triangle "></i></span>
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fa fa-phone"></i></span>
                                             <input type="text" id="phone" name="phone" class="form-control"
-                                                   v-bind:value="formItems.phone"
+                                                   v-model:value="formItems.phone"
                                                    placeholder="تلفن">
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
                                             <input type="text" id="support_phone" name="support_phone"
-                                                   v-bind:value="formItems.support_phone"
+                                                   v-model:value="formItems.support_phone"
                                                    class="form-control"
                                                    placeholder="تلفن پشتیبانی">
                                         </div>
@@ -110,7 +110,7 @@
                                         <span class="input-group-text"><i class="far fa-envelope"></i></span>
                                         <div class="input-group">
                                             <input type="email" id="email" name="email" class="form-control"
-                                                   v-bind:value="formItems.email"
+                                                   v-model:value="formItems.email"
                                                    placeholder="example@domain.com">
                                             <span class="input-group-text bg-warning text-dark ">
                                                 <i class="fa fa-exclamation-triangle "></i></span>
@@ -118,7 +118,7 @@
                                             <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
                                             <input type="text" id="work_time" name="work_time"
                                                    class="form-control"
-                                                   v-bind:value="formItems.work_time"
+                                                   v-model:value="formItems.work_time"
                                                    placeholder="ساعت کاری">
                                         </div>
                                     </div>
@@ -173,7 +173,7 @@
                                             <span class="input-group-text"><i class="fab fa-instagram"></i></span>
                                         </div>
                                         <input type="text" id="social" name="social" class="form-control"
-                                               v-bind:value="formItems.social"
+                                               v-model:value="formItems.social"
                                                placeholder="اینستاگرام">
                                         <span class="input-group-addon"></span>
                                         <div class="input-group-prepend w-40">
@@ -209,13 +209,13 @@
                                         <span class="input-group-text"><i class="fas fa-search-location"></i></span>
                                         <div class="input-group">
                                             <input type="text" id="orgin" name="orgin" class="form-control "
-                                                   v-bind:value="formItems.orgin"
+                                                   v-model:value="formItems.orgin"
                                                    placeholder="محل ثبت نام" readonly>
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i
                                                 class="fab fa-internet-explorer"></i></span>
                                             <input type="text" id="website" name="website" class="form-control"
-                                                   v-bind:value="formItems.website"
+                                                   v-model:value="formItems.website"
                                                    placeholder="وبسایت">
                                         </div>
                                     </div>
@@ -226,7 +226,7 @@
                                         <div class="input-group">
                                             <input type="text" id="bank_account" name="bank_account"
                                                    class="form-control"
-                                                   v-bind:value="formItems.bank_account"
+                                                   v-model:value="formItems.bank_account"
                                                    placeholder=" شماره حساب">
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fab fa-autoprefixer"></i></span>
@@ -243,18 +243,18 @@
                                         <span class="input-group-text"><i class="fas fa-wallet"></i></span>
                                         <div class="input-group">
                                             <input type="number" id="wallet" name="wallet" class="form-control "
-                                                   v-bind:value="formItems.wallet"
+                                                   v-model:value="formItems.wallet"
                                                    placeholder="کیف پول">
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fas fa-star-half-alt"></i></span>
                                             <input type="number" id="score" name="score" class="form-control"
-                                                   v-bind:value="formItems.score"
+                                                   v-model:value="formItems.score"
                                                    placeholder="امتیاز">
                                             <span class="input-group-addon"></span>
                                             <span class="input-group-text"><i class="fas fa-funnel-dollar"></i></span>
                                             <input type="number" id="score_limit" name="score_limit"
                                                    class="form-control"
-                                                   v-bind:value="formItems.score_limit"
+                                                   v-model:value="formItems.score_limit"
                                                    placeholder="سقف امتیاز">
                                         </div>
                                     </div>
@@ -444,7 +444,8 @@
             console.log('parent.indexForEdit = ' + this.$parent.indexForEdit)
             console.log(this.data)
             this.csrf = window.Laravel.csrfToken
-            this.getFormInitData(0);
+            // this.getFormInitData(0);
+            this.getCardPreNumber()
             this.populateFormInputIfIsForEdit()
             if (this.$parent.indexForEdit >= 0) {
                 this.is_it_new_registration = 'false';

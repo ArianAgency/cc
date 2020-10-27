@@ -39,7 +39,7 @@
                             <td>
                                 {{$parent.splitedCardNumber(user.card_number,4)}}
                             </td>
-                            <td v-bind:id="'sw_lb_'+ user.id_users">
+                            <td v-bind:id="'sw_lb_'+ user.id_users" >
                                 <span v-if=" user.is_active == 1 " class="badge badge-success">فعال</span>
                                 <span v-else class="badge badge-secondary">غیر فعال</span>
                             </td>
@@ -50,11 +50,13 @@
                                 <span class="switch-label" data-on="On" data-off="Off"></span>
                                 <span class="switch-handle"></span>
                             </label></td>
-                            <th v-on:click="$parent.indexForEdit = index ,$parent.view = 'add',$parent.pageTitle = 'ویرایش اطلاعات کاربر'">
-                                <a href="#">
+                            <th v-if="$parent.user.role_id < user.role_id" v-on:click="$parent.indexForEdit = index ,$parent.view = 'add',$parent.pageTitle = 'ویرایش اطلاعات کاربر'"
+                                >
+                                <a  href="#">
                                     <i class="fa fa-edit"/>
                                 </a>
                             </th>
+                            <th v-else><i class="fa fa-edit"/> </th>
                         </tr>
 
 
@@ -138,6 +140,7 @@
                 var label_id = event.target.id.substring(0, 3) + 'lb_' + id_user;
                 console.log('label_id : ' + label_id);
                 console.log('id_user : ' + id_user);
+
 
                 axios.post('/admin-panel/user', {
                     action: 'is_active',
