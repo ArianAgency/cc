@@ -256,8 +256,8 @@ class AdminController extends Controller
         error_log('user_get_this - ');
         $get_this = $request['this'];
         $availableCardNumber = '';
-        $userDetail='';
-        $businessesIndex='';
+        $userDetail = '';
+        $businessesIndex = '';
         error_log('$get_this = ' . $get_this);
 
         switch ($get_this) {
@@ -274,11 +274,11 @@ class AdminController extends Controller
                 if (count($lastCardNumber) > 0) {
                     $availableCardNumber = $lastCardNumber[0]->card_number + 1;
                 } else {
-                    $cardPreNumberOfBusiness = DB::table('businesses')->where('id_businesses','=',$businessID)
+                    $cardPreNumberOfBusiness = DB::table('businesses')->where('id_businesses', '=', $businessID)
                         ->get('card_pre_number');
                     $cardPreNumberOfBusiness = $cardPreNumberOfBusiness[0]->card_pre_number;
-                    error_log('$cardPreNumberOfBusiness  = '.$cardPreNumberOfBusiness);
-                    $availableCardNumber = $cardPreNumberOfBusiness.'000000000001';
+                    error_log('$cardPreNumberOfBusiness  = ' . $cardPreNumberOfBusiness);
+                    $availableCardNumber = $cardPreNumberOfBusiness . '000000000001';
                 }
 
                 break;
@@ -321,9 +321,9 @@ class AdminController extends Controller
                 return Response(['status' => 'Done', 'user' => $userDetail], 200);
                 break;
         }
-        error_log('End of user_get_this - '.$get_this);
-        error_log('$availableCardNumber = '.$availableCardNumber);
-        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber,'user' => $userDetail, 'businessesIndex' => $businessesIndex], 200);
+        error_log('End of user_get_this - ' . $get_this);
+        error_log('$availableCardNumber = ' . $availableCardNumber);
+        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber, 'user' => $userDetail,'roles'=>$roles, 'businessesIndex' => $businessesIndex], 200);
     }
 
     public function user_new(Request $request)
@@ -362,7 +362,7 @@ class AdminController extends Controller
         $score = $request->score;
         $businesse_id = $request->businesse_id;
         $role_id = $request->role_id;
-        $password = password_hash($request->password, PASSWORD_DEFAULT);
+        $password = $request->password;
 
         $bank_account = $request->bank_account;
 
@@ -394,7 +394,11 @@ class AdminController extends Controller
         if (strlen($businesse_id) == 0) {
             $businesse_id = 1;
         }
-
+        if (strlen($password)) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+        } else {
+            $password = password_hash('secret', PASSWORD_DEFAULT);
+        }
         if (strlen($card_number) == 0) {
             $lastCardNumber = DB::table('customers')->where('card_number', 'like', '90%')
                 ->orderBy('created_at', 'desc')->get('card_number');
@@ -540,6 +544,7 @@ class AdminController extends Controller
         $name = $request->name;
         $family = $request->family;
         $father_name = $request->father_name;
+        $national_code = $request->national_code;
         $gender = $request->gender;
         $mobile = $request->mobile;
         $mobile_verified_at = $request->mobile_verified_at;
@@ -561,7 +566,7 @@ class AdminController extends Controller
         $bank_account = $request->bank_account;
         $wallet = $request->wallet;
         $score = $request->score;
-        $password = password_hash($request->password, PASSWORD_DEFAULT);
+        $password = $request->password;
 
         $customer_ip = $_SERVER['REMOTE_ADDR'];
 
@@ -588,7 +593,11 @@ class AdminController extends Controller
         if (strlen($score) == 0) {
             $score = 0;
         }
-
+        if (strlen($password)) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+        } else {
+            $password = password_hash('secret', PASSWORD_DEFAULT);
+        }
 
         if (strlen($card_number) == 0) {
             $lastCardNumber = DB::table('customers')->where('card_number', 'like', '90%')
@@ -605,7 +614,7 @@ class AdminController extends Controller
             }
         }
 
-        $query = "CALL sp_register_new_customer  ($is_it_new_registration,'$name', '$family', '$father_name', '$gender', '$mobile', '$phone', '$email',
+        $query = "CALL sp_register_new_customer  ($is_it_new_registration,'$name', '$family', '$father_name','$national_code', '$gender', '$mobile', '$phone', '$email',
                                  '$have_social', '$birthday', '$marriage_status', $wedding_anniversary, '$education', '$field', '$address',
                                  '$registration_origin', '$website', '$finding_way', '$job','$card_number','$wallet','$score',
                                  '$customer_ip', '$password')";

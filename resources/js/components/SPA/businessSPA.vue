@@ -17,8 +17,8 @@
             </div>
         </template>
     </businesses-table-component>
-    <new-business-creation-form v-else-if="view==='add'">
 
+    <new-business-creation-form v-else-if="view==='add'">
         <template slot="header">
             <div class="card-header">
                 <div class="mytitle">
@@ -93,6 +93,8 @@
         mounted: function () {
             console.log('Business SPA mounted.')
             this.csrf = window.Laravel.csrfToken;
+            console.log('csrf = ')
+            console.log(this.csrf)
         },
         created: function () {
             console.log('Business SPA created.')

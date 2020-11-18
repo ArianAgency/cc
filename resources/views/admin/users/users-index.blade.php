@@ -12,7 +12,6 @@
     <script type="application/javascript">
     var Laravel = {
             'csrfToken': '{{csrf_token()}}'
-
         };
         // console.log('Laravel = ' + Laravel['csrfToken'])
 

@@ -3,169 +3,296 @@
         <div class="animated fadeIn">
             <div class="card div-body">
                 <slot name="header"></slot>
-                <form action="" method="post" ref="form" name="xsens_new_form" autocomplete="on">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <div class="input-group-prepend ">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                        <div class="input-group">
-                                            <input type="text" id="x_sens_name_fa" name="x_sens_name_fa"
-                                                   class="form-control"
-                                                   v-model="(indexForEdit>-1 ) ? formItems.x_sens_name_fa : NewformItems.x_sens_name_fa"
-                                                   placeholder="نام">
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
-                                            <input type="text" id="x_sens_name_en" name="x_sens_name_en"
-                                                   class="form-control"
-                                                   v-model="(indexForEdit>-1 ) ? formItems.x_sens_name_en:NewformItems.x_sens_name_en"
-                                                   placeholder="En Name">
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
-                                            <input type="text" id="3" name="business" class="form-control"
-                                                   v-model="(indexForEdit>-1) ? formItems.business_name : $parent.user.business.brand_name"
-                                                   readonly
-                                                   placeholder="کسب و کار مربوط">
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i
-                                                class="fab fa-internet-explorer"></i></span>
-                                            <input type="text" id="33" name="creator_user"
-                                                   class="form-control "
-                                                   v-model="(indexForEdit>-1) ? formItems.creator_user_name : $parent.user.name"
-                                                   placeholder="کاربر ایجاد کننده" readonly>
+                <ValidationObserver v-slot="{invalid, handleSubmit }">
+                    <form ref="form" @submit.prevent="handleSubmit(xsens_new_form_submit($event))">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-body">
+
+                                    <!--name & x_sens_name_en & business & creator_user-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend ">
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-user"></i></span>
+                                                        <input type="text" id="name" name="name" class="form-control"
+                                                               v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.name:NewformItems.name"
+                                                               placeholder="نام"></div>
+                                                    <p class="invalid-feedback d-inline-block mr-2"
+                                                       v-show="errors">{{ errors[0]}}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="x_sens_name_en" name="x_sens_name_en"
+                                                               class="form-control"
+                                                               v-model="(indexForEdit>-1 ) ? formItems.x_sens_name_en:NewformItems.x_sens_name_en"
+                                                               placeholder="En Name">
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="3" name="business" class="form-control"
+                                                               v-model="(indexForEdit>-1) ? formItems.business_name : $parent.user.business.brand_name"
+                                                               readonly
+                                                               placeholder="کسب و کار مربوط">
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="33" name="creator_user"
+                                                               class="form-control "
+                                                               v-model="(indexForEdit>-1) ? formItems.creator_user_name : $parent.user.name"
+                                                               placeholder="کاربر ایجاد کننده" readonly>
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="input-group-prepend ">
-                                        <span class="input-group-text"><i class="fas fa-search-location"></i></span>
-                                        <div class="input-group">
-                                            <input type="text" id="business" name="business" class="form-control"
-                                                   v-model="(indexForEdit>-1) ? formItems.business_name : $parent.user.business.brand_name"
-                                                   readonly
-                                                   placeholder="کسب و کار مربوط">
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i
-                                                class="fab fa-internet-explorer"></i></span>
-                                            <input type="text" id="creator_user" name="creator_user"
-                                                   class="form-control "
-                                                   v-model="(indexForEdit>-1) ? formItems.creator_user_name : $parent.user.name"
-                                                   placeholder="کاربر ایجاد کننده" readonly>
-                                        </div>
-                                        <span class="input-group-addon"></span>
-                                        <span class="input-group-text"><i
-                                            class="fab fa-creative-commons-zero"></i></span>
-                                        <input type="text" id="created_at" name="created_at" class="form-control"
-                                               v-model="indexForEdit >= 0 ? formItems.created_at  : NewformItems.created_at"
-                                               readonly
-                                               placeholder="تاریخ ایجاد">
-                                        <span class="input-group-addon"></span>
-                                        <div class="input-group-prepend col-3">
-                                            <span class="input-group-text"><i class="fas fa-trash"></i></span>
-                                            <input type="text" id="expire_at" name="expire_at" class="form-control "
-                                                   v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
-                                                   placeholder="تاریخ انقضا">
-                                            <date-picker
-                                                v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
-                                                element="expire_at"
-                                                format="YYYY-MM-DD"></date-picker>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <div class="input-group-prepend ">
-                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                        <div class="input-group">
-                                            <select id="first_chord_id" name="first_chord_id"
-                                                    class="form-control h-100 ">
-                                                <option value="0"
-                                                        v-bind:selected="$parent.indexForEdit < 0">نت آغازین
-                                                </option>
-                                                <template v-for="chord in $parent.data.chords">
-                                                    <option v-if="chord.chord_allowed == '1' "
-                                                            v-bind:value="chord.id_chords"
-                                                            :selected="formItems.first_chord_id === chord.id_chords">
-                                                        {{ chord.chord_name_fa }}
-                                                    </option>
-                                                </template>
-                                            </select>
-
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
-                                            <select id="mid_chord_id" name="mid_chord_id" class="form-control h-100 ">
-                                                <option value="0"
-                                                        v-bind:selected="$parent.indexForEdit < 0">نت میانی
-                                                </option>
-                                                <template v-for="chord in $parent.data.chords">
-                                                    <option v-if="chord.chord_allowed == '2' "
-                                                            v-bind:value="chord.id_chords"
-                                                            :selected="formItems.mid_chord_id === chord.id_chords">
-                                                        {{ chord.chord_name_fa }}
-                                                    </option>
-                                                </template>
-                                            </select>
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
-                                            <select id="last_chord_id" name="last_chord_id" class="form-control h-100"
-                                                    @change="handleChange">
-                                                <option value="0"
-                                                        v-bind:selected="$parent.indexForEdit < 0">نت پایانی
-                                                </option>
-                                                <template v-for="chord in $parent.data.chords">
-                                                    <option v-if="chord.chord_allowed == '3' "
-                                                            v-bind:value="chord.id_chords"
-                                                            :selected="formItems.last_chord_id === chord.id_chords">
-                                                        {{ chord.chord_name_fa }}
-                                                    </option>
-                                                </template>
-                                            </select>
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
-                                            <input type="text" id="off_chord" name="off_chord" class="form-control"
-                                                   v-model="(indexForEdit>-1 ) ? formItems.off_chord:NewformItems.off_chord"
-                                                   v-bind:readonly="!offChordIsEnabled"
-                                                   placeholder="نوت خارج">
+                                    <!--business & creator_user & created_at & expire_at-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend ">
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-user"></i></span>
+                                                        <input type="text" id="business" name="business"
+                                                               class="form-control"
+                                                               v-model="(indexForEdit>-1) ? formItems.business_name : $parent.user.business.brand_name"
+                                                               readonly
+                                                               placeholder="کسب و کار مربوط"></div>
+                                                    <p class="invalid-feedback d-inline-block mr-2"
+                                                       v-show="errors">{{ errors[0]}}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="creator_user" name="creator_user"
+                                                               class="form-control "
+                                                               v-model="(indexForEdit>-1) ? formItems.creator_user_name : $parent.user.name"
+                                                               placeholder="کاربر ایجاد کننده" readonly>
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="created_at" name="created_at"
+                                                               class="form-control"
+                                                               v-model="indexForEdit >= 0 ? formItems.created_at  : NewformItems.created_at"
+                                                               readonly
+                                                               placeholder="تاریخ ایجاد">
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="expire_at" name="expire_at"
+                                                               class="form-control "
+                                                               v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
+                                                               placeholder="تاریخ انقضا">
+                                                        <date-picker
+                                                            v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
+                                                            element="expire_at"
+                                                            format="YYYY-MM-DD"></date-picker>
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                    <!--first_chord_id & mid_chord_id & last_chord_id & off_chord-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend ">
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fas fa-book"></i></span>
+                                                        <select id="first_chord_id" name="first_chord_id"
+                                                                class="form-control h-100 "
+                                                                v-model="formItems.first_chord_id">
+                                                            <!--                                                            <option value="0"-->
+                                                            <!--                                                                    v-bind:selected="$parent.indexForEdit < 0">نت آغازین-->
+                                                            <!--                                                            </option>-->
+                                                            <template v-for="chord in $parent.data.chords">
+                                                                <option v-if="chord.chord_allowed == '1' "
+                                                                        v-bind:value="chord.id_chords"
+                                                                        :selected="formItems.first_chord_id === chord.id_chords">
+                                                                    {{ chord.chord_name_fa }}
+                                                                </option>
+                                                            </template>
+                                                        </select>
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fas fa-book"></i></span>
+                                                        <select id="mid_chord_id" name="mid_chord_id"
+                                                                class="form-control h-100 "
+                                                                v-model="formItems.mid_chord_id">
+                                                            <!--                                                            <option value="0"-->
+                                                            <!--                                                                    v-bind:selected="$parent.indexForEdit < 0">نت میانی-->
+                                                            <!--                                                            </option>-->
+                                                            <template v-for="chord in $parent.data.chords">
+                                                                <option v-if="chord.chord_allowed == '2' "
+                                                                        v-bind:value="chord.id_chords"
+                                                                        :selected="formItems.mid_chord_id === chord.id_chords">
+                                                                    {{ chord.chord_name_fa }}
+                                                                </option>
+                                                            </template>
+                                                        </select>
+                                                    </div>
 
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider :rules="!offChordIsEnabled?'required':''"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fas fa-book"></i></span>
+                                                        <select id="last_chord_id" name="last_chord_id"
+                                                                class="form-control h-100"
+                                                                @change="handleChange"
+                                                                v-model="formItems.last_chord_id">
+                                                            <option value="0"
+                                                                    v-bind:selected="$parent.indexForEdit < 0">نت پایانی
+                                                            </option>
+                                                            <template v-for="chord in $parent.data.chords">
+                                                                <option v-if="chord.chord_allowed == '3' "
+                                                                        v-bind:value="chord.id_chords"
+                                                                        :selected="formItems.last_chord_id === chord.id_chords">
+                                                                    {{ chord.chord_name_fa }}
+                                                                </option>
+                                                            </template>
+                                                        </select>
+
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="off_chord" name="off_chord"
+                                                               class="form-control"
+                                                               v-model="(indexForEdit>-1 ) ? formItems.off_chord:NewformItems.off_chord"
+                                                               v-bind:readonly="!offChordIsEnabled"
+                                                               placeholder="نوت خارج">
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--description-->
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
                                             <span class="input-group-text"><i
                                                 class="fas fa-audio-description"></i></span>
+                                            </div>
+                                            <textarea class="form-control flex-fill" id="description"
+                                                      placeholder="توضیحات"
+                                                      v-model="(indexForEdit>-1 ) ? formItems.description:NewformItems.description"
+                                                      name="description" rows="2"
+                                            />
                                         </div>
-                                        <textarea class="form-control flex-fill" id="description" placeholder="توضیحات"
-                                                  v-model="(indexForEdit>-1 ) ? formItems.description:NewformItems.description"
-                                                  name="description" rows="2"
-                                        />
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-7"></div>
-                                <div class="form-group form-actions col-2">
 
-                                    <button type="" class="btn btn-border btn-primary  w-100"
-                                            v-on:click="xsens_new_form_new($event)">
-                                        <i class="far fa-file-alt ml-2"></i>جدید
-                                    </button>
                                 </div>
-                                <div class="form-group form-actions col-2 ml-2">
-                                    <button type="submit" class="btn btn-border btn-success  w-100"
-                                            v-on:click="xsens_new_form_submit($event)">
-                                        <i class="fa fa-check-circle ml-2"></i>ثبت
-                                    </button>
+                                <div class="row">
+                                    <div class="col-7"></div>
+                                    <div class="form-group form-actions col-2">
+
+                                        <button type="" class="btn btn-border btn-primary  w-100"
+                                                v-on:click="xsens_new_form_new($event)">
+                                            <i class="far fa-file-alt ml-2"></i>جدید
+                                        </button>
+
+                                    </div>
+                                    <div class="form-group form-actions col-2 ml-2">
+                                        <button type="submit" value="submit" class="btn btn-border btn-success  w-75"
+                                                v-bind:disabled="invalid">
+                                            <i class="fa fa-check-circle ml-1"></i>ثبت
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </ValidationObserver>
             </div>
         </div>
     </div>
@@ -197,8 +324,15 @@
         },
         methods: {
 
-            xsens_new_form_submit: function (event) {
-                event.preventDefault()
+            async xsens_new_form_submit(event) {
+
+                const isValid = await this.$refs.observer.validate();
+
+                if (!isValid) {
+                    // ABORT!!
+                    swal("نا تمام!", "لطفا همه گزینه های اجباری را پر کنید", "error");
+                    return
+                }
                 const formData = new FormData(this.$refs['form']); // reference to form element
                 this.NewformItems.price = this.NewformItems.price + '.00'
                 const data = {}; // need to convert it before using not with XMLHttpRequest
@@ -221,7 +355,8 @@
                 axios.post('/admin-panel/xsens/new', data)
                     .then(response => {
                         console.log(response)
-                        alert('با موفقیت ثبت شد')
+                        swal("تمام!", "با موفقیت ثبت شد", "success");
+                        this.$refs.observer.reset();
                         this.setToNewForm();
                     })
                     .catch(e => {
@@ -229,7 +364,7 @@
                         // console.log(e)
                         // console.log('e.response.data.code = ' + e.response.data.code)
                         if (e.response.data.code == 2) {
-                            alert('Duplication error')
+                            swal("نا تمام!", "با خطا مواجه شد", "error");
                         } else {
                             alert('error')
                         }

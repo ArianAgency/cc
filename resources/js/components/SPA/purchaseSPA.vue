@@ -11,10 +11,12 @@
                         </div>
                     </div>
                     <div class="row justify-content-between">
-                        <div class="form-group col-7 mt-2 mr-2">
+                        <div class="form-group col-9 mt-2 mr-2">
                             <div class="form-group">
                                 <div class="controls">
                                     <div class="input-group">
+
+                                        <!--mobile-->
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
@@ -28,7 +30,10 @@
                                                     v-on:click.prevent="getUserData($event)">برو!
                                             </button>
                                         </div>
+
                                         <span class="input-group-addon"></span>
+
+                                        <!--wallet_percent-->
                                         <span class="input-group-text"><i class="fas fa-percent"></i></span>
                                         <input type="number" min="0" id="wallet_percent" name="wallet_percent"
                                                class="form-control "
@@ -37,14 +42,30 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">کیف پول</span>
                                         </div>
+
+<!--                                        <span class="input-group-addon"></span>-->
+
+<!--                                        &lt;!&ndash;score_percent&ndash;&gt;-->
+<!--                                        <span class="input-group-text"><i class="fas fa-percent"></i></span>-->
+<!--                                        <input type="number" min="0" max="100" id="score_percent" name="score_percent"-->
+<!--                                               class="form-control "-->
+<!--                                               v-model="preferredPercents.score"-->
+<!--                                               placeholder="درصد ترجیحی از امتیاز">-->
+<!--                                        <div class="input-group-prepend">-->
+<!--                                            <span class="input-group-text">امتیاز</span>-->
+<!--                                        </div>-->
+
                                         <span class="input-group-addon"></span>
-                                        <span class="input-group-text"><i class="fas fa-percent"></i></span>
-                                        <input type="number" min="0" id="score_percent" name="score_percent"
+
+                                        <!--remain_cash-->
+                                        <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
+                                        <input type="text" min="0" id="remain_cash" name="score_percent"
                                                class="form-control "
-                                               v-model="preferredPercents.score"
-                                               placeholder="درصد ترجیحی از امتیاز">
+                                               :value="remainCash"
+                                               readonly="true"
+                                               placeholder="0.00">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text">امتیاز</span>
+                                            <span class="input-group-text">تومان</span>
                                         </div>
                                     </div>
                                 </div>
@@ -197,6 +218,9 @@
                 preferredPercents: {
                     score: 0,
                     wallet: 0
+                },
+                cash: {
+                    remain: 0.00
                 }
             }
         },
@@ -279,6 +303,7 @@
                         break;
                     case 'remove':
                         this.shoppingBasket.splice(serviceIndex, 1)
+                        this.calculateTotalPrice();
                         break;
                 }
                 console.log(this.shoppingBasket)
@@ -306,11 +331,11 @@
 
                 axios.post('/admin-panel/purchase/doPurchase', JSON.stringify(purchaseData))
                     .then(response => {
-                        alert('با موفقیت انجام شد')
+                        swal("تمام!", "با موفقیت ثبت شد", "success");
                         this.clearItems()
                     })
                     .catch(e => {
-                        // this.errors.push(e)
+                        swal("نا تمام!", "با خطا مواجه شد", "error");
                         console.log(e)
                     })
             },
@@ -330,6 +355,23 @@
         created: function () {
             console.log('Purchase SPA created.')
             this.getServiceData('/admin-panel/purchase/get/purchaseList')
+        },
+        computed: {
+            remainCash: function () {
+                console.log('Before this.cash.remain = ' + this.cash.remain)
+                this.totalPrice.string
+                if (this.preferredPercents.wallet <= 100) {
+                    console.log('this.preferredPercents.wallet <= 100 ')
+                    this.cash.remain = this.totalPrice.int - ((this.totalPrice.int * (this.preferredPercents.score / 100)) + (this.totalPrice.int * (this.preferredPercents.wallet / 100)))
+                } else {
+                    console.log('this.preferredPercents.wallet > 100 ')
+                    this.cash.remain = this.totalPrice.int - ((this.totalPrice.int * (this.preferredPercents.score / 100)) + ((this.preferredPercents.wallet)))
+                }
+                this.cash.remain =  Math.round(this.cash.remain)
+                console.log('After this.cash.remain = ' + this.cash.remain)
+                return this.numberWithCommas(this.cash.remain)
+
+            }
         }
     }
 

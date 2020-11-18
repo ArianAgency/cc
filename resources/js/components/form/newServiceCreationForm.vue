@@ -3,123 +3,191 @@
         <div class="animated fadeIn">
             <div class="card div-body">
                 <slot name="header"></slot>
-                <form action="" method="post" ref="form" name="customer_new_form" autocomplete="on">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <div class="input-group-prepend ">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                        <div class="input-group">
-                                            <input type="text" id="name" name="name" class="form-control"
-                                                   v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.name:NewformItems.name"
-                                                   placeholder="نام">
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
-                                            <input type="text" id="sync_code" name="sync_code" class="form-control"
-                                                   v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.sync_code:NewformItems.sync_code"
-                                                   placeholder="کد همگام سازی">
+                <ValidationObserver v-slot="{invalid, handleSubmit }">
+                    <form ref="form" @submit.prevent="handleSubmit(service_new_form_submit($event))">
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card-body">
+
+                                    <!--name & sync_code-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend ">
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-user"></i></span>
+                                                        <input type="text" id="name" name="name" class="form-control"
+                                                               v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.name:NewformItems.name"
+                                                               placeholder="نام"></div>
+                                                    <p class="invalid-feedback d-inline-block mr-2"
+                                                       v-show="errors">{{ errors[0]}}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="sync_code" name="sync_code"
+                                                               class="form-control"
+                                                               v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.sync_code:NewformItems.sync_code"
+                                                               placeholder="کد همگام سازی">
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="input-group-prepend ">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                        <div class="input-group">
-                                            <input type="text" id="price" name="price" class="form-control"
-                                                   v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.price:NewformItems.price"
-                                                   placeholder="قیمت">
+                                    <!--price-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend ">
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="digits|required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="price" name="price" class="form-control"
+                                                               v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.price:NewformItems.price"
+                                                               placeholder="قیمت">
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
+                                    <!--description-->
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
                                             <span class="input-group-text"><i
                                                 class="fas fa-audio-description"></i></span>
-                                        </div>
-                                        <textarea class="form-control flex-fill" id="description" placeholder="توضیحات"
-                                                  v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.description:NewformItems.description"
-                                                  name="description" rows="2"
-                                        />
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <div class="input-group-prepend ">
-                                        <span class="input-group-text"><i class="fas fa-search-location"></i></span>
-                                        <div class="input-group">
-                                            <input type="text" id="business" name="business" class="form-control"
-                                                   v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.business.brand_name : $parent.user.business.brand_name"
-                                                   readonly
-                                                   placeholder="کسب و کار مربوط">
-                                            <span class="input-group-addon"></span>
-                                            <span class="input-group-text"><i
-                                                class="fab fa-internet-explorer"></i></span>
-                                            <input type="text" id="creator_user" name="creator_user"
-                                                   class="form-control "
-                                                   v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.user.name : $parent.user.name"
-                                                   placeholder="کاربر ایجاد کننده" readonly>
+                                            </div>
+                                            <textarea class="form-control flex-fill" id="description"
+                                                      placeholder="توضیحات"
+                                                      v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.description:NewformItems.description"
+                                                      name="description" rows="2"
+                                            />
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                                <span class="input-group-text"><i
-                                                    class="fab fa-creative-commons-zero"></i></span>
-                                        </div>
 
-                                        <input type="text" id="created_at" name="created_at" class="form-control"
-
-                                               v-model="indexForEdit >= 0 ? formItems.created_at  : NewformItems.created_at"
-                                               readonly
-                                               placeholder="تاریخ ایجاد">
-
-                                        <span class="input-group-addon"></span>
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-trash"></i></span>
-                                            <input type="text" id="expire_at" name="expire_at" class="form-control"
-                                                   v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
-                                                   placeholder="تاریخ انقضا">
-                                            <date-picker
-                                                v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
-                                                element="expire_at"
-                                                format="YYYY-MM-DD"></date-picker>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-7"></div>
-                        <div class="form-group form-actions col-2">
+                            <div class="col-6">
+                                <div class="card-body">
 
-                            <button type="" class="btn btn-border btn-primary  w-100"
-                                    v-on:click="service_new_form_new($event)">
-                                <i class="far fa-file-alt ml-2"></i>جدید
-                            </button>
+                                    <!--business & creator_user-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend ">
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-user"></i></span>
+                                                        <input type="text" id="business" name="business"
+                                                               class="form-control"
+                                                               v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.business.brand_name : $parent.user.business.brand_name"
+                                                               readonly
+                                                               placeholder="کسب و کار مربوط"></div>
+                                                    <p class="invalid-feedback d-inline-block mr-2"
+                                                       v-show="errors">{{ errors[0]}}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                            <span class="input-group-text"><i
+                                                                class="fa fa-venus-mars"></i></span>
+                                                        <input type="text" id="creator_user" name="creator_user"
+                                                               class="form-control "
+                                                               v-model="(indexForEdit>-1 && getAllDataForServiceEditReady) ? formItems.user.name : $parent.user.name"
+                                                               placeholder="کاربر ایجاد کننده" readonly>
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--created_at & expire_at-->
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <div class="mydiv">
+                                                <div class="myinput">
+                                                    <span class="input-group-text"><i
+                                                        class="fab fa-instagram"></i></span>
+                                                    <input type="text" id="created_at" name="created_at"
+                                                           class="form-control"
+
+                                                           v-model="indexForEdit >= 0 ? formItems.created_at  : NewformItems.created_at"
+                                                           readonly
+                                                           placeholder="تاریخ ایجاد">
+                                                </div>
+
+                                            </div>
+                                            <div class="mydiv">
+                                                <ValidationProvider rules="required"
+                                                                    v-slot="{ errors }">
+                                                    <div class="myinput">
+                                                           <span class="input-group-text"><i
+                                                               class="fa fa-birthday-cake"></i></span>
+                                                        <input type="text" id="expire_at" name="expire_at"
+                                                               class="form-control"
+                                                               v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
+                                                               placeholder="تاریخ انقضا">
+                                                        <date-picker
+                                                            v-model="indexForEdit >= 0 ? formItems.expire_at :NewformItems.expire_at "
+                                                            element="expire_at"
+                                                            format="YYYY-MM-DD"></date-picker>
+                                                    </div>
+                                                    <p class="invalid-feedback d-inline-block mr-2 "
+                                                       v-show="errors">{{ errors[0] }}
+                                                    </p>
+                                                </ValidationProvider>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group form-actions col-2 ml-2">
-                            <button type="submit" class="btn btn-border btn-success  w-100"
-                                    v-on:click="service_new_form_submit($event)">
-                                <i class="fa fa-check-circle ml-2"></i>ثبت
-                            </button>
+                        <div class="row">
+                            <div class="col-7"></div>
+                            <div class="form-group form-actions col-2">
+
+                                <button type="" class="btn btn-border btn-primary  w-100"
+                                        v-on:click="service_new_form_new($event)">
+                                    <i class="far fa-file-alt ml-2"></i>جدید
+                                </button>
+                            </div>
+                            <div class="form-group form-actions col-2 ml-2">
+                                <button type="submit" value="submit" class="btn btn-border btn-success  w-75"
+                                        v-bind:disabled="invalid">
+                                    <i class="fa fa-check-circle ml-1"></i>ثبت
+                                </button>
+                            </div>
+
                         </div>
 
-                    </div>
-
-                </form>
+                    </form>
+                </ValidationObserver>
             </div>
         </div>
     </div>
@@ -151,8 +219,16 @@
             }
         },
         methods: {
-            service_new_form_submit: function (event) {
-                event.preventDefault()
+            async service_new_form_submit(event) {
+
+                const isValid = await this.$refs.observer.validate();
+
+                if (!isValid) {
+                    // ABORT!!
+                    swal("نا تمام!", "لطفا همه گزینه های اجباری را پر کنید", "error");
+                    return
+                }
+
                 const formData = new FormData(this.$refs['form']); // reference to form element
                 this.NewformItems.price = this.NewformItems.price + '.00'
                 const data = {}; // need to convert it before using not with XMLHttpRequest
@@ -176,7 +252,8 @@
                 axios.post('/admin-panel/service/new', data)
                     .then(response => {
                         console.log(response)
-                        alert('با موفقیت ثبت شد')
+                        swal("تمام!", "با موفقیت ثبت شد", "success");
+                        this.$refs.observer.reset();
                         this.setToNewForm();
                     })
                     .catch(e => {
@@ -184,7 +261,7 @@
                         // console.log(e)
                         // console.log('e.response.data.code = ' + e.response.data.code)
                         if (e.response.data.code == 2) {
-                            alert('Duplication error')
+                            swal("نا تمام!", "با خطا مواجه شد", "error");
                         } else {
                             alert('error')
                         }

@@ -39,15 +39,15 @@
                             <td>
                                 {{$parent.splitedCardNumber(user.card_number,4)}}
                             </td>
-                            <td v-bind:id="'sw_lb_'+ user.id_users" >
+                            <td v-bind:id="'sw_lb_'+ user.id_users"  >
                                 <span v-if=" user.is_active == 1 " class="badge badge-success">فعال</span>
                                 <span v-else class="badge badge-secondary">غیر فعال</span>
                             </td>
-                            <td><label class="switch switch-text switch-pill switch-info-outline-alt">
+                            <td ><label class="switch switch-text switch-pill switch-info-outline-alt" v-if="$parent.user.role_id < user.role_id">
                                 <input type="checkbox" class="switch-input" v-bind:checked="user.is_active"
                                        v-bind:id="'sw_'+user.id_users"
                                        v-on:click="check($event,user.id_users)">
-                                <span class="switch-label" data-on="On" data-off="Off"></span>
+                                <span class="switch-label" data-on="On" data-off="Off" ></span>
                                 <span class="switch-handle"></span>
                             </label></td>
                             <th v-if="$parent.user.role_id < user.role_id" v-on:click="$parent.indexForEdit = index ,$parent.view = 'add',$parent.pageTitle = 'ویرایش اطلاعات کاربر'"

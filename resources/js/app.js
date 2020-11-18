@@ -8,6 +8,49 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import Vue from 'vue';
+import {ValidationProvider, extend, localize,ValidationObserver} from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+
+localize('fa', fa);
+Object.keys(rules).forEach(rule => {
+    extend(rule, rules[rule]);
+});
+
+import fa from 'vee-validate/dist/locale/fa.json';
+
+
+localize({
+    fa: {
+        names: {
+            name: 'نام',
+            password: 'Password',
+            family:'نام خانوادگی',
+            father_name:'نام پدر',
+            gender:'جنسیت',
+            mobile:'موبایل',
+            phone:'تلفن',
+            email:'ایمیل'
+
+        }
+    },
+});
+
+// Add a rule.
+// extend('secret', {
+//     validate: value => value === 'example',
+//     message: 'این کامه جادویی نیست'
+// });
+
+
+
+// Register it globally
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
+
+import swal from 'sweetalert'
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
