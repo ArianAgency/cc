@@ -6,6 +6,13 @@
 
                 <slot name="header"></slot>
                 <div class="card-body">
+                    <autocomplete
+                        :search="search"
+                        placeholder="مشتری را جستجو کنید"
+                        :get-result-value="getResultValue"
+                        :debounce-time="500"
+                        @submit="handleSearchSubmit"
+                    ></autocomplete>
                     <table class="table table-responsive-sm table-striped mytable">
                         <thead>
                         <tr>
@@ -24,7 +31,7 @@
 
                         <tbody class="animated fadeIn">
 
-                        <tr v-for="(customer,index) in $parent.data.data">
+                        <tr v-for="(customer,index) in data.data">
 
                             <td>{{index +1}}</td>
 
@@ -113,14 +120,10 @@
                 is_active_label: '',
                 data: '',
                 posts: [],
+                filterForCustomerSearch: ['name', 'family']
             }
         },
         methods: {
-            alert1() {
-                // alert('bhdsjakl;scvmnbfvdnsam,lcm vnbdnsmkqlsdmnvbfsdnwjqk');
-                // ???
-                alert(this.is_active_label)
-            },
             check(event, id_customer) {
                 const vm = this;
                 var status = event.target.checked;
@@ -157,12 +160,62 @@
                         console.log('error : ' + error);
                     });
             },
+            search(input) {
+                let searchResult;
+                if (input.length <= 2) {
+                    console.log('input.length <= 2')
+                    return []
+                }
+
+                console.log('input = ')
+                console.log(input)
+                return new Promise(resolve => {
+                    axios.get('/admin-panel/customer/get/customerByInput?input=' + input + '&filterForCustomerSearch=' + this.filterForCustomerSearch)
+                        .then(response => {
+                            console.log('response')
+                            console.log(response)
+                            searchResult = response.data.searchResult;
+                            resolve(searchResult)
+                            console.log('searchResult = ')
+                            console.log(searchResult)
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            searchResult = ['error']
+                        })
+
+                    // return new Promise(searchResult)
+
+
+                })
+            },
+            getResultValue(result) {
+                console.log('getResultValue')
+                console.log(result)
+                return result.name
+            },
+            handleSearchSubmit(result) {
+                console.log('You selected = ')
+                console.log(result)
+                console.log(this.data.data)
+                this.data.data = [];
+                if (typeof result !== 'undefined'){
+                    console.log('CHECK 1')
+                    this.data.data.push(result);
+                }else {
+                    console.log('CHECK 2')
+                    console.log( this.$parent.data)
+                    this.data = this.$parent.data
+                }
+            }
         },
         created: function () {
-            this.data = this.$parent.data
+
         },
         mounted: function () {
             console.log('CustomerTableComponent mounted.')
+            this.$parent.getCustomerData(`/admin-panel/customer/index?page=1`)
+            this.data = this.$parent.data
         },
     }
 </script>

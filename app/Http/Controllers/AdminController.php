@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business;
+use App\Category;
 use App\Customer;
 use App\Service;
 use App\User;
@@ -95,6 +96,7 @@ class AdminController extends Controller
         $get_this = $request['this'];
         $availableCardPreNumber = '';
         error_log($get_this);
+        $response = array();
 
         switch ($get_this) {
             case 'availableCardPreNumber':
@@ -103,6 +105,14 @@ class AdminController extends Controller
                 $availableCardPreNumber = ($availableCardPreNumber->card_pre_number) + 1;
                 error_log('$availableCardPreNumber  = ');
                 error_log($availableCardPreNumber);
+                break;
+            case 'bussinessNameByID':
+                $businesse_id = $request->businesse_id;
+                $business = DB::table('businesses')->where('id_businesses', '=', $businesse_id)->get();
+                $response['company_name'] = $business[0]->company_name;
+//                error_log('company_name = ');
+//                error_log($response['company_name']);
+                return Response(['status' => 'Done', 'response' => $response], 200);
                 break;
         }
 
@@ -258,6 +268,8 @@ class AdminController extends Controller
         $availableCardNumber = '';
         $userDetail = '';
         $businessesIndex = '';
+        $roles = '';
+        $response = array();
         error_log('$get_this = ' . $get_this);
 
         switch ($get_this) {
@@ -280,7 +292,6 @@ class AdminController extends Controller
                     error_log('$cardPreNumberOfBusiness  = ' . $cardPreNumberOfBusiness);
                     $availableCardNumber = $cardPreNumberOfBusiness . '000000000001';
                 }
-
                 break;
             case 'formInitData':
 
@@ -320,10 +331,62 @@ class AdminController extends Controller
 //                error_log($userDetail);
                 return Response(['status' => 'Done', 'user' => $userDetail], 200);
                 break;
+            case 'userDetailByMobile':
+                $mobile = $request->mobile;
+                error_log('mobile = ');
+                error_log($mobile);
+                $user_detail = DB::table('users')->where('mobile', '=', $mobile)->get();
+                $response['userDetail'] = $user_detail[0];
+
+                $business = DB::table('businesses')->where('id_businesses', '=', $user_detail[0]->businesse_id)->get();
+                $response['business'] = $business[0]->brand_name;
+
+                break;
         }
         error_log('End of user_get_this - ' . $get_this);
-        error_log('$availableCardNumber = ' . $availableCardNumber);
-        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber, 'user' => $userDetail,'roles'=>$roles, 'businessesIndex' => $businessesIndex], 200);
+//        error_log('$availableCardNumber = ' . $availableCardNumber);
+        return Response(['status' => 'Done', 'response' => $response, 'availableCardNumber' => $availableCardNumber, 'user' => $userDetail, 'roles' => $roles, 'businessesIndex' => $businessesIndex], 200);
+    }
+
+    public function user_do_this_action(Request $request)
+    {
+        error_log('user_do_this_action -> ');
+        $do_this = $request['this'];
+        $status = '';
+        $response = array();
+
+        switch ($do_this) {
+            case 'promotionalCharge':
+                $id_target_user = $request['id_target_user'];
+                $id_creator_user = $userDetail = Auth::user()->id_users;
+                $wallet_charge = $request['wallet_charge'];
+                $score_charge = $request['score_charge'];
+                $description = $request['description'];
+                $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+                error_log('$request = ');
+                error_log($request);
+
+
+                $query = "CALL sp_charge_user_add ('$id_target_user', '$wallet_charge',
+                                    '$score_charge' ,'$description' ,'$id_creator_user' ,
+                                    '$creator_user_ip')";
+
+//                error_log('sp_charge_user_add -> $query = ' . $query);
+
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $status = 'Done';
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    $status = 'Failed';
+                }
+                break;
+        }
+        error_log('End of user_do_this - ' . $do_this);
+
+        return Response(['status' => $status, 'response' => $response,], 200);
     }
 
     public function user_new(Request $request)
@@ -391,6 +454,7 @@ class AdminController extends Controller
         if (strlen($score) == 0) {
             $score = 0;
         }
+        error_log('$businesse_id = ' . $businesse_id);
         if (strlen($businesse_id) == 0) {
             $businesse_id = 1;
         }
@@ -434,6 +498,22 @@ class AdminController extends Controller
             error_log('query error code= ' . $ex->getCode());
             return Response(['status' => 'error', 'code' => 2], 409);
         }
+    }
+
+    public function show_user_v_view(Request $request)
+    {
+        $view = $request['v'];
+        $viewInReturn = '';
+
+        error_log("show_" . $view . "_view");
+
+        switch ($view) {
+            case 'instant-charge':
+                $viewInReturn = 'admin.users.users-instant-charge';
+                break;
+
+        }
+        return view($viewInReturn);
     }
 
 //****************************************************************************User
@@ -500,17 +580,18 @@ class AdminController extends Controller
     {
         error_log('customer_get_this - ');
         $get_this = $request['this'];
-        $availableCardPreNumber = '';
         error_log($get_this);
 
         $response = array();
         $response['status'] = 'Done';
 
         switch ($get_this) {
-            case 'availableCardNumber':
+            case 'getFormInitData': //availableCardNumber
+                $businessID = $request->businessID;
+
                 $lastCardNumber = DB::table('customers')->where('card_number', 'like', '90%')
                     ->orderBy('created_at', 'desc')->get('card_number');
-                error_log('$lastCardNumber = ' . $lastCardNumber);
+                error_log('lastCardNumber = ' . $lastCardNumber);
                 error_log('count($lastCardNumber) = ' . count($lastCardNumber));
                 if (count($lastCardNumber) > 0) {
                     $availableCardNumber = $lastCardNumber[0]->card_number + 1;
@@ -518,13 +599,101 @@ class AdminController extends Controller
                     $availableCardNumber = '9009000000000001';
                 }
                 $response['availableCardNumber'] = $availableCardNumber;
+
+                $categories = DB::table('category')->where('id_business', $businessID)
+                    ->get(['id_category', 'category_name']);
+                $response['categories'] = $categories;
+
                 break;
             case 'getAllDetail':
                 $id_customers = $request['id_customers'];
                 $customerDetail = DB::table('customers')->where('id_customers', '=', $id_customers);
                 $response['customerDetail'] = $customerDetail;
                 break;
+            case 'customerDetailByMobile':
+                $mobile = $request->mobile;
+                error_log('mobile = ');
+                error_log($mobile);
+
+                $customer_detail = DB::table('customers')->where('mobile', '=', $mobile)->get();
+//                $customer_detail = DB::table('customers')->where('id_customers', '=', 1)->get();
+                $response['customerDetail'] = $customer_detail[0];
+
+
+                $business = DB::table('businesses')->where('id_businesses', '=', $customer_detail[0]->registration_origin)->get();
+                $response['business'] = $business[0]->brand_name;
+
+                break;
+            case 'categories':
+                $category = DB::table('category')->paginate(10);
+                $response['response'] = $category;
+                break;
+            case 'categoriesByBusiness':
+                $userBusinessID = Auth::user()->businesse_id;
+                $filter = ($request->filter) . '%';
+                error_log('$filter');
+                error_log($filter);
+                $category = DB::table('category')->where([['id_business', '=', $userBusinessID], ['category_name', 'LIKE', '%' . $filter . '%']])->get(['id_category', 'category_name']);
+//                $category = DB::table('category')->where(['id_business' => $userBusinessID, 'category_name' => $filter ])->get();
+                $response['categoriesByBusiness'] = $category;
+                break;
+            case 'tags':
+                $tag = DB::table('tag')->paginate(10);
+                $response['response'] = $tag;
+                break;
+            case 'tagsByBusiness':
+                $userBusinessID = Auth::user()->businesse_id;
+                $filter = ($request->filter) . '%';
+                error_log('$filter');
+                error_log($filter);
+                $category = DB::table('tag')->where([['id_business', '=', $userBusinessID], ['tag_name', 'LIKE', '%' . $filter . '%']])->get(['id_tag', 'tag_name']);
+//                $category = DB::table('category')->where(['id_business' => $userBusinessID, 'category_name' => $filter ])->get();
+                $response['tagsByBusiness'] = $category;
+                break;
+            case 'selectedCategoriesAndTags':
+                $userBusinessID = Auth::user()->businesse_id;
+                $id_customer = $request->id_customer;
+                $category = DB::table('customerSelectedCategoriesName')->where('id_customer', '=', $id_customer)->get();
+                $response['customerSelectedCategoriesName'] = $category;
+                $tag = DB::table('customerSelectedTagsName')->where('id_customer', '=', $id_customer)->get();
+                $response['customerSelectedTagsName'] = $tag;
+                break;
+            case 'customerByInput':
+                $userBusinessID = Auth::user()->businesse_id;
+                $input = $request->input;
+                $filterForCustomerSearch = explode(',', $request->filterForCustomerSearch);
+                $searchResult = array();
+//                error_log('$filterForCustomerSearch = ');
+//                error_log($filterForCustomerSearch[0] );
+                foreach ($filterForCustomerSearch as $filter) {
+                    $searchQueryResult = DB::table('customers')
+                        ->where($filter, 'like', '%' . $input . '%')
+                        ->get();
+                    error_log('CHECK 1');
+                    foreach ($searchQueryResult as $result) {
+                        if (count($searchResult) > 0) {
+
+                            error_log($result->id_customers);
+                            $index = array_search($result->id_customers, array_column($searchResult, "id_customers"));
+                            error_log($index);
+                            if ( false !== $index ) {
+                                error_log('if');
+                            } else {
+                                error_log('else');
+                                array_push($searchResult, $result);
+                            }
+                        } else {
+                            array_push($searchResult, $result);
+                        }
+                    }
+                }
+                $response['searchResult'] = $searchResult;
+                break;
+
         }
+
+        error_log('$response = ');
+        error_log(json_encode($response));
 
 //        return Response(['status' => 'Done', 'availableCardNumber' => $availableCardNumber], 200);
         return Response($response, 200);
@@ -567,6 +736,8 @@ class AdminController extends Controller
         $wallet = $request->wallet;
         $score = $request->score;
         $password = $request->password;
+        $categories = ($request->categories);
+        $tags = ($request->tags);
 
         $customer_ip = $_SERVER['REMOTE_ADDR'];
 
@@ -619,16 +790,258 @@ class AdminController extends Controller
                                  '$registration_origin', '$website', '$finding_way', '$job','$card_number','$wallet','$score',
                                  '$customer_ip', '$password')";
         error_log('sp_register_new_customer -> $query = ' . $query);
-
-        try {
-            $queryResult = DB:: select(DB::raw($query));
-            return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
-        } catch (\Illuminate\Database\QueryException $ex) {
+        if ($is_it_new_registration === 'true') {
+            try {
+                $queryResult = DB:: select(DB::raw($query));
+                error_log('query successfull');
+            } catch (\Illuminate\Database\QueryException $ex) {
 //            dd($ex->getMessage());
-            error_log('query error = ' . $ex->getMessage());
-            error_log('query error code= ' . $ex->getCode());
-            return Response(['status' => 'error', 'code' => 2], 409);
+                error_log('query error = ' . $ex->getMessage());
+                error_log('query error code= ' . $ex->getCode());
+                return Response(['status' => 'error', 'code' => 2], 409);
+            }
+            $id_customer = $queryResult[0]->id_customers;
+        } else {
+            $id_customer = $request->id_customer;
         }
+
+
+        error_log('$id_customer = ');
+        error_log($id_customer);
+        $categories = json_decode($categories, true);
+        $tags = json_decode($tags, true);
+//        error_log('$categories = ***');
+//        error_log($categories);
+//        error_log($categories[0]['id_category']);
+//        error_log('***');
+        error_log('count($categories) =');
+        error_log(count($categories));
+        error_log('count($tags) =');
+        error_log(count($tags));
+        if (count($categories) > 0) {
+            foreach ($categories as $category) {
+                error_log('customer_category_junction');
+                $id_category = $category['id_category'];
+                error_log('$id_category = ');
+                error_log($id_category);
+//            DB::table('customer_category_junction')->insert(["id_customer" => $id_customer, "id_category" => $id_category]);
+                $query = "CALL sp_customer_category_junction_add  ('$id_customer','$id_category')";
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    error_log('sp_customer_category_junction_add query successfull');
+
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+            }
+        } else {
+            $query = "CALL sp_customer_category_junction_add  ('$id_customer','0')";
+            try {
+                $queryResult = DB:: select(DB::raw($query));
+                error_log('sp_customer_category_junction_add query successfull');
+
+            } catch (\Illuminate\Database\QueryException $ex) {
+                error_log('query error = ' . $ex->getMessage());
+                error_log('query error code= ' . $ex->getCode());
+                return Response(['status' => 'error', 'code' => 2], 409);
+            }
+        }
+
+        if (count($tags) > 0) {
+            foreach ($tags as $tag) {
+                error_log('customer_tag_junction');
+                $id_tag = $tag['id_tag'];
+                error_log('$id_tag = ');
+                error_log($id_tag);
+//            DB::table('customer_tag_junction')->insert(["id_customer" => $id_customer, "id_tag" => $id_tag]);
+                $query = "CALL sp_customer_tag_junction_add  ('$id_customer','$id_tag')";
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    error_log('sp_customer_tag_junction_add query successfull');
+
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+            }
+        } else {
+            $query = "CALL sp_customer_tag_junction_add  ('$id_customer','0')";
+            try {
+                $queryResult = DB:: select(DB::raw($query));
+                error_log('sp_customer_tag_junction_add query successfull');
+
+            } catch (\Illuminate\Database\QueryException $ex) {
+                error_log('query error = ' . $ex->getMessage());
+                error_log('query error code= ' . $ex->getCode());
+                return Response(['status' => 'error', 'code' => 2], 409);
+            }
+        }
+
+
+//        return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
+        return Response(['status' => 'done', 'code' => 1, 'data' => 1], 200);
+    }
+
+    public function show_customer_v_view(Request $request)
+    {
+        $view = $request['v'];
+        $viewInReturn = '';
+
+        error_log("show_" . $view . "_view");
+
+        switch ($view) {
+            case 'instant-charge':
+                $viewInReturn = 'admin.customers.customers-instant-charge';
+                break;
+            case 'category':
+                $viewInReturn = 'admin.customers.customer-category';
+                break;
+            case 'tag':
+                $viewInReturn = 'admin.customers.customer-tag';
+                break;
+        }
+        return view($viewInReturn);
+    }
+
+    public function customer_do_this_action(Request $request)
+    {
+        error_log('customer_do_this_action -> ');
+        $do_this = $request['this'];
+
+        $response = array();
+        $status = '';
+
+        switch ($do_this) {
+            case 'promotionalCharge':
+                $id_target_customer = $request['id_target_customer'];
+                $id_creator_user = $userDetail = Auth::user()->id_users;
+                $wallet_charge = $request['wallet_charge'];
+                $score_charge = $request['score_charge'];
+                $description = $request['description'];
+                $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+                error_log('$request = ');
+                error_log($request);
+
+                $query = "CALL sp_charge_customer_add ('$id_target_customer', '$wallet_charge',
+                                    '$score_charge' ,'$description' ,'$id_creator_user' ,
+                                    '$creator_user_ip')";
+
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $status = 'Done';
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    $status = 'Failed';
+                }
+                break;
+            case 'createNewCategory':
+                $category_name = $request['category_name'];
+                $id_creator_user = Auth::user()->id_users;
+                $id_business = Auth::user()->businesse_id;
+                $description = $request['description'];
+                $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+
+                $query = "CALL sp_category_add('$category_name' , '$description' ,
+                                 '$id_creator_user' , '$id_business' ,
+                                 '$creator_user_ip' )";
+
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $status = 'Done';
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    $status = 'Failed';
+                }
+                break;
+            case 'editCategory':
+                $id_category = $request['id_category'];
+                $category_name = $request['category_name'];
+                $id_creator_user = Auth::user()->id_users;
+                $id_business = Auth::user()->businesse_id;
+                $description = $request['description'];
+                $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+
+                $query = "CALL sp_category_edit('$id_category' ,'$category_name' , '$description' ,
+                                 '$id_creator_user' ,'$creator_user_ip' )";
+
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $status = 'Done';
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    $status = 'Failed';
+                }
+                break;
+            case 'createNewTag':
+                $tag_name = $request['tag_name'];
+                $id_creator_user = Auth::user()->id_users;
+                $id_business = Auth::user()->businesse_id;
+                $description = $request['description'];
+                $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+
+                $query = "CALL sp_tag_add('$tag_name' , '$description' ,
+                                 '$id_creator_user' , '$id_business' ,
+                                 '$creator_user_ip' )";
+
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $status = 'Done';
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    $status = 'Failed';
+                }
+                break;
+            case 'editTag':
+                $id_tag = $request['id_tag'];
+                $tag_name = $request['tag_name'];
+                $id_creator_user = Auth::user()->id_users;
+                $id_business = Auth::user()->businesse_id;
+                $description = $request['description'];
+                $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+
+                $query = "CALL sp_tag_edit('$id_tag' ,'$tag_name' , '$description' ,
+                                 '$id_creator_user' ,'$creator_user_ip' )";
+
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $status = 'Done';
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    $status = 'Failed';
+                }
+                break;
+            case 'categoryActivationStatus':
+                $id_category = $request['id_category'];
+                $value = $request['value'];
+
+                DB::table('category')
+                    ->where('id_category', $id_category)
+                    ->update(['is_active' => $value]);
+                break;
+            case 'tagActivationStatus':
+                $id_tag = $request['id_tag'];
+                $value = $request['value'];
+
+                DB::table('tag')
+                    ->where('id_tag', $id_tag)
+                    ->update(['is_active' => $value]);
+                break;
+        }
+        error_log('End of customer_do_this - ' . $do_this);
+
+        return Response(['status' => $status, 'response' => $response,], 200);
     }
 
 //****************************************************************************Customer

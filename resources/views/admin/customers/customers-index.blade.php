@@ -5,7 +5,7 @@
     <div id="app">
 
 
-        <customer-s-p-a :user-id={{ Auth::user()->id_users }}></customer-s-p-a>
+        <customer-s-p-a :user="{{Auth::user()}}"></customer-s-p-a>
 
     </div>
 

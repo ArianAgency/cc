@@ -10,263 +10,244 @@
                                 <div class="card-body">
 
                                     <!-- brand_name & company_name -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                         <span class="input-group-text"><i
                                                             class="far fa-building"></i></span>
-                                                        <input type="text" id="brand_name" name="brand_name"
-                                                               class="form-control"
-                                                               v-model:value="formItems.brand_name"
-                                                               placeholder="نام برند">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="text" id="brand_name" name="brand_name"
+                                                           class="form-control"
+                                                           v-model:value="formItems.brand_name"
+                                                           placeholder="نام برند">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="text" id="company_name" name="company_name"
-                                                               class="form-control"
-                                                               v-model:value="formItems.company_name"
-                                                               placeholder=" نام شرکت">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="text" id="company_name" name="company_name"
+                                                           class="form-control"
+                                                           v-model:value="formItems.company_name"
+                                                           placeholder=" نام شرکت">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
                                     <!-- register_code & national_code & financial_code -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-4">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                         <span class="input-group-text"><i
                                                             class="far fa-file-excel"></i></span>
-                                                        <input type="text" id="register_code" name="register_code"
-                                                               class="form-control" v-model="formItems.register_code"
-                                                               placeholder="شماره ثبت">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="text" id="register_code" name="register_code"
+                                                           class="form-control" v-model="formItems.register_code"
+                                                           placeholder="شماره ثبت">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-4">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-passport"></i></span>
-                                                        <input type="text" id="national_code" name="national_code"
-                                                               class="form-control"
-                                                               v-model:value="formItems.national_code"
-                                                               placeholder=" شناسه ملی">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="text" id="national_code" name="national_code"
+                                                           class="form-control"
+                                                           v-model:value="formItems.national_code"
+                                                           placeholder=" شناسه ملی">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-4">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-money-check-alt"></i></span>
-                                                        <input type="text" id="financial_code" name="financial_code"
-                                                               class="form-control"
-                                                               v-model:value="formItems.financial_code"
-                                                               placeholder="کد اقتصادی">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="text" id="financial_code" name="financial_code"
+                                                           class="form-control"
+                                                           v-model:value="formItems.financial_code"
+                                                           placeholder="کد اقتصادی">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
-
 
                                     <!-- foundation_date & company_field -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                         <span class="input-group-text"><i
                                                             class="far fa-calendar-check"></i></span>
-                                                        <input type="text" id="foundation_date" name="foundation_date"
-                                                               class="form-control"
-                                                               v-model="formItems.foundation_date"
-                                                               placeholder="تاریخ ثبت">
-                                                        <date-picker v-model="formItems.foundation_date"
-                                                                     element="foundation_date"
-                                                                     format="YYYY-MM-DD"></date-picker>
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="text" id="foundation_date" name="foundation_date"
+                                                           class="form-control"
+                                                           v-model="formItems.foundation_date"
+                                                           placeholder="تاریخ ثبت">
+                                                    <date-picker v-model="formItems.foundation_date"
+                                                                 element="foundation_date"
+                                                                 format="YYYY-MM-DD"></date-picker>
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-layer-group"></i></span>
-                                                        <input type="text" id="company_field" name="company_field"
-                                                               class="form-control"
-                                                               v-model:value="formItems.company_field"
-                                                               placeholder="نوع فعالیت">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="text" id="company_field" name="company_field"
+                                                           class="form-control"
+                                                           v-model:value="formItems.company_field"
+                                                           placeholder="نوع فعالیت">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
-
 
                                     <!-- address -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
-                                                        <span class="input-group-text"><i
-                                                            class="far fa-map-marked-alt"></i></span>
-                                                        <textarea class="form-control flex-fill" id="address"
-                                                                  placeholder="آدرس"
-                                                                  name="address" rows="2"
-                                                                  v-model:value="formItems.address"
-                                                        />
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-map-marked-alt"></i>
+                                                        </span>
+                                                    <textarea class="form-control flex-fill" id="address"
+                                                              placeholder="آدرس"
+                                                              name="address" rows="2"
+                                                              v-model:value="formItems.address"
+                                                    />
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
-                                    </div>
 
+                                    </div>
 
                                     <!-- mobile & phone & support_phone -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
-                                                        <span class="input-group-text"><i
-                                                            class="far fa-mobile-alt"></i></span>
-                                                        <input type="text" id="mobile" name="mobile"
-                                                               class="form-control"
-                                                               maxlength="11"
-                                                               v-model:value="formItems.mobile"
-                                                               placeholder="شماره موبایل">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-4">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
+                                                        <span class="input-group-text">
+                                                           <i class="fas fa-mobile-alt"></i>
+                                                        </span>
+                                                    <input type="text" id="mobile" name="mobile"
+                                                           class="form-control"
+                                                           maxlength="11"
+                                                           v-model:value="formItems.mobile"
+                                                           placeholder="شماره موبایل">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-4">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="text" id="phone" name="phone" class="form-control"
-                                                               v-model:value="formItems.phone"
-                                                               placeholder="تلفن">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="text" id="phone" name="phone" class="form-control"
+                                                           v-model:value="formItems.phone"
+                                                           placeholder="تلفن">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-4">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="text" id="support_phone" name="support_phone"
-                                                               v-model:value="formItems.support_phone"
-                                                               class="form-control"
-                                                               placeholder="تلفن پشتیبانی">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="text" id="support_phone" name="support_phone"
+                                                           v-model:value="formItems.support_phone"
+                                                           class="form-control"
+                                                           placeholder="تلفن پشتیبانی">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
-
                                     <!-- email & work_time -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                         <span class="input-group-text"><i
                                                             class="far fa-envelope"></i></span>
-                                                        <input type="email" id="email" name="email" class="form-control"
-                                                               v-model:value="formItems.email"
-                                                               placeholder="example@domain.com">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="email" id="email" name="email" class="form-control"
+                                                           v-model:value="formItems.email"
+                                                           placeholder="example@domain.com">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-info-circle"></i></span>
-                                                        <input type="text" id="work_time" name="work_time"
-                                                               class="form-control"
-                                                               v-model:value="formItems.work_time"
-                                                               placeholder="ساعت کاری">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="text" id="work_time" name="work_time"
+                                                           class="form-control"
+                                                           v-model:value="formItems.work_time"
+                                                           placeholder="ساعت کاری">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
                                     <!-- logo_address -->
-                                    <div class="form-group ">
+                                    <div class="form-group row">
                                         <div class="input-group align-content-center  ">
                                             <div class="input-group-prepend  ">
                                                 <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
@@ -278,12 +259,10 @@
                                                    placeholder="لوگو">
                                             <!--          TODO load logo-->
                                         </div>
-
                                     </div>
 
                                     <!-- file-pond -->
                                     <div class="form-group  ">
-                                        <!--                                    server="/upload/user-img"-->
                                         <file-pond
                                             :metadata=" {
                                         poster: 'https://pqina.nl/filepond/static/assets/social-square.png'
@@ -308,84 +287,85 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-6">
                                 <div class="card-body">
 
                                     <!-- social & company_size -->
-
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fas fa-book"></i></span>
-                                                        <select id="company_size" name="company_size"      class="form-control h-100 " style="width: 300px "
-                                                                v-model="formItems.education">
-<!--                                                            <option value="0"-->
-<!--                                                                    :selected="formItems.company_size === 0">اندازه شرکت-->
-<!--                                                            </option>-->
-                                                            <option value="1"
-                                                                    :selected="formItems.company_size === 1">زیر 10
-                                                            </option>
-                                                            <option value="2"
-                                                                    :selected="formItems.company_size === 2">10-20
-                                                            </option>
-                                                            <option value="3"
-                                                                    :selected="formItems.company_size === 3">20-50
-                                                            </option>
-                                                            <option value="4"
-                                                                    :selected="formItems.company_size === 4">50-100
-                                                            </option>
-                                                            <option value="5"
-                                                                    :selected="formItems.company_size === 5">100-200
-                                                            </option>
-                                                            <option value="6"
-                                                                    :selected="formItems.company_size === 6">200+
-                                                            </option>
-                                                        </select>
-                                                    </div>
+                                                    <select id="company_size" name="company_size"
+                                                            class="custom-select"
+                                                            v-model="formItems.education">
+                                                        <!--                                                            <option value="0"-->
+                                                        <!--                                                                    :selected="formItems.company_size === 0">اندازه شرکت-->
+                                                        <!--                                                            </option>-->
+                                                        <option value="1"
+                                                                :selected="formItems.company_size === 1">زیر 10
+                                                        </option>
+                                                        <option value="2"
+                                                                :selected="formItems.company_size === 2">10-20
+                                                        </option>
+                                                        <option value="3"
+                                                                :selected="formItems.company_size === 3">20-50
+                                                        </option>
+                                                        <option value="4"
+                                                                :selected="formItems.company_size === 4">50-100
+                                                        </option>
+                                                        <option value="5"
+                                                                :selected="formItems.company_size === 5">100-200
+                                                        </option>
+                                                        <option value="6"
+                                                                :selected="formItems.company_size === 6">200+
+                                                        </option>
+                                                    </select>
+                                                </div>
 
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
 
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
-
-                                                        <div class="input-group-prepend">
+                                                    <div class="input-group-prepend">
                                                     <span class="input-group-text"><i
                                                         class="fas fa-briefcase"></i></span>
 
-                                                        </div>
-                                                        <input type="text" id="social" name="social" class="form-control"
-                                                               v-model:value="formItems.social"
-                                                               placeholder="اینستاگرام">
                                                     </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-
+                                                    <input type="text" id="social" name="social"
+                                                           class="form-control"
+                                                           v-model:value="formItems.social"
+                                                           placeholder="اینستاگرام">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
                                     <!-- orgin & website -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <span class="input-group-text"><i class="fas fa-search-location"></i></span>
-                                            <div class="input-group">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <div class="input-group ">
+                                                <span class="input-group-text"><i
+                                                    class="fas fa-search-location"></i></span>
+
                                                 <input type="text" id="orgin" name="orgin" class="form-control "
                                                        v-model:value="formItems.orgin"
                                                        placeholder="محل ثبت نام" readonly>
-                                                <span class="input-group-addon"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group ">
                                                 <span class="input-group-text"><i
                                                     class="fab fa-internet-explorer"></i></span>
                                                 <input type="text" id="website" name="website" class="form-control"
@@ -395,20 +375,25 @@
                                         </div>
                                     </div>
 
+
                                     <!-- bank_account & card_pre_number -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <span class="input-group-text"><i
-                                                class="fas fa-file-invoice-dollar"></i></span>
+                                    <div class="form-group row">
+                                        <div class="col-6">
                                             <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-file-invoice-dollar"></i>
+                                            </span>
                                                 <input type="text" id="bank_account" name="bank_account"
                                                        class="form-control"
                                                        v-model:value="formItems.bank_account"
                                                        placeholder=" شماره حساب">
-                                                <span class="input-group-addon"></span>
-                                                <span class="input-group-text"><i
-                                                    class="fab fa-autoprefixer"></i></span>
-
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fab fa-autoprefixer"></i>
+                                            </span>
                                                 <input type="text" id="card_pre_number" name="card_pre_number"
                                                        class="form-control"
                                                        v-bind:value="$parent.indexForEdit > -1 ? formItems.card_pre_number : availableCardPreNumber"
@@ -418,20 +403,26 @@
                                     </div>
 
                                     <!-- wallet & score & score_limit -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <span class="input-group-text"><i class="fas fa-wallet"></i></span>
+                                    <div class="form-group row">
+                                        <div class="col-4">
                                             <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-wallet"></i></span>
                                                 <input type="number" id="wallet" name="wallet" class="form-control "
                                                        v-model:value="formItems.wallet"
                                                        placeholder="کیف پول">
-                                                <span class="input-group-addon"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="input-group">
                                                 <span class="input-group-text"><i
                                                     class="fas fa-star-half-alt"></i></span>
                                                 <input type="number" id="score" name="score" class="form-control"
                                                        v-model:value="formItems.score"
                                                        placeholder="امتیاز">
-                                                <span class="input-group-addon"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="input-group">
                                                 <span class="input-group-text"><i
                                                     class="fas fa-funnel-dollar"></i></span>
                                                 <input type="number" id="score_limit" name="score_limit"
@@ -456,29 +447,25 @@
                                     </div>
 
                                     <!-- password -->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
-
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-asterisk"></i></span>
-
-                                                        <input type="password" id="password" name="password"
-                                                               class="form-control"
-                                                               v-model="formItems.passwordtemp"
-                                                               autocomplete="new-password" placeholder="رمز عبور">
-
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="password" id="password" name="password"
+                                                           class="form-control"
+                                                           v-model="formItems.passwordtemp"
+                                                           autocomplete="new-password" placeholder="رمز عبور">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -546,13 +533,15 @@
                 posts: [],
                 csrf: '',
                 availableCardPreNumber: '',
-                formItems: [],
+                formItems: {
+                    wallet: 0,
+                    score: 0
+                },
                 is_it_new_registration: 'true',
                 roles: '',
             }
         },
         methods: {
-
             getCardPreNumber() {
                 console.log('getCardPreNumber')
                 axios.get('/admin-panel/business/get/availableCardPreNumber')
@@ -567,23 +556,21 @@
                         console.log(e)
                     })
             },
-
             handleFilePondInit: function () {
                 console.log('handleFilePondInit csrf. = ' + this.csrf)
                 this.csrf = window.Laravel.csrfToken
 
 
             },
+            async business_new_form_submit(event, is_it_new_registration) {
 
-           async business_new_form_submit (event, is_it_new_registration) {
+                const isValid = await this.$refs.observer.validate();
 
-               const isValid = await this.$refs.observer.validate();
-
-               if (!isValid) {
-                   // ABORT!!
-                   swal("نا تمام!", "لطفا همه گزینه های اجباری را پر کنید", "error");
-                   return
-               }
+                if (!isValid) {
+                    // ABORT!!
+                    swal("نا تمام!", "لطفا همه گزینه های اجباری را پر کنید", "error");
+                    return
+                }
 
                 const formData = new FormData(this.$refs['form']); // reference to form element
                 const data = {}; // need to convert it before using not with XMLHttpRequest
@@ -646,7 +633,10 @@
             },
             setToNewForm() {
                 this.$parent.indexForEdit = -1
-                this.formItems = '';
+                this.formItems = {
+                    wallet: 0,
+                    score: 0
+                };
                 this.$parent.getUserData(`/admin-panel/user/index?page=1`)
             }
         },

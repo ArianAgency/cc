@@ -42,6 +42,10 @@ localize({
 //     message: 'این کامه جادویی نیست'
 // });
 
+import Multiselect from 'vue-multiselect'
+
+// register globally
+Vue.component('multiselect', Multiselect)
 
 
 // Register it globally
@@ -50,6 +54,11 @@ Vue.component('ValidationObserver', ValidationObserver);
 
 import swal from 'sweetalert'
 
+import { VueCsvImport } from 'vue-csv-import';
+
+import Autocomplete from '@trevoreyre/autocomplete-vue'
+import '@trevoreyre/autocomplete-vue/dist/style.css'
+Vue.use(Autocomplete)
 
 /**
  * The following block of code may be used to automatically register your
@@ -71,12 +80,20 @@ Vue.component('newBusinessCreationForm', require('./components/form/newBusinessC
 Vue.component('userSPA', require('./components/SPA/userSPA.vue').default);
 Vue.component('UserTableComponent', require('./components/table/UserTableComponent.vue').default);
 Vue.component('newUserCreationForm', require('./components/form/newUserCreationForm.vue').default);
-
+Vue.component('userInstantChargeSPA', require('./components/SPA/userInstantChargeSPA.vue').default);
+Vue.component('userInstantChargeForm', require('./components/form/userInstantChargeForm.vue').default);
 
 Vue.component('customerSPA', require('./components/SPA/customerSPA.vue').default);
 Vue.component('CustomerTableComponent', require('./components/table/CustomerTableComponent.vue').default);
 Vue.component('newCustomerCreationForm', require('./components/form/newCustomerCreationForm.vue').default);
-
+Vue.component('customerInstantChargeSPA', require('./components/SPA/customerInstantChargeSPA.vue').default);
+Vue.component('customerInstantChargeForm', require('./components/form/customerInstantChargeForm.vue').default);
+Vue.component('customerCategorySPA', require('./components/SPA/customerCategorySPA.vue').default);
+Vue.component('customerCategoryForm', require('./components/form/customerCategoryForm.vue').default);
+Vue.component('CategoryTableComponent', require('./components/table/CategoryTableComponent.vue').default);
+Vue.component('customerTagSPA', require('./components/SPA/customerTagSPA.vue').default);
+Vue.component('customerTagForm', require('./components/form/customerTagForm.vue').default);
+Vue.component('TagTableComponent', require('./components/table/TagTableComponent.vue').default);
 
 Vue.component('serviceSPA', require('./components/SPA/serviceSPA.vue').default);
 Vue.component('ServiceTableComponent', require('./components/table/ServiceTableComponent.vue').default);

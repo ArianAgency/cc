@@ -10,77 +10,114 @@
                             <span>فاکتور فروش</span>
                         </div>
                     </div>
-                    <div class="row justify-content-between">
-                        <div class="form-group col-9 mt-2 mr-2">
-                            <div class="form-group">
-                                <div class="controls">
-                                    <div class="input-group">
+                    <ValidationObserver v-slot="{invalid, handleSubmit }" ref="observer">
+                    <div class="row justify-content-around">
+                        <div class="form-group col-10 mt-2 mr-2">
+                            <!--                            <div class="form-group">-->
+                            <!--                                <div class="controls">-->
 
-                                        <!--mobile-->
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+
+                                <div class="input-group">
+                                    <!--mobile-->
+                                    <ValidationProvider rules="required" v-slot="{ errors }">
+                                        <div class="input-group">
+                                            <!--mobile-->
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            </div>
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="mobile" name="mobile"
+                                                       class="form-control"
+                                                       v-model="mobile"
+                                                       placeholder="شماره موبایل">
+
+                                            </div>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-success" type="button"
+                                                        v-on:click.prevent="getUserData($event)">برو!
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="input-group-prepend">
-                                            <input type="text" id="mobile" name="mobile" class="form-control"
-                                                   v-model="mobile"
-                                                   placeholder="شماره موبایل">
+                                        <div>
+                                            <p class="invalid-feedback d-inline-block mr-2"
+                                               v-show="errors">{{ errors[0]}}
+                                            </p>
                                         </div>
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-success" type="button"
-                                                    v-on:click.prevent="getUserData($event)">برو!
-                                            </button>
+                                    </ValidationProvider>
+
+                                    <span class="input-group-addon"></span>
+
+                                    <!--wallet_percent-->
+                                    <ValidationProvider :rules="'max_value:'+walletAllowedValue" v-slot="{ errors }">
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                            </div>
+                                            <input type="number" min="0" :max="walletAllowedValue"
+                                                   id="wallet_percent"
+                                                   name="wallet_percent"
+                                                   class="form-control "
+                                                   v-model="preferredPercents.wallet"
+                                                   placeholder="درصد ترجیحی از کیف پول">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">کیف پول</span>
+                                            </div>
                                         </div>
-
-                                        <span class="input-group-addon"></span>
-
-                                        <!--wallet_percent-->
-                                        <span class="input-group-text"><i class="fas fa-percent"></i></span>
-                                        <input type="number" min="0" id="wallet_percent" name="wallet_percent"
-                                               class="form-control "
-                                               v-model="preferredPercents.wallet"
-                                               placeholder="درصد ترجیحی از کیف پول">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">کیف پول</span>
+                                        <div>
+                                            <p class="invalid-feedback d-inline-block mr-2"
+                                               v-show="errors">{{ errors[0]}}
+                                            </p>
                                         </div>
+                                    </ValidationProvider>
 
-<!--                                        <span class="input-group-addon"></span>-->
+                                    <!--                                        <span class="input-group-addon"></span>-->
 
-<!--                                        &lt;!&ndash;score_percent&ndash;&gt;-->
-<!--                                        <span class="input-group-text"><i class="fas fa-percent"></i></span>-->
-<!--                                        <input type="number" min="0" max="100" id="score_percent" name="score_percent"-->
-<!--                                               class="form-control "-->
-<!--                                               v-model="preferredPercents.score"-->
-<!--                                               placeholder="درصد ترجیحی از امتیاز">-->
-<!--                                        <div class="input-group-prepend">-->
-<!--                                            <span class="input-group-text">امتیاز</span>-->
-<!--                                        </div>-->
+                                    <!--                                        &lt;!&ndash;score_percent&ndash;&gt;-->
+                                    <!--                                        <span class="input-group-text"><i class="fas fa-percent"></i></span>-->
+                                    <!--                                        <input type="number" min="0" max="100" id="score_percent" name="score_percent"-->
+                                    <!--                                               class="form-control "-->
+                                    <!--                                               v-model="preferredPercents.score"-->
+                                    <!--                                               placeholder="درصد ترجیحی از امتیاز">-->
+                                    <!--                                        <div class="input-group-prepend">-->
+                                    <!--                                            <span class="input-group-text">امتیاز</span>-->
+                                    <!--                                        </div>-->
 
-                                        <span class="input-group-addon"></span>
+                                    <span class="input-group-addon"></span>
 
-                                        <!--remain_cash-->
-                                        <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
-                                        <input type="text" min="0" id="remain_cash" name="score_percent"
-                                               class="form-control "
-                                               :value="remainCash"
-                                               readonly="true"
-                                               placeholder="0.00">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">تومان</span>
+                                    <!--remain_cash-->
+                                    <ValidationProvider rules="" v-slot="{ errors }">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-hand-holding-usd"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" id="remain_cash" name="remainCash"
+                                                   class="form-control "
+                                                   :value="remainCash"
+                                                   readonly="true"
+                                                   placeholder="0.00">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">تومان</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </ValidationProvider>s
+
                                 </div>
-                            </div>
+
+                            <!--                                </div>-->
+                            <!--                            </div>-->
                         </div>
                         <div class="form-group ">
                             <div class="controls">
                                 <button class="btn btn-primary mt-2 ml-5" type="button"
-                                        :disabled="shoppingBasket.length===0 || customerDetail.length===0"
-                                        v-on:click.prevent="confirmPurchaseAndSendData()">نهایی شدن خرید
-                                </button>
+
+                                        v-on:click.prevent="handleSubmit(confirmPurchaseAndSendData())">نهایی شدن خرید
+                                </button><!--  :disabled="shoppingBasket.length===0 || customerDetail.length===0"-->
                             </div>
                         </div>
                     </div>
-
+                    </ValidationObserver>
 
                     <div class="  bg-dark text-white div-body p-2 ">
                         <div class="d-flex   justify-content-center">
@@ -103,7 +140,7 @@
                             </div>
                             <div class="col-md">
                                 <label>کیف پول:</label>
-                                <strong>{{customerDetail.wallet>0 ? numberWithCommas(customerDetail.wallet):'-'
+                                <strong>{{customerDetail.wallet>0 ? numberWithCommas(customerDetail.wallet):'0.00'
                                     }}</strong>
                             </div>
                         </div>
@@ -212,7 +249,9 @@
                 csrf: "",
                 shoppingBasket: [],
                 services: '',
-                customerDetail: '',
+                customerDetail: {
+                    wallet: 0
+                },
                 mobile: '',
                 totalPrice: [],
                 preferredPercents: {
@@ -367,10 +406,31 @@
                     console.log('this.preferredPercents.wallet > 100 ')
                     this.cash.remain = this.totalPrice.int - ((this.totalPrice.int * (this.preferredPercents.score / 100)) + ((this.preferredPercents.wallet)))
                 }
-                this.cash.remain =  Math.round(this.cash.remain)
+                this.cash.remain = Math.round(this.cash.remain)
                 console.log('After this.cash.remain = ' + this.cash.remain)
                 return this.numberWithCommas(this.cash.remain)
 
+            },
+            walletAllowedValue: function () {
+                if (this.customerDetail.wallet <= 0) {
+                    console.log('walletAllowedValue = ' + ' return 0')
+                    return 0;
+                }
+                if (this.preferredPercents.wallet < 100) {
+                    console.log('walletAllowedValue = ' + (this.customerDetail.wallet / this.totalPrice.int) * 100)
+                    return (parseFloat(this.customerDetail.wallet) / this.totalPrice.int) * 100
+                }
+                console.log('walletAllowedValue = ')
+                console.log(parseFloat(this.customerDetail.wallet))
+                return parseFloat(this.customerDetail.wallet)
+            }
+        },
+        watch: {
+            preferredPercents: function (val) {
+                console.log("val = " + val)
+                if (val > this.walletAllowedValue) {
+                    val = this.walletAllowedValue
+                }
             }
         }
     }

@@ -46,12 +46,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin-panel/user/{type}', 'AdminController@user_type');
     Route::get('/admin-panel/user/get/{this}', 'AdminController@user_get_this');
     Route::post('/admin-panel/user/new', 'AdminController@user_new');
+    Route::get('/admin-panel/user/view/{v}', 'AdminController@show_user_v_view');
+    Route::post('/admin-panel/user/action/{this}', 'AdminController@user_do_this_action');
 
     Route::get('/admin-panel/customer', 'AdminController@customer');
     Route::post('/admin-panel/customer', 'AdminController@customerAction');
     Route::get('/admin-panel/customer/{type}', 'AdminController@customer_type');
     Route::get('/admin-panel/customer/get/{this}', 'AdminController@customer_get_this');
     Route::post('/admin-panel/customer/new', 'AdminController@customer_new');
+    Route::get('/admin-panel/customer/view/{v}', 'AdminController@show_customer_v_view');
+    Route::post('/admin-panel/customer/action/{this}', 'AdminController@customer_do_this_action');
 
     Route::get('/admin-panel/service', 'AdminController@services');
     Route::post('/admin-panel/service', 'AdminController@serviceAction');

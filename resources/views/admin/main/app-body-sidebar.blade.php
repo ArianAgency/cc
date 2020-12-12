@@ -18,6 +18,9 @@
                     <li class="nav-item">
                         <a href="/admin-panel/user" class="nav-link"><i class="icon-user-follow"></i> ثبت نام شده</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="/admin-panel/user/view/instant-charge" class="nav-link"><i class="icon-plus"></i>شارژ سریع</a>
+                    </li>
                 </ul>
             </li>
         @endif
@@ -53,6 +56,15 @@
                     <li class="nav-item">
                         <a href="/admin-panel/customer" class="nav-link"><i class="icon-user-follow"></i> ثبت نام
                             شده</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin-panel/customer/view/instant-charge" class="nav-link"><i class="icon-plus"></i>شارژ سریع</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin-panel/customer/view/category" class="nav-link"><i class="fas fa-tag"></i>دسته بندی ها</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin-panel/customer/view/tag" class="nav-link"><i class="fas fa-tags"></i>نشانه ها</a>
                     </li>
                     <li class="nav-divider"></li>
                     <li class="nav-title">

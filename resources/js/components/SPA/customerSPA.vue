@@ -17,8 +17,8 @@
             </div>
         </template>
     </customer-table-component>
-    <new-customer-creation-form v-else-if="view==='add'">
 
+    <new-customer-creation-form v-else-if="view==='add' ">
         <template slot="header">
             <div class="card-header">
                 <div class="mytitle">
@@ -42,13 +42,14 @@
 <script>
 
     export default {
-        props: ['userId'],
+        props: ['user'],
         data() {
             return {
                 view: 'list',
                 csrf: "",
-                userID: this.userId,
+                userID: this.user.id_users,
                 data: '',
+                user: this.user,
                 dataIsReady: false,
                 indexForEdit: -1,
                 pageTitle: 'ثبت مشتری جدید'
@@ -91,6 +92,10 @@
         mounted: function () {
             console.log('Customer SPA mounted.')
             this.csrf = window.Laravel.csrfToken;
+            console.log('this.userID')
+            console.log(this.userID)
+            console.log('this.user')
+            console.log(this.user)
         },
         created: function () {
             console.log('Customer SPA created.')
