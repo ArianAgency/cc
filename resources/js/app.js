@@ -9,7 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import Vue from 'vue';
-import {ValidationProvider, extend, localize,ValidationObserver} from 'vee-validate';
+import {ValidationProvider, extend, localize, ValidationObserver} from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
 
 localize('fa', fa);
@@ -25,12 +25,12 @@ localize({
         names: {
             name: 'نام',
             password: 'Password',
-            family:'نام خانوادگی',
-            father_name:'نام پدر',
-            gender:'جنسیت',
-            mobile:'موبایل',
-            phone:'تلفن',
-            email:'ایمیل'
+            family: 'نام خانوادگی',
+            father_name: 'نام پدر',
+            gender: 'جنسیت',
+            mobile: 'موبایل',
+            phone: 'تلفن',
+            email: 'ایمیل'
 
         }
     },
@@ -54,11 +54,22 @@ Vue.component('ValidationObserver', ValidationObserver);
 
 import swal from 'sweetalert'
 
-import { VueCsvImport } from 'vue-csv-import';
+import {VueCsvImport} from 'vue-csv-import';
+
+Vue.component('vue-csv-import', VueCsvImport);
 
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
+
 Vue.use(Autocomplete)
+
+
+import VueKonva from 'vue-konva'
+Vue.use(VueKonva)
+
+
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
 
 /**
  * The following block of code may be used to automatically register your
@@ -94,10 +105,23 @@ Vue.component('CategoryTableComponent', require('./components/table/CategoryTabl
 Vue.component('customerTagSPA', require('./components/SPA/customerTagSPA.vue').default);
 Vue.component('customerTagForm', require('./components/form/customerTagForm.vue').default);
 Vue.component('TagTableComponent', require('./components/table/TagTableComponent.vue').default);
+Vue.component('customerCardSPA', require('./components/SPA/customerCardSPA.vue').default);
+Vue.component('customerCardForm', require('./components/form/customerCardForm.vue').default);
+Vue.component('customerGroupCardSPA', require('./components/SPA/customerGroupCardSPA.vue').default);
+Vue.component('customerGroupCardForm', require('./components/form/customerGroupCardForm.vue').default);
+Vue.component('CustomerGroupCardTableComponent', require('./components/table/CustomerGroupCardTableComponent.vue').default);
+
 
 Vue.component('serviceSPA', require('./components/SPA/serviceSPA.vue').default);
 Vue.component('ServiceTableComponent', require('./components/table/ServiceTableComponent.vue').default);
 Vue.component('newServiceCreationForm', require('./components/form/newServiceCreationForm.vue').default);
+Vue.component('serviceCategorySPA', require('./components/SPA/serviceCategorySPA.vue').default);
+Vue.component('serviceTagSPA', require('./components/SPA/serviceTagSPA').default);
+Vue.component('serviceCategoryForm', require('./components/form/serviceCategoryForm').default);
+Vue.component('serviceTagForm', require('./components/form/serviceTagForm').default);
+Vue.component('ServiceCategoryTableComponent', require('./components/table/ServiceCategoryTableComponent').default);
+Vue.component('ServiceTagTableComponent', require('./components/table/ServiceTagTableComponent').default);
+
 
 Vue.component('xsensSPA', require('./components/SPA/xsensSPA').default);
 Vue.component('XsensTableComponent', require('./components/table/XsensTableComponent').default);
@@ -109,8 +133,12 @@ Vue.component('newSerXsensCreationForm', require('./components/form/newSerXsensC
 
 
 Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
+Vue.component('PurchaseHistoryTableComponent', require('./components/table/PurchaseHistoryTableComponent').default);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
+
+// card designer
+Vue.component('cardDesigner', require('./components/tools/cardDesigner').default);
 
 
 /**
@@ -121,7 +149,6 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 
 const app = new Vue({
     el: '#app',
-
 });
 
 

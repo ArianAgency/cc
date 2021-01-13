@@ -4,7 +4,7 @@
     <div id="app">
 
 
-        <xsens-s-p-a :user-id={{ Auth::user()->id_users }}></xsens-s-p-a>
+        <xsens-s-p-a :user="{{Auth::user()}}"></xsens-s-p-a>
 
     </div>
 

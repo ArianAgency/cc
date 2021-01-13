@@ -1,7 +1,7 @@
 <template>
 
     <div>
-        <new-xsens-creation-form :indexForEdit="indexForEdit" v-if="dataIsReady">
+        <new-xsens-creation-form :indexForEdit="indexForEdit" :user="user" :data="data.data.data" v-if="dataIsReady">
             <template slot="header">
                 <div class="card-header">
                     <div class="mytitle">
@@ -11,6 +11,7 @@
                 </div>
             </template>
         </new-xsens-creation-form>
+
         <xsens-table-component v-if="dataIsReady">
             <template slot="header">
                 <div class="card-header">
@@ -29,14 +30,12 @@
     import axios from 'axios'
 
     export default {
-        props: ['userId'],
+        props: ['user'],
         data() {
             return {
                 view: 'add',
                 csrf: "",
-                userID: this.userId,
                 data: '',
-                user: {},
                 dataIsReady: false,
                 indexForEdit: -1,
                 pageTitle: 'ثبت X-sens جدید'
@@ -50,33 +49,13 @@
             getXsensData(href) {
                 axios.get(href)
                     .then(response => {
-                        this.data = response.data
+                        this.data = response.data;
                         this.dataIsReady = true;
-                        // console.log('this.data = ')
-                        // console.log( this.data)
-                        // console.log('this.data.chords = ')
-                        // console.log( this.data.chords)
-                        // console.log('response = ')
-                        // console.log( response)
                     })
                     .catch(e => {
-                        // this.errors.push(e)
-                        console.log(e)
+                        console.log(e);
                     })
             },
-            getUserData(href) {
-                axios.get(href)
-                    .then(response => {
-                        this.user = response.data.user
-                        console.log('user = ' + this.user)
-                        console.log('user.name = ' + this.user.name)
-                        console.log('user.business.brand_name = ' + this.user.business)
-                    })
-                    .catch(e => {
-                        // this.errors.push(e)
-                        console.log(e)
-                    })
-            }
         },
         mounted: function () {
             console.log('Xsens SPA mounted.')
@@ -84,7 +63,6 @@
         },
         created: function () {
             console.log('Xsens SPA created.')
-            this.getUserData('/admin-panel/user/get/detail')
             this.getXsensData(`/admin-panel/xsens/index?page=1`)
         },
     }

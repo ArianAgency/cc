@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Business extends Model
 {
     protected $primaryKey = 'id_businesses';
+
     //
+
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 }

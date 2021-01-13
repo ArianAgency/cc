@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin-panel/business/get/{this}', 'AdminController@business_get_this');
     Route::post('/admin-panel/business/new', 'AdminController@business_new');
 
+
     Route::get('/admin-panel/user', 'AdminController@user');
     Route::post('/admin-panel/user', 'AdminController@userAction');
     Route::get('/admin-panel/user/{type}', 'AdminController@user_type');
@@ -53,7 +54,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin-panel/customer', 'AdminController@customerAction');
     Route::get('/admin-panel/customer/{type}', 'AdminController@customer_type');
     Route::get('/admin-panel/customer/get/{this}', 'AdminController@customer_get_this');
-    Route::post('/admin-panel/customer/new', 'AdminController@customer_new');
+    Route::post('/admin-panel/customer/new/{type}', 'AdminController@customer_new');
     Route::get('/admin-panel/customer/view/{v}', 'AdminController@show_customer_v_view');
     Route::post('/admin-panel/customer/action/{this}', 'AdminController@customer_do_this_action');
 
@@ -61,7 +62,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin-panel/service', 'AdminController@serviceAction');
     Route::get('/admin-panel/service/{type}', 'AdminController@service_type');
     Route::get('/admin-panel/service/get/{this}', 'AdminController@service_get_this');
-    Route::post('/admin-panel/service/new', 'AdminController@service_new');
+    Route::post('/admin-panel/service/new/{type}', 'AdminController@service_new');
+    Route::get('/admin-panel/service/view/{v}', 'AdminController@show_service_v_view');
+    Route::post('/admin-panel/service/action/{this}', 'AdminController@service_do_this_action');
+
 
     Route::get('/admin-panel/xsenses', 'AdminController@xsenses');
     Route::post('/admin-panel/xsens', 'AdminController@xsensAction');
@@ -75,11 +79,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin-panel/serXsen/get/{this}', 'AdminController@services_xsense_get_this');
     Route::post('/admin-panel/serXsen/new', 'AdminController@services_xsense_new');
 
-    Route::get('/admin-panel/purchase', 'AdminController@purchase');
+    Route::get('/admin-panel/purchase/{view}', 'AdminController@purchase');
     Route::get('/admin-panel/purchase/get/{this}', 'AdminController@purchase_get_this');
+    Route::get('/admin-panel/purchase/do/{this}', 'AdminController@purchase_do_this');
     Route::post('/admin-panel/purchase/doPurchase', 'AdminController@doPurchase');
 
-    Route::post('/upload/user-img','AdminController@store');
+    Route::post('/upload/{this}','AdminController@store');
 });
 
 

@@ -76,6 +76,9 @@
                                                            class="form-control"
                                                            v-model="formItems.walletCharge"
                                                            placeholder="مبلغ">
+                                                    <span class="input-group-text">
+                                                       تومان
+                                                    </span>
                                                 </div>
 
                                                 <div>
@@ -98,6 +101,9 @@
                                                            class="form-control"
                                                            v-model="formItems.scoreCharge"
                                                            placeholder="امتیاز">
+                                                    <span class="input-group-text">
+                                                       امتیاز
+                                                    </span>
                                                 </div>
 
                                                 <div>

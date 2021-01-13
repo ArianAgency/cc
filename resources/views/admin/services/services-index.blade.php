@@ -4,7 +4,7 @@
     <div id="app">
 
 
-        <service-s-p-a :user-id={{ Auth::user()->id_users }}></service-s-p-a>
+        <service-s-p-a active-view="{{$activeView}}" :user-id={{ Auth::user()->id_users }} ></service-s-p-a>
 
     </div>
 

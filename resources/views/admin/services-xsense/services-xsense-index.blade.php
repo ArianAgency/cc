@@ -4,7 +4,7 @@
     <div id="app">
 
 
-        <services-xsense-junction-s-p-a :user-id={{ Auth::user()->id_users }}></services-xsense-junction-s-p-a>
+        <services-xsense-junction-s-p-a :user="{{Auth::user()}}"></services-xsense-junction-s-p-a>
 
     </div>
 

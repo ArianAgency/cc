@@ -5,7 +5,7 @@
     <div id="app">
 
 
-        <customer-s-p-a :user="{{Auth::user()}}"></customer-s-p-a>
+        <customer-s-p-a user="{{Auth::user()}}" active-view="{{$activeView}}"></customer-s-p-a>
 
     </div>
 

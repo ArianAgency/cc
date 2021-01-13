@@ -249,39 +249,51 @@
                                     <!-- logo_address -->
                                     <div class="form-group row">
                                         <div class="input-group align-content-center  ">
-                                            <div class="input-group-prepend  ">
-                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                                            </div>
-                                            <input type="text" id="logo_address" name="logo_address"
+                                            <input type="text" id="logo_address" name="logo_address" hidden
                                                    class="form-control "
                                                    v-bind:value="$parent.indexForEdit > -1 ? (formItems.logo_address!=null?formItems.logo_address:'--') : '-'"
                                                    readonly
                                                    placeholder="لوگو">
-                                            <!--          TODO load logo-->
                                         </div>
                                     </div>
 
                                     <!-- file-pond -->
                                     <div class="form-group  ">
                                         <file-pond
-                                            :metadata=" {
-                                        poster: 'https://pqina.nl/filepond/static/assets/social-square.png'
-                                    }"
                                             name="image"
                                             ref="pond"
                                             label-idle="Drop files here..."
                                             v-bind:allow-multiple="false"
                                             accepted-file-types="image/jpeg, image/png"
-
+                                            allowImagePreview="true"
+                                            imagePreviewHeight="200"
+                                            imageCropAspectRatio="1:1"
+                                            imageResizeTargetWidth="200"
+                                            imageResizeTargetHeight="200"
+                                            filePosterMaxHeight="200"
                                             :server="{
                                                process: {
-                                                      url: '/upload/user-img',
+                                                      url: '/upload/business_logo',
                                                       method: 'POST',
                                                       headers: {
                                                      'X-CSRF-TOKEN': csrf
                                                                   }
-                                                      },
+                                                      }
                                                           }"
+                                            :files="formItems.logo_address?[ {
+                                                        // the server file reference
+                                                        // source: '../storage/logo_img/slide04_rtl_102620201442215f96af15f3104.jpg',
+                                                        source: '../storage/logo_img/'+formItems.logo_address,
+
+                                                        // set type to local to indicate an already uploaded file
+                                                        options: {
+                                                            type: 'local',
+                                                             metadata: {
+                                                                         // poster: '../storage/logo_img/slide04_rtl_102620201442215f96af15f3104.jpg'
+                                                                         poster:'../storage/logo_img/'+ formItems.logo_address
+                                                                     }
+                                                        }
+                                                    }]:''"
                                             v-on:init="handleFilePondInit"
                                         />
                                     </div>
@@ -290,7 +302,7 @@
                             <div class="col-6">
                                 <div class="card-body">
 
-                                    <!-- social & company_size -->
+                                    <!-- instagram_id & company_size -->
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <ValidationProvider rules="required"
@@ -300,10 +312,7 @@
                                                                 class="fas fa-book"></i></span>
                                                     <select id="company_size" name="company_size"
                                                             class="custom-select"
-                                                            v-model="formItems.education">
-                                                        <!--                                                            <option value="0"-->
-                                                        <!--                                                                    :selected="formItems.company_size === 0">اندازه شرکت-->
-                                                        <!--                                                            </option>-->
+                                                            v-model="formItems.company_size">
                                                         <option value="1"
                                                                 :selected="formItems.company_size === 1">زیر 10
                                                         </option>
@@ -340,15 +349,28 @@
                                                         class="fas fa-briefcase"></i></span>
 
                                                     </div>
-                                                    <input type="text" id="social" name="social"
+                                                    <input type="text" id="instagram_id" name="instagram_id"
                                                            class="form-control"
-                                                           v-model:value="formItems.social"
+                                                           v-model:value="formItems.instagram_id"
                                                            placeholder="اینستاگرام">
                                                 </div>
                                                 <p class="invalid-feedback d-inline-block mr-2 "
                                                    v-show="errors">{{ errors[0] }}
                                                 </p>
                                             </ValidationProvider>
+                                        </div>
+                                    </div>
+
+                                    <!-- instagram_hashtag -->
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                                            </div>
+                                            <input type="text" id="instagram_hashtag" name="instagram_hashtag"
+                                                   class="form-control"
+                                                   v-model:value="formItems.instagram_hashtag"
+                                                   placeholder="هشتگ">
                                         </div>
                                     </div>
 
@@ -374,7 +396,6 @@
                                             </div>
                                         </div>
                                     </div>
-
 
                                     <!-- bank_account & card_pre_number -->
                                     <div class="form-group row">
@@ -433,19 +454,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- have_hashtag -->
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                                            </div>
-                                            <input type="text" id="have_hashtag" name="have_hashtag"
-                                                   class="form-control"
-                                                   v-bind:value="$parent.indexForEdit > -1 ? (formItems.have_hashtag!=null?formItems.have_hashtag:'--') : '-'"
-                                                   placeholder="هشتگ">
-                                        </div>
-                                    </div>
-
                                     <!-- password -->
                                     <div class="form-group row">
                                         <div class="col-12">
@@ -472,8 +480,7 @@
                         <div class="row">
                             <div class="col-10"></div>
                             <div class="form-group form-actions col-2">
-                                <button type="submit" class="btn btn-border btn-success  w-75"
-                                        v-bind:disabled="invalid">
+                                <button type="submit" class="btn btn-border btn-success  w-75">
                                     <i class="fa fa-check-circle ml-1"></i>ثبت
                                 </button>
                             </div>
@@ -500,7 +507,7 @@
     import VueContentLoading from "vue-content-loading";
     import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
     // import vueFilePond from 'vue-filepond';
-    import vueFilePond, {setOptions} from 'vue-filepond';
+    import vueFilePond from 'vue-filepond';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
     import FilePondPluginFileMetadata from 'filepond-plugin-file-metadata/dist/filepond-plugin-file-metadata.esm.js';
     import FilePondPluginFileRename from 'filepond-plugin-file-rename';
@@ -559,8 +566,6 @@
             handleFilePondInit: function () {
                 console.log('handleFilePondInit csrf. = ' + this.csrf)
                 this.csrf = window.Laravel.csrfToken
-
-
             },
             async business_new_form_submit(event, is_it_new_registration) {
 
@@ -585,14 +590,9 @@
                 axios.post('/admin-panel/business/new', data)
                     .then(response => {
                         console.log(response)
-
-                        var self = this;
-                        Object.keys(this.data.form).forEach(function (key, index) {
-                            self.data.form[key] = '';
-                        });
                         swal("تمام!", "با موفقیت ثبت شد", "success");
-                        this.$refs.observer.reset();
                         this.$parent.view = 'list'
+                        this.$refs.observer.reset();
                     })
                     .catch(e => {
                         // this.errors.push(e)
@@ -629,6 +629,8 @@
                     // console.log('populateFormInputIfIsForEdit = ')
                     // console.log(this.data[0])
                     this.formItems = this.data[this.$parent.indexForEdit]
+                    console.log('this.formItems = ')
+                    console.log(this.formItems)
                 }
             },
             setToNewForm() {

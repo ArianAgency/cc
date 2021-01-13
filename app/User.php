@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
     use Notifiable;
     protected $primaryKey = 'id_users';
+    protected $appends = ['business'];
     /**
      * The attributes that are mass assignable.
      *
@@ -37,5 +39,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getBusinessAttribute()
+    {
+        $business = Business::all()->where('id_businesses','=',$this->businesse_id)->first();
+        return $business;
+    }
 
 }

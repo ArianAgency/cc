@@ -3,7 +3,7 @@
         <div class="animated fadeIn">
             <div class="card div-body">
                 <slot name="header"></slot>
-                <ValidationObserver v-slot="{invalid, handleSubmit }">
+                <ValidationObserver v-slot="{invalid, handleSubmit }" ref="observer">
                     <form ref="form" @submit.prevent="handleSubmit(xsens_new_form_submit($event))" autocomplete="on">
                         <div class="row">
                             <div class="col-12">
@@ -11,216 +11,219 @@
 
 
                                     <!--id_service & id_x_sense-->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                             >
                                                                 سرویس
                                                             </i>
                                                             </span>
-                                                        <select id="id_service" name="id_service"
-                                                                class="form-control h-100 "
-                                                                v-model="formItems.id_service">
-                                                            <!--                                                            <option value="0"-->
-                                                            <!--                                                                    v-bind:selected="$parent.indexForEdit < 0">سرویس-->
-                                                            <!--                                                            </option>-->
-                                                            <template v-for="service in services_list">
-                                                                <option
-                                                                    v-bind:value="service.id_services"
-                                                                    :selected="formItems.service_id === service.id_services">
-                                                                    {{ service.name}}
-                                                                </option>
-                                                            </template>
-                                                        </select></div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <select id="id_service" name="id_service"
+                                                            class="form-control h-100 "
+                                                            v-model="formItems.id_service">
+                                                        <!--                                                            <option value="0"-->
+                                                        <!--                                                                    v-bind:selected="$parent.indexForEdit < 0">سرویس-->
+                                                        <!--                                                            </option>-->
+                                                        <template v-for="service in services_list">
+                                                            <option
+                                                                v-bind:value="service.id_services"
+                                                                :selected="formItems.service_id === service.id_services">
+                                                                {{ service.name}}
+                                                            </option>
+                                                        </template>
+                                                    </select></div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-6">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i>
                                                                 شرط
                                                             </i></span>
-                                                        <select id="id_x_sense" name="id_x_sense"
-                                                                class="form-control h-100 "
-                                                                v-model="formItems.id_x_senses">
-                                                            <!--                                                            <option value="0"-->
-                                                            <!--                                                                    v-bind:selected="$parent.indexForEdit < 0">شرط-->
-                                                            <!--                                                            </option>-->
-                                                            <template v-for="xsens in xsens_list">
-                                                                <option
-                                                                    v-bind:value="xsens.id_x_senses"
-                                                                    :selected="formItems.x_sens_id === xsens.id_x_senses">
-                                                                    {{ xsens.x_sens_name_fa }}
-                                                                </option>
-                                                            </template>
-                                                        </select>
-                                                    </div>
+                                                    <select id="id_x_sense" name="id_x_sense"
+                                                            class="form-control h-100 "
+                                                            v-model="formItems.id_x_senses">
+                                                        <!--                                                            <option value="0"-->
+                                                        <!--                                                                    v-bind:selected="$parent.indexForEdit < 0">شرط-->
+                                                        <!--                                                            </option>-->
+                                                        <template v-for="xsens in xsens_list">
+                                                            <option
+                                                                v-bind:value="xsens.id_x_senses"
+                                                                :selected="formItems.x_sens_id === xsens.id_x_senses">
+                                                                {{ xsens.x_sens_name_fa }}
+                                                            </option>
+                                                        </template>
+                                                    </select>
+                                                </div>
 
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
-                                    <!--business & score_percent & cash_back_percent & cash_back_value-->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="integer|required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <!--off_percent & score_percent & cash_back_percent & cash_back_value-->
+                                    <div class="form-group row">
+                                        <div class="col-3">
+                                            <ValidationProvider rules=""
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-user"></i></span>
-                                                        <input type="number" min="0" id="off_percent" name="off_percent"
-                                                               class="form-control"
-                                                               v-model=" formItems.off_percent "
-                                                               placeholder="درصد تخفیف">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="integer|required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="number" min="0" id="off_percent" name="off_percent"
+                                                           class="form-control"
+                                                           v-model=" formItems.off_percent "
+                                                           placeholder="درصد تخفیف">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-3">
+                                            <ValidationProvider rules="integer|required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="number" id="score_percent" name="score_percent"
-                                                               class="form-control "
-                                                               v-model=" formItems.score_percent"
-                                                               placeholder="درصد امتیاز">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="integer|required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="number" id="score_percent" name="score_percent"
+                                                           class="form-control "
+                                                           v-model=" formItems.score_percent"
+                                                           placeholder="درصد امتیاز">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-3">
+                                            <ValidationProvider rules="integer|required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="number" min="0" id="cash_back_percent"
-                                                               name="cash_back_percent"
-                                                               class="form-control"
-                                                               v-model=" formItems.cash_back_percent "
-                                                               v-on:change="formItems.cash_back_percent > 0 ? formItems.cash_back_value=0:null"
-                                                               placeholder="درصد کش بک">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider
-                                                    :rules="formItems.cash_back_percent == 0 ?'integer|required':''"
-                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="number" min="0" id="cash_back_percent"
+                                                           name="cash_back_percent"
+                                                           class="form-control"
+                                                           v-model=" formItems.cash_back_percent "
+                                                           v-on:change="formItems.cash_back_percent > 0 ? formItems.cash_back_value=0:null"
+                                                           placeholder="درصد کش بک">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+                                        <div class="col-3">
+                                            <ValidationProvider
+                                                :rules="formItems.cash_back_percent == 0 ?'integer|required':''"
+                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="number" min="0" id="cash_back_value"
-                                                               name="cash_back_value"
-                                                               class="form-control"
-                                                               v-model="formItems.cash_back_value"
-                                                               v-bind:readonly="formItems.cash_back_percent != 0"
-                                                               placeholder="مقدار کش بک">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="number" min="0" id="cash_back_value"
+                                                           name="cash_back_value"
+                                                           class="form-control"
+                                                           v-model="formItems.cash_back_value"
+                                                           v-bind:readonly="formItems.cash_back_percent != 0"
+                                                           placeholder="مقدار کش بک">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
-                                    <!--off_percent & creator_user & created_at & expire_at-->
-                                    <div class="form-group">
-                                        <div class="input-group-prepend ">
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                    <!--business & creator_user & created_at & expire_at-->
+                                    <div class="form-group row">
+                                        <!--business-->
+                                        <div class="col-3">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-user"></i></span>
-                                                        <input type="text" id="business" name="business"
-                                                               class="form-control"
-                                                               v-model="formItems.business_name "
-                                                               readonly
-                                                               placeholder="کسب و کار مربوط">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2"
-                                                       v-show="errors">{{ errors[0]}}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
+                                                    <input type="text" id="business" name="business"
+                                                           class="form-control"
+                                                           :value="user.business.brand_name"
+                                                           readonly
+                                                           placeholder="کسب و کار مربوط">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2"
+                                                   v-show="errors">{{ errors[0]}}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+
+                                        <!--creator_user-->
+                                        <div class="col-3">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
                                                             <span class="input-group-text"><i
                                                                 class="fa fa-venus-mars"></i></span>
-                                                        <input type="text" id="creator_user" name="creator_user"
-                                                               class="form-control "
-                                                               v-model="formItems.creator_user_name"
-                                                               placeholder="کاربر ایجاد کننده" readonly>
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider rules="required"
-                                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
-                                                            <span class="input-group-text"><i
-                                                                class="fa fa-venus-mars"></i></span>
-                                                        <input type="text" id="created_at" name="created_at"
-                                                               class="form-control"
-                                                               v-model="formItems.created_at"
-                                                               readonly
-                                                               placeholder="تاریخ ایجاد">
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
-                                            <div class="mydiv">
-                                                <ValidationProvider
-                                                    rules="required"
-                                                    v-slot="{ errors }">
-                                                    <div class="myinput">
-                                                            <span class="input-group-text"><i
-                                                                class="fa fa-venus-mars"></i></span>
-                                                        <input type="text" id="expire_at" name="expire_at"
-                                                               class="form-control "
-                                                               v-model="formItems.expire_at "
-                                                               placeholder="تاریخ انقضا">
-                                                        <date-picker
-                                                            v-model="formItems.expire_at "
-                                                            element="expire_at"
-                                                            format="YYYY-MM-DD"></date-picker>
-                                                    </div>
-                                                    <p class="invalid-feedback d-inline-block mr-2 "
-                                                       v-show="errors">{{ errors[0] }}
-                                                    </p>
-                                                </ValidationProvider>
-                                            </div>
+                                                    <input type="text" id="creator_user" name="creator_user"
+                                                           class="form-control "
+                                                           :value="user.name +' '+ user.family"
+                                                           placeholder="کاربر ایجاد کننده" readonly>
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+
+                                        <!--created_at-->
+                                        <div class="col-3">
+                                            <ValidationProvider rules="required"
+                                                                v-slot="{ errors }">
+                                                <div class="input-group">
+                                                            <span class="input-group-text">
+                                                            <i class="far fa-calendar-check"></i>
+                                                            </span>
+                                                    <input type="text" id="created_at" name="created_at"
+                                                           class="form-control"
+                                                           :value="getTime()"
+                                                           readonly
+                                                           placeholder="تاریخ ایجاد">
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
+                                        </div>
+
+                                        <!--expire_at-->
+                                        <div class="col-3">
+                                            <ValidationProvider
+                                                rules="required"
+                                                v-slot="{ errors }">
+                                                <div class="input-group">
+                                                            <span class="input-group-text">
+                                                                <i class="far fa-calendar-times"></i>
+                                                            </span>
+                                                    <input type="text" id="expire_at" name="expire_at"
+                                                           class="form-control "
+                                                           v-model="formItems.expire_at "
+                                                           placeholder="تاریخ انقضا">
+                                                    <date-picker
+                                                        v-model="formItems.expire_at "
+                                                        element="expire_at"
+                                                        format="YYYY-MM-DD"></date-picker>
+                                                </div>
+                                                <p class="invalid-feedback d-inline-block mr-2 "
+                                                   v-show="errors">{{ errors[0] }}
+                                                </p>
+                                            </ValidationProvider>
                                         </div>
                                     </div>
 
@@ -238,7 +241,9 @@
                                             />
                                         </div>
                                     </div>
+
                                 </div>
+
                                 <div class="row">
                                     <div class="col-7"></div>
                                     <div class="form-group form-actions col-2">
@@ -248,8 +253,7 @@
                                         </button>
                                     </div>
                                     <div class="form-group form-actions col-2 ml-2">
-                                        <button type="submit" value="submit" class="btn btn-border btn-success  w-75"
-                                                v-bind:disabled="invalid">
+                                        <button type="submit" value="submit" class="btn btn-border btn-success  w-75">
                                             <i class="fa fa-check-circle ml-1"></i>ثبت
                                         </button>
                                     </div>
@@ -273,7 +277,7 @@
             VueContentLoading,
             datePicker: VuePersianDatetimePicker
         },
-        props: ['indexForEdit'],
+        props: ['indexForEdit', 'user'],
         data() {
             return {
                 is_active_label: '',
@@ -289,7 +293,7 @@
         },
         methods: {
 
-            async xsens_new_form_submit (event) {
+            async xsens_new_form_submit(event) {
 
                 const isValid = await this.$refs.observer.validate();
 
@@ -353,31 +357,38 @@
             get_services_and_xsens_list() {
                 axios.get('/admin-panel/serXsen/get/serXsenList')
                     .then(response => {
-                        console.log('get_services_and_xsens_list = ')
-                        console.log(response.data)
-                        this.services_list = response.data.services
-                        this.xsens_list = response.data.xsenses
+                        console.log('get_services_and_xsens_list = ');
+                        console.log(response.data);
+                        this.services_list = response.data.services;
+                        this.xsens_list = response.data.xsenses;
                     })
                     .catch(e => {
-                        this.errors.push(e)
-                        console.log(e)
+                        console.log(e);
                     })
             },
-
+            getTime() {
+                // console.log('date = ');
+                let date;
+                date = new Date();
+                date = date.getUTCFullYear() + '-' +
+                    ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
+                    ('00' + date.getDate()).slice(-2);
+                // + ' ' +
+                // ('00' + date.getHours()).slice(-2) + ':' +
+                // ('00' + date.getMinutes()).slice(-2) + ':' +
+                // ('00' + date.getSeconds()).slice(-2);
+                // console.log(date);
+                return date;
+            }
         },
         created: function () {
-            console.log('newXsensCreationForm created ')
-            this.data = this.$parent.data.data
-            console.log('this.data')
-            console.log(this.data)
+            console.log('newXsensCreationForm created ');
+            this.data = this.$parent.data.data;
+            console.log('this.data');
+            console.log(this.data);
             this.get_services_and_xsens_list()
         },
         mounted: function () {
-            // console.log('newXsensCreationForm mounted ')
-            // console.log('this.$parent.indexForEdit = ' + this.$parent.indexForEdit)
-            // console.log('this.formItems = ')
-            // console.log(this.formItems.first_chord_id)
-
             this.csrf = window.Laravel.csrfToken
         },
         watch: {

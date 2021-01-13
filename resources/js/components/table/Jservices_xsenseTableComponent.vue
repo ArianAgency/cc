@@ -24,7 +24,7 @@
 
                         <tbody class="animated fadeIn">
 
-                        <tr v-for="(serXsen,index) in $parent.data.data">
+                        <tr v-for="(serXsen,index) in data.data">
 
                             <td>{{index +1}}</td>
 
@@ -65,12 +65,12 @@
                     <!--                    @if( count($data) > 10)-->
                     <ul class="pagination">
                         <li class="page-item" v-if="data.prev_page_url !==null"><a class="page-link" href="#"
-                                                                                   v-on:click="parent.getUserData(data.prev_page_url)">قبلی</a>
+                                                                                   v-on:click="$parent.getUserData(data.prev_page_url)">قبلی</a>
                         </li>
                         <li class="page-item disabled" v-else><a class="page-link " href="#">قبلی</a></li>
 
                         <li class="page-item" v-show="data.prev_page_url !==null"><a class="page-link" href="#"
-                                                                                     v-on:click="parent.getUserData(data.prev_page_url)">{{data.current_page
+                                                                                     v-on:click="$parent.getUserData(data.prev_page_url)">{{data.current_page
                             - 1}}</a>
                         </li>
 
@@ -78,13 +78,13 @@
                         <li class="page-item active"><a class="page-link" href="#">{{data.current_page}}</a></li>
 
                         <li class="page-item" v-show="data.next_page_url !==null"><a class="page-link" href="#"
-                                                                                     v-on:click="parent.getUserData(data.next_page_url)">{{data.current_page
+                                                                                     v-on:click="$parent.getUserData(data.next_page_url)">{{data.current_page
                             + 1}}</a>
                         </li>
 
 
                         <li class="page-item" v-if="data.next_page_url !==null"><a class="page-link" href="#"
-                                                                                   v-on:click="parent.getUserData(data.next_page_url)">بعدی</a>
+                                                                                   v-on:click="$parent.getUserData(data.next_page_url)">بعدی</a>
                         </li>
                         <li class="page-item disabled" v-else><a class="page-link " href="#">بعدی</a></li>
 
@@ -105,10 +105,10 @@
         components: {
             VueContentLoading,
         },
+        props:['data'],
         data() {
             return {
                 is_active_label: '',
-                data: '',
                 posts: [],
             }
         },
@@ -151,11 +151,10 @@
             },
         },
         created: function () {
-            console.log('Jservices_xsenseTableComponent created.')
-            this.data = this.$parent.data
+            console.log('Jservices_xsenseTableComponent created.');
         },
         mounted: function () {
-            console.log('Jservices_xsenseTableComponent mounted.')
+            console.log('Jservices_xsenseTableComponent mounted.');
         },
     }
 </script>

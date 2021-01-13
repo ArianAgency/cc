@@ -20,6 +20,8 @@
     <!-- Styles required by this views -->
 
     <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
+
+
 </head>
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" >
@@ -94,7 +96,6 @@
 {{--<script src="{{ asset('js/Chart.min.js') }}" ></script>--}}
 <script src="{{ asset('js/main.js') }}" ></script>
 <script src="{{ asset('js/app.js') }}" ></script>
-
 {{--<script src="/public/admin/content/js/views/main.js"></script>--}}
 
 </body>

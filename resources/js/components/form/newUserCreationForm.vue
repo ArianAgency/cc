@@ -442,7 +442,6 @@
                                             </div>
                                         </div>
 
-
                                         <!--business & role_id-->
                                         <div class="form-group row">
                                             <div class="col-6">
