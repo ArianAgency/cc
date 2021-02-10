@@ -675,8 +675,7 @@ class AdminController extends Controller
         return Response(['status' => 'Done', 'data' => $customers], 200);
     }
 
-    public
-    function customer_get_this(Request $request)
+    public function customer_get_this(Request $request)
     {
         error_log('customer_get_this - ');
         $get_this = $request['this'];
@@ -808,18 +807,18 @@ class AdminController extends Controller
                 $userBusinessID = Auth::user()->businesse_id;
                 $card_number = $request->card_number;
                 $mode = $request->mode;
-                if ($mode == 'null'){
+                if ($mode == 'null') {
                     $searchQueryResult = Customer::
                     where([['registration_origin', '=', $userBusinessID],
-                        ['card_number', 'like', $card_number.'%'],
+                        ['card_number', 'like', $card_number . '%'],
                         ['name', '=', '-'],
-                        ['is_deleted','!=',1]])
+                        ['is_deleted', '!=', 1]])
                         ->limit(10)->get();
-                }else{
+                } else {
                     $searchQueryResult = Customer::
                     where([['registration_origin', '=', $userBusinessID],
-                        ['card_number', 'like', $card_number.'%'],
-                    ['is_deleted','!=',1]])
+                        ['card_number', 'like', $card_number . '%'],
+                        ['is_deleted', '!=', 1]])
                         ->limit(10)->get();
                 }
 
@@ -832,7 +831,7 @@ class AdminController extends Controller
                 where([
                     ['registration_origin', '=', $userBusinessID],
                     ['name', '=', '-'],
-                    ['is_deleted','!=',1]])
+                    ['is_deleted', '!=', 1]])
                     ->paginate(10);
                 $response['nullCards'] = $queryResult;
                 break;
@@ -845,8 +844,7 @@ class AdminController extends Controller
         return Response($response, 200);
     }
 
-    public
-    function customer_new(Request $request)
+    public function customer_new(Request $request)
     {
         error_log('*******************************');
         error_log('request = ' . $request);
@@ -1144,8 +1142,7 @@ class AdminController extends Controller
         return Response(['status' => 'done', 'code' => 1, 'data' => 1, 'numberOfNewRecords' => $numberOfNewRecords], 200);
     }
 
-    public
-    function show_customer_v_view(Request $request)
+    public function show_customer_v_view(Request $request)
     {
         $view = $request['v'];
         $viewInReturn = '';
@@ -1180,8 +1177,7 @@ class AdminController extends Controller
         return view($viewInReturn)->with('activeView', $activeView);
     }
 
-    public
-    function customer_do_this_action(Request $request)
+    public function customer_do_this_action(Request $request)
     {
         error_log('customer_do_this_action -> ');
         $do_this = $request['this'];
@@ -1366,14 +1362,12 @@ class AdminController extends Controller
 
 //****************************************************************************Customer
 //****************************************************************************Product / Service
-    public
-    function services()
+    public function services()
     {
         return view('admin.services.services-index');
     }
 
-    public
-    function show_service_v_view(Request $request)
+    public function show_service_v_view(Request $request)
     {
         $view = $request['v'];
         $viewInReturn = '';
@@ -1397,11 +1391,10 @@ class AdminController extends Controller
                 $viewInReturn = 'admin.services.services-tag';
                 break;
         }
-        return view($viewInReturn)->with('activeView', $activeView);;
+        return view($viewInReturn)->with('activeView', $activeView);
     }
 
-    public
-    function serviceAction(Request $request)
+    public function serviceAction(Request $request)
     {
         $action = $request['action'];
         $service_id = $request['id_service'];
@@ -1433,8 +1426,7 @@ class AdminController extends Controller
         return Response(['action' => $action, 'user_id' => $service_id, 'value' => $value], 200);
     }
 
-    public
-    function service_type(Request $request)
+    public function service_type(Request $request)
     {
         $type = $request['type'];
         $services = '';
@@ -1455,8 +1447,7 @@ class AdminController extends Controller
         return Response(['status' => 'Done', 'data' => $services], 200);
     }
 
-    public
-    function service_get_this(Request $request)
+    public function service_get_this(Request $request)
     {
         error_log($request);
         $get_this = $request['this'];
@@ -1518,8 +1509,7 @@ class AdminController extends Controller
         return Response($response, 200);
     }
 
-    public
-    function service_do_this_action(Request $request)
+    public function service_do_this_action(Request $request)
     {
         $do_this = $request['this'];
         error_log('service_do_this_action -> ' . $do_this);
@@ -1639,8 +1629,7 @@ class AdminController extends Controller
         return Response(['status' => $status, 'response' => $response,], 200);
     }
 
-    public
-    function service_new(Request $request)
+    public function service_new(Request $request)
     {
         error_log('*******************************');
         error_log('request = ' . $request);
@@ -1809,8 +1798,7 @@ class AdminController extends Controller
 
     }
 
-    public
-    function services_load_type(Request $request)
+    public function services_load_type(Request $request)
     {
         $type = $request['type'];
         $services = '';
@@ -1980,7 +1968,7 @@ class AdminController extends Controller
         error_log($sp_name . ' -> $query = ' . $query);
 
         try {
-            $queryResult = DB:: select(DB::raw($query));
+            $queryResult = DB::statement($query);
             return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
         } catch (\Illuminate\Database\QueryException $ex) {
 //            dd($ex->getMessage());
@@ -2157,7 +2145,7 @@ class AdminController extends Controller
         error_log($sp_name . ' -> $query = ' . $query);
 
         try {
-            $queryResult = DB:: select(DB::raw($query));
+            $queryResult = DB::statement($query);
             return Response(['status' => 'done', 'code' => 1, 'data' => $queryResult], 200);
         } catch (\Illuminate\Database\QueryException $ex) {
 //            dd($ex->getMessage());
@@ -2213,7 +2201,9 @@ class AdminController extends Controller
                 if ($id_user == '*') {
                     $services = DB::table('v_get_services_list')->get();
                 } else {
-                    $services = DB::table('v_get_services_list')->where('id_business', '=', $id_business)->get();
+                    $services = DB::table('v_get_services_list')
+                        ->where([['id_business', '=', $id_business], ['price', '>', '1']])
+                        ->get();
                 }
 
                 $response['services'] = $services;
@@ -2468,6 +2458,133 @@ class AdminController extends Controller
     }
 
 //****************************************************************************purchase
+//****************************************************************************convertor
+    public function score_convertor(Request $request)
+    {
+        $view = $request['v'];
+        $viewInReturn = '';
+        $activeView = '';
+
+        switch ($view) {
+            case 'table':
+                $activeView = 'table';
+                $viewInReturn = 'admin.score-convertor.score-convertor';
+                break;
+            case 'form':
+                $activeView = 'form';
+                $viewInReturn = 'admin.score-convertor.score-convertor';
+                break;
+        }
+        return view($viewInReturn)->with('activeView', $activeView);
+    }
+
+    public function score_convertor_do_this(Request $request)
+    {
+        error_log($request);
+        $do_this = $request['this'];
+
+        error_log('score_convertor_do_this -> ' . $do_this);
+        $response = array();
+        $response['status'] = 'Done';
+        $id_business = Auth::user()->businesse_id;
+        $id_user = Auth::user()->id_users;
+        $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+        switch ($do_this) {
+
+            case 'add_new':
+
+                $convertor_name = $request['convertor_name'];
+                $score_cost = $request['score_cost'];
+                $off_percent = $request['off_percent'];
+                $off_value = $request['off_value'];
+                $description = $request['description'];
+                $available = $request['available'];
+                $expire = $request['expire'];
+
+                $query = "CALL sp_set_new_score_convertor (
+                                            '$convertor_name' ,
+                                            '$score_cost' ,
+                                            '$off_percent' ,
+                                            '$off_value' ,
+                                            '$description' ,
+                                            '$id_user'  ,
+                                            '$id_business'  ,
+                                            '$creator_user_ip',
+                                            '$available' ,
+                                            '$expire' ); ";
+
+                try {
+                    $queryResult = DB::statement($query);
+                    $response['result'] = $queryResult;
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'Error', 'code' => 2], 409);
+                }
+                break;
+            case 'edit':
+
+                $convertor_name = $request['convertor_name'];
+                $score_cost = $request['score_cost'];
+                $off_percent = $request['off_percent'];
+                $off_value = $request['off_value'];
+                $description = $request['description'];
+                $available = $request['available'];
+                $expire = $request['expire'];
+                $id_score_convertor = $request['id_score_convertor'];
+
+                $query = "CALL sp_edit_score_convertor (
+                                            '$id_score_convertor' ,
+                                            '$convertor_name' ,
+                                            '$score_cost' ,
+                                            '$off_percent' ,
+                                            '$off_value' ,
+                                            '$description' ,
+                                            '$id_user'  ,
+                                            '$id_business'  ,
+                                            '$creator_user_ip',
+                                            '$available' ,
+                                            '$expire' ); ";
+
+                try {
+                    $queryResult = DB::statement($query);
+                    $response['result'] = $queryResult;
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'Error', 'code' => 2], 409);
+                }
+                break;
+        }
+        return Response($response, 200);
+    }
+
+    public function score_convertor_get_this(Request $request)
+    {
+//        error_log($request);
+        $get_this = $request['this'];
+
+        error_log('purchase_get_this -> ' . $get_this);
+        $response = array();
+
+        $response['status'] = 'Done';
+        $id_business = Auth::user()->businesse_id;
+        $id_user = Auth::user()->id_users;
+        $creator_user_ip = $_SERVER['REMOTE_ADDR'];
+
+        switch ($get_this) {
+
+            case 'convertor_list':
+                $result = DB::table('v_get_score_convertor_list')
+                    ->where('id_business', '=', $id_business)->paginate(10);
+                $response['dataList'] = $result;
+                break;
+
+        }
+        return Response($response, 200);
+    }
+
+//****************************************************************************convertor
 //****************************************************************************Tools
     public
     function store(Request $request)

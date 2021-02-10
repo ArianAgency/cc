@@ -84,6 +84,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin-panel/purchase/do/{this}', 'AdminController@purchase_do_this');
     Route::post('/admin-panel/purchase/doPurchase', 'AdminController@doPurchase');
 
+    Route::get('/admin-panel/score_convertor/view/{v}', 'AdminController@score_convertor');
+    Route::get('/admin-panel/score_convertor/do/{this}', 'AdminController@score_convertor_do_this');
+    Route::post('/admin-panel/score_convertor/do/{this}', 'AdminController@score_convertor_do_this');
+    Route::get('/admin-panel/score_convertor/get/{this}', 'AdminController@score_convertor_get_this');
+
+
     Route::post('/upload/{this}','AdminController@store');
 });
 

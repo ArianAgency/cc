@@ -42,7 +42,7 @@
                                                                        v-model=" formItems.name"
                                                                        placeholder="نام"></div>
                                                             <p class="invalid-feedback d-inline-block mr-2"
-                                                               v-show="errors">{{ errors[0]}}
+                                                               v-show="errors">{{ errors[0] }}
                                                             </p>
                                                         </ValidationProvider>
                                                     </div>
@@ -122,7 +122,7 @@
                                                                        readonly
                                                                        placeholder="کسب و کار مربوط"></div>
                                                             <p class="invalid-feedback d-inline-block mr-2"
-                                                               v-show="errors">{{ errors[0]}}
+                                                               v-show="errors">{{ errors[0] }}
                                                             </p>
                                                         </ValidationProvider>
                                                     </div>
@@ -203,7 +203,7 @@
                                                             :custom-label="nameFormatter">
                                                             <template slot="tag" slot-scope="{ option, remove }">
                                                 <span class="custom__tag">
-                                                    <span>{{ option.category_name}}</span>
+                                                    <span>{{ option.category_name }}</span>
                                                     <span class="custom__remove" @click="remove(option)">❌</span>
                                                 </span>
                                                             </template>
@@ -236,7 +236,7 @@
                                                             :custom-label="nameFormatter_tag">
                                                             <template slot="tag" slot-scope="{ option, remove }">
                                                 <span class="custom__tag">
-                                                    <span>{{ option.tag_name}}</span>
+                                                    <span>{{ option.tag_name }}</span>
                                                     <span class="custom__remove" @click="remove(option)">❌</span>
                                                 </span>
                                                             </template>
@@ -264,8 +264,7 @@
                                         </div>
                                         <div class="form-group form-actions col-2 ml-2">
                                             <button type="submit" value="submit"
-                                                    class="btn btn-border btn-success  w-75"
-                                            >
+                                                    class="btn btn-border btn-success  w-75">
                                                 <i class="fa fa-check-circle ml-1"></i>ثبت
                                             </button>
                                         </div>
@@ -330,281 +329,281 @@
 
 
 <script>
-    import VueContentLoading from "vue-content-loading";
-    import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
+import VueContentLoading from "vue-content-loading";
+import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
 
 
-    export default {
-        components: {
-            VueContentLoading,
-            datePicker: VuePersianDatetimePicker
-        },
-        props: ['indexForEdit'],
-        data() {
-            return {
-                csv:[],
-                is_active_label: '',
-                data: '',
-                expireDate: '',
-                posts: [],
-                csrf: "",
-                formItems: {
-                    category: {
-                        isLoading: false,
-                        selectedList: [],
-                        rawList: []
-                    },
-                    tag: {
-                        isLoading: false,
-                        selectedList: [],
-                        rawList: []
-                    },
+export default {
+    components: {
+        VueContentLoading,
+        datePicker: VuePersianDatetimePicker
+    },
+    props: ['indexForEdit'],
+    data() {
+        return {
+            csv: [],
+            is_active_label: '',
+            data: '',
+            expireDate: '',
+            posts: [],
+            csrf: "",
+            formItems: {
+                category: {
+                    isLoading: false,
+                    selectedList: [],
+                    rawList: []
                 },
-                NewformItems: [],
-                is_it_new_registration: 'true',
-                Now: '',
-                getAllDataForServiceEditReady: false,
-
-            }
-        },
-        methods: {
-             submit() {
-                // console.log('csv = ');
-                // console.log(this.csv);
-                    swal("تمام!", "با موفقیت ثبت شد", "success");
+                tag: {
+                    isLoading: false,
+                    selectedList: [],
+                    rawList: []
+                },
             },
-            async service_new_form_submit(event) {
+            NewformItems: [],
+            is_it_new_registration: 'true',
+            Now: '',
+            getAllDataForServiceEditReady: false,
 
-                const isValid = await this.$refs.observer.validate();
+        }
+    },
+    methods: {
+        submit() {
+            // console.log('csv = ');
+            // console.log(this.csv);
+            swal("تمام!", "با موفقیت ثبت شد", "success");
+        },
+        async service_new_form_submit(event) {
 
-                if (!isValid) {
-                    // ABORT!!
-                    swal("نا تمام!", "لطفا همه گزینه های اجباری را پر کنید", "error");
-                    return
-                }
+            const isValid = await this.$refs.observer.validate();
 
-                const formData = new FormData(this.$refs['form']); // reference to form element
-                this.NewformItems.price = this.NewformItems.price + '.00'
-                const data = {}; // need to convert it before using not with XMLHttpRequest
-                for (let [key, val] of formData.entries()) {
-                    Object.assign(data, {[key]: val})
-                }
-                Object.assign(data, {'is_it_new_registration': this.is_it_new_registration});
+            if (!isValid) {
+                // ABORT!!
+                swal("نا تمام!", "لطفا همه گزینه های اجباری را پر کنید", "error");
+                return
+            }
 
-                if (this.is_it_new_registration === 'true') {
-                    Object.assign(data, {'id_services': 0})
-                } else {
-                    Object.assign(data, {'id_services': this.formItems.id_services})
-                }
+            const formData = new FormData(this.$refs['form']); // reference to form element
+            this.NewformItems.price = this.NewformItems.price + '.00'
+            const data = {}; // need to convert it before using not with XMLHttpRequest
+            for (let [key, val] of formData.entries()) {
+                Object.assign(data, {[key]: val})
+            }
+            Object.assign(data, {'is_it_new_registration': this.is_it_new_registration});
 
-                Object.assign(data, {'id_business': this.$parent.user.businesse_id});
+            if (this.is_it_new_registration === 'true') {
+                Object.assign(data, {'id_services': 0})
+            } else {
+                Object.assign(data, {'id_services': this.formItems.id_services})
+            }
 
-                Object.assign(data, {'categories': JSON.stringify(this.formItems.category.selectedList)});
-                Object.assign(data, {'tags': JSON.stringify(this.formItems.tag.selectedList)});
+            Object.assign(data, {'id_business': this.$parent.user.businesse_id});
 
-                console.log('this.data = ');
-                console.log(this.data);
-                // console.log('this.$parent.user = ')
-                // console.log(this.$parent.user.businesse_id)
+            Object.assign(data, {'categories': JSON.stringify(this.formItems.category.selectedList)});
+            Object.assign(data, {'tags': JSON.stringify(this.formItems.tag.selectedList)});
 
-                axios.post('/admin-panel/service/new/individual', data)
+            console.log('this.data = ');
+            console.log(this.data);
+            // console.log('this.$parent.user = ')
+            // console.log(this.$parent.user.businesse_id)
+
+            axios.post('/admin-panel/service/new/individual', data)
+                .then(response => {
+                    console.log(response);
+                    swal("تمام!", "با موفقیت ثبت شد", "success");
+                    this.$refs.observer.reset();
+                    this.$parent.indexForEdit = -1;
+                    this.$parent.initData();
+                })
+                .catch(e => {
+                    // this.errors.push(e)
+                    // console.log(e)
+                    // console.log('e.response.data.code = ' + e.response.data.code)
+                    if (e.response.data.code == 2) {
+                        swal("نا تمام!", "با خطا مواجه شد", "error");
+                    } else {
+                        alert('error')
+                    }
+
+                })
+        },
+        service_new_form_new: function (event) {
+            event.preventDefault()
+            this.getAllDataForServiceEditReady = true
+            this.formItems = []
+            this.$parent.indexForEdit = -1
+        },
+        getAllDataForServiceEdit(businessID, userID) {
+            console.log('getAllDataForServiceEdit')
+            this.getAllDataForServiceEditReady = false
+            axios.get('/admin-panel/service/get/getAllDataForServiceEdit?businessID=' + businessID + '&userID=' + userID)
+                .then(response => {
+                    console.log('response = ' + response)
+                    this.formItems.business = response.data.business
+                    this.formItems.user = response.data.user
+                    console.log('formItems[business] = ' + response.data.business.brand_name)
+                    console.log('formItems[business] = ' + this.formItems.business.brand_name)
+                    console.log('formItems[user] = ' + this.formItems.user.name)
+                })
+                .catch(e => {
+                    // this.errors.push(e)
+                    console.log(e)
+                })
+        },
+        populateFormInputIfIsForEdit() {
+            console.log('populateFormInputIfIsForEdit');
+            console.log('this.$parent.indexForEdit = ');
+            console.log(this.$parent.indexForEdit);
+            if (this.$parent.indexForEdit >= 0) {
+
+                this.mix(this.data[this.$parent.indexForEdit], this.formItems);
+                axios.get('/admin-panel/service/get/selectedCategoriesAndTags?id_services=' + this.formItems.id_services)
                     .then(response => {
                         console.log(response);
-                        swal("تمام!", "با موفقیت ثبت شد", "success");
-                        this.$refs.observer.reset();
-                        this.$parent.indexForEdit = -1;
-                        this.$parent.initData();
-                    })
-                    .catch(e => {
-                        // this.errors.push(e)
-                        // console.log(e)
-                        // console.log('e.response.data.code = ' + e.response.data.code)
-                        if (e.response.data.code == 2) {
-                            swal("نا تمام!", "با خطا مواجه شد", "error");
-                        } else {
-                            alert('error')
-                        }
-
-                    })
-            },
-            service_new_form_new: function (event) {
-                event.preventDefault()
-                this.getAllDataForServiceEditReady = true
-                this.formItems = []
-                this.$parent.indexForEdit = -1
-            },
-            getAllDataForServiceEdit(businessID, userID) {
-                console.log('getAllDataForServiceEdit')
-                this.getAllDataForServiceEditReady = false
-                axios.get('/admin-panel/service/get/getAllDataForServiceEdit?businessID=' + businessID + '&userID=' + userID)
-                    .then(response => {
-                        console.log('response = ' + response)
-                        this.formItems.business = response.data.business
-                        this.formItems.user = response.data.user
-                        console.log('formItems[business] = ' + response.data.business.brand_name)
-                        console.log('formItems[business] = ' + this.formItems.business.brand_name)
-                        console.log('formItems[user] = ' + this.formItems.user.name)
-                    })
-                    .catch(e => {
-                        // this.errors.push(e)
-                        console.log(e)
-                    })
-            },
-            populateFormInputIfIsForEdit() {
-                console.log('populateFormInputIfIsForEdit');
-                console.log('this.$parent.indexForEdit = ');
-                console.log(this.$parent.indexForEdit);
-                if (this.$parent.indexForEdit >= 0) {
-
-                    this.mix(this.data[this.$parent.indexForEdit], this.formItems);
-                    axios.get('/admin-panel/service/get/selectedCategoriesAndTags?id_services=' + this.formItems.id_services)
-                        .then(response => {
-                            console.log(response);
-                            this.formItems.category.selectedList = response.data.serviceSelectedCategoriesName;
-                            this.formItems.tag.selectedList = response.data.serviceSelectedTagsName;
-                            console.log('CatSelectedList = ');
-                            console.log(this.formItems.category.selectedList);
-                            console.log('TagSelectedList = ');
-                            console.log(this.formItems.tag.selectedList);
-                        })
-                        .catch(e => {
-                            console.log(e)
-                        })
-                    // console.log('after = ')
-                    // console.log(this.formItems)
-                }
-            },
-            setToNewForm() {
-                console.log('setToNewForm*******');
-                let tempObj = {
-                    category: {
-                        isLoading: false,
-                        selectedList: [],
-                        rawList: []
-                    },
-                    tag: {
-                        isLoading: false,
-                        selectedList: [],
-                        rawList: []
-                    },
-                };
-
-                console.log('tempObj = ');
-                console.log(tempObj);
-                this.formItems = tempObj;
-                this.is_it_new_registration = "true";
-                this.$parent.getServiceData(`/admin-panel/service/index?page=1`);
-                if (this.$parent.indexForEdit >= 0) {
-                    this.$parent.indexForEdit = -1;
-                }
-            },
-            getNow: function () {
-                const today = new Date();
-                const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                const dateTime = date + ' ' + time;
-                console.log(dateTime)
-                this.Now = dateTime;
-            },
-            //multi select box
-            limitText(count) {
-                return `and ${count} `
-            },
-            asyncFindCategory(query) {
-                if (query.length === 0) {
-                    this.formItems.category.rawList = [];
-                    return;
-                }
-                console.log(query)
-                this.formItems.category.isLoading = true
-                axios.get('/admin-panel/service/get/categoriesByBusiness?filter=' + query)
-                    .then(response => {
-                        console.log('response = ')
-                        console.log(response)
-                        this.formItems.category.rawList = response.data.categoriesByBusiness;
-                        this.formItems.category.isLoading = false
+                        this.formItems.category.selectedList = response.data.serviceSelectedCategoriesName;
+                        this.formItems.tag.selectedList = response.data.serviceSelectedTagsName;
+                        console.log('CatSelectedList = ');
+                        console.log(this.formItems.category.selectedList);
+                        console.log('TagSelectedList = ');
+                        console.log(this.formItems.tag.selectedList);
                     })
                     .catch(e => {
                         console.log(e)
                     })
-            },
-            asyncFindTag(query) {
-                if (query.length === 0) {
-                    this.formItems.tag.rawList = [];
-                    return;
-                }
-                this.formItems.tag.isLoading = true
-                axios.get('/admin-panel/service/get/tagsByBusiness?filter=' + query)
-                    .then(response => {
-                        console.log('response = ')
-                        console.log(response)
-                        this.formItems.tag.rawList = response.data.tagsByBusiness;
-                        this.formItems.tag.isLoading = false
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-            },
-            clearAll() {
-                this.formItems.category.selectedList = []
-            },
-            nameFormatter({category_name}) {
-                return `${category_name}`;
-            },
-            nameFormatter_tag({tag_name}) {
-                return `${tag_name}`;
-            },
-            mix(source, target) {
-                // console.log('source');
-                // console.log(source);
-                // console.log('target');
-                // console.log(target);
-                for (var key of Object.keys(source)) {
-                    if (source.hasOwnProperty(key)) {
-                        target[key] = source[key];
-                        // console.log('target = ')
-                        // console.log(target)
-                    }
-                }
-            },
-            setAll(obj, val) {
-                /* Duplicated with @Maksim Kalmykov
-                    for(index in obj) if(obj.hasOwnProperty(index))
-                        obj[index] = val;
-                */
-                Object.keys(obj).forEach(function (index) {
-                    obj[index] = val
-                });
+                // console.log('after = ')
+                // console.log(this.formItems)
             }
         },
-        created: function () {
-            console.log('newCustomerCreationForm created ');
-            this.data = this.$parent.data.data.data;
-            console.log('this.data  = ');
-            console.log(this.data);
+        setToNewForm() {
+            console.log('setToNewForm*******');
+            let tempObj = {
+                category: {
+                    isLoading: false,
+                    selectedList: [],
+                    rawList: []
+                },
+                tag: {
+                    isLoading: false,
+                    selectedList: [],
+                    rawList: []
+                },
+            };
+
+            console.log('tempObj = ');
+            console.log(tempObj);
+            this.formItems = tempObj;
+            this.is_it_new_registration = "true";
+            this.$parent.getServiceData(`/admin-panel/service/index?page=1`);
+            if (this.$parent.indexForEdit >= 0) {
+                this.$parent.indexForEdit = -1;
+            }
         },
-        mounted: function () {
-            console.log('newCustomerCreationForm mounted ');
-            this.csrf = window.Laravel.csrfToken;
+        getNow: function () {
+            const today = new Date();
+            const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            const dateTime = date + ' ' + time;
+            console.log(dateTime)
+            this.Now = dateTime;
+        },
+        //multi select box
+        limitText(count) {
+            return `and ${count} `
+        },
+        asyncFindCategory(query) {
+            if (query.length === 0) {
+                this.formItems.category.rawList = [];
+                return;
+            }
+            console.log(query)
+            this.formItems.category.isLoading = true
+            axios.get('/admin-panel/service/get/categoriesByBusiness?filter=' + query)
+                .then(response => {
+                    console.log('response = ')
+                    console.log(response)
+                    this.formItems.category.rawList = response.data.categoriesByBusiness;
+                    this.formItems.category.isLoading = false
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+        },
+        asyncFindTag(query) {
+            if (query.length === 0) {
+                this.formItems.tag.rawList = [];
+                return;
+            }
+            this.formItems.tag.isLoading = true
+            axios.get('/admin-panel/service/get/tagsByBusiness?filter=' + query)
+                .then(response => {
+                    console.log('response = ')
+                    console.log(response)
+                    this.formItems.tag.rawList = response.data.tagsByBusiness;
+                    this.formItems.tag.isLoading = false
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+        },
+        clearAll() {
+            this.formItems.category.selectedList = []
+        },
+        nameFormatter({category_name}) {
+            return `${category_name}`;
+        },
+        nameFormatter_tag({tag_name}) {
+            return `${tag_name}`;
+        },
+        mix(source, target) {
+            // console.log('source');
+            // console.log(source);
+            // console.log('target');
+            // console.log(target);
+            for (var key of Object.keys(source)) {
+                if (source.hasOwnProperty(key)) {
+                    target[key] = source[key];
+                    // console.log('target = ')
+                    // console.log(target)
+                }
+            }
+        },
+        setAll(obj, val) {
+            /* Duplicated with @Maksim Kalmykov
+                for(index in obj) if(obj.hasOwnProperty(index))
+                    obj[index] = val;
+            */
+            Object.keys(obj).forEach(function (index) {
+                obj[index] = val
+            });
+        }
+    },
+    created: function () {
+        console.log('newCustomerCreationForm created ');
+        this.data = this.$parent.data.data.data;
+        console.log('this.data  = ');
+        console.log(this.data);
+    },
+    mounted: function () {
+        console.log('newCustomerCreationForm mounted ');
+        this.csrf = window.Laravel.csrfToken;
+        this.populateFormInputIfIsForEdit();
+        if (this.$parent.indexForEdit >= 0) {
+            this.is_it_new_registration = 'false';
+        }
+        this.getNow();
+    },
+    watch: {
+        indexForEdit: function () {
             this.populateFormInputIfIsForEdit();
             if (this.$parent.indexForEdit >= 0) {
                 this.is_it_new_registration = 'false';
+            } else {
+                this.is_it_new_registration = 'true';
+                this.setToNewForm();
             }
-            this.getNow();
         },
-        watch: {
-            indexForEdit: function () {
-                this.populateFormInputIfIsForEdit();
-                if (this.$parent.indexForEdit >= 0) {
-                    this.is_it_new_registration = 'false';
-                } else {
-                    this.is_it_new_registration = 'true';
-                    this.setToNewForm();
-                }
-            },
 
-        }
     }
+}
 
 </script>
 

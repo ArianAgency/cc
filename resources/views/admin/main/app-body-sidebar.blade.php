@@ -142,7 +142,20 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin-panel/services_xsense "><i class="fa fa-building-o"></i>انتصاب
-                            شرط و محصول</a>
+                            شرط و محصول
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/score_convertor/view/table">
+                            <i class="fas fa-star-half-alt"></i>
+                            لیست تبدیل امتیاز
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/score_convertor/view/form">
+                            <i class="fas fa-star-half-alt"></i>
+                            ایجاد تبدیل امتیاز
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link"><i class="icon-user-follow"></i>نظر سنجی</a>

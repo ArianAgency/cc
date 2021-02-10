@@ -4,7 +4,7 @@
             <div class="card div-body">
                 <slot name="header"></slot>
 
-                <ValidationObserver v-slot="{handleSubmit }" ref="observer">
+                <ValidationObserver v-slot="{handleSubmit}" ref="observer">
                     <form ref="form">
                         <div class="row">
                             <div class="col-12">

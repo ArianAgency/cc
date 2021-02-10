@@ -110,6 +110,11 @@ Vue.component('customerCardForm', require('./components/form/customerCardForm.vu
 Vue.component('customerGroupCardSPA', require('./components/SPA/customerGroupCardSPA.vue').default);
 Vue.component('customerGroupCardForm', require('./components/form/customerGroupCardForm.vue').default);
 Vue.component('CustomerGroupCardTableComponent', require('./components/table/CustomerGroupCardTableComponent.vue').default);
+/*
+customer panel
+ */
+Vue.component('customerProfile', require('./components/customer/customerProfile.vue').default);
+Vue.component('customerScoreConvertor', require('./components/customer/customerScoreConvertor.vue').default);
 
 
 Vue.component('serviceSPA', require('./components/SPA/serviceSPA.vue').default);
@@ -132,6 +137,9 @@ Vue.component('Jservices_xsenseTableComponent', require('./components/table/Jser
 Vue.component('newSerXsensCreationForm', require('./components/form/newSerXsensCreationForm').default);
 
 
+Vue.component('scoreConvertorSPA', require('./components/SPA/scoreConvertorSPA').default);
+
+
 Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
 Vue.component('PurchaseHistoryTableComponent', require('./components/table/PurchaseHistoryTableComponent').default);
 
@@ -139,6 +147,10 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 
 // card designer
 Vue.component('cardDesigner', require('./components/tools/cardDesigner').default);
+//table template
+Vue.component('tableTemplate', require('./components/Template/tableTemplate').default);
+//SpaMainTemplate
+Vue.component('SpaMainTemplate', require('./components/template/SpaMainTemplate').default);
 
 
 /**

@@ -104,7 +104,7 @@ export default {
     },
     created: function () {
         console.log('Customer SPA created.')
-        this.getCustomerData(`/admin-panel/customer/index?page=1`)
+        this.getCustomerData(`/admin-panel/customer/index?page=1&mode=completed`)
     },
 
 }

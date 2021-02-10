@@ -1,4 +1,5 @@
-@extends('layouts.coreui.admin')
+{{--@extends('layouts.coreui.admin')--}}
+@extends('admin.master-admin-template')
 
 @section('app-body-main-content')
     <!-- Breadcrumb -->

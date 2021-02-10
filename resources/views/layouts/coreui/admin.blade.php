@@ -26,12 +26,14 @@
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" >
 <header class="app-header navbar">
-    @include('admin.main.app-header')
+{{--    @include('admin.main.app-header')--}}
+    @yield('app-header')
 </header>
 
 <div class="app-body" id="app">
     <div class="sidebar">
-        @include('admin.main.app-body-sidebar')
+{{--        @include('admin.main.app-body-sidebar')--}}
+        @yield('app-body-sidebar')
     </div>
 
     <!-- Main content -->
@@ -55,7 +57,8 @@
     </main>
 
     <aside class="aside-menu">
-        @include('admin.main.app-body-aside-menu')
+        @yield('app-body-aside-menu')
+{{--        @include('admin.main.app-body-aside-menu')--}}
     </aside>
 
 </div>

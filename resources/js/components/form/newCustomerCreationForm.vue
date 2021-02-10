@@ -679,6 +679,7 @@
             VueContentLoading,
             datePicker: VuePersianDatetimePicker
         },
+
         data() {
             return {
                 user: {},
@@ -710,19 +711,7 @@
             }
         },
         methods: {
-            async submit() {
-                console.log('submitttttttttttttttt')
-                const isValid = await this.$refs.observer.validate();
-                console.log('isValid = ' + isValid)
-                console.log(isValid)
-                if (!isValid) {
-                    // ABORT!!
-                    swal("نا تمام!", "با خطا مواجه شد", "error");
-                    return
-                }
-                swal("تمام!", "با موفقیت ثبت شد", "success");
-                // 🐿 ship it
-            },
+
             async customer_new_form_submit(event, is_it_new_registration) {
 
                 const isValid = await this.$refs.observer.validate();
