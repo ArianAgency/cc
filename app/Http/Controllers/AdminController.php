@@ -2480,7 +2480,10 @@ class AdminController extends Controller
 
     public function score_convertor_do_this(Request $request)
     {
+        error_log('*****************************');
         error_log($request);
+        error_log('*****************************');
+
         $do_this = $request['this'];
 
         error_log('score_convertor_do_this -> ' . $do_this);
@@ -2501,6 +2504,7 @@ class AdminController extends Controller
                 $available = $request['available'];
                 $expire = $request['expire'];
 
+
                 $query = "CALL sp_set_new_score_convertor (
                                             '$convertor_name' ,
                                             '$score_cost' ,
@@ -2514,13 +2518,32 @@ class AdminController extends Controller
                                             '$expire' ); ";
 
                 try {
-                    $queryResult = DB::statement($query);
+                    $queryResult = DB::select(DB::raw($query));
                     $response['result'] = $queryResult;
                 } catch (\Illuminate\Database\QueryException $ex) {
                     error_log('query error = ' . $ex->getMessage());
                     error_log('query error code= ' . $ex->getCode());
                     return Response(['status' => 'Error', 'code' => 2], 409);
                 }
+
+                $service_list = json_decode($request['service_list'], true);
+                if (count($service_list) > 0) {
+                    foreach ($service_list as $service) {
+                        $id_score_convertor = $response['result'];
+                        $query = "CALL sp_score_convertor_plans_services_junction_add  ('$id_score_convertor','$service')";
+                        try {
+                            $queryResult = DB:: select(DB::raw($query));
+                            error_log('sp_score_convertor_plans_services_junction_add query successful');
+
+                        } catch (\Illuminate\Database\QueryException $ex) {
+                            error_log('query error = ' . $ex->getMessage());
+                            error_log('query error code= ' . $ex->getCode());
+                            return Response(['status' => 'error', 'code' => 2], 409);
+                        }
+                    }
+                }
+
+
                 break;
             case 'edit':
 
@@ -2554,6 +2577,24 @@ class AdminController extends Controller
                     error_log('query error code= ' . $ex->getCode());
                     return Response(['status' => 'Error', 'code' => 2], 409);
                 }
+
+                $service_list = json_decode($request['service_list'], true);
+                if (count($service_list) > 0) {
+                    foreach ($service_list as $service) {
+                        $id_services = $service['id_services'];
+                        $query = "CALL sp_score_convertor_plans_services_junction_add ('$id_score_convertor','$id_services')";
+                        try {
+                            $queryResult = DB:: select(DB::raw($query));
+                            error_log('sp_score_convertor_plans_services_junction_add query successful');
+
+                        } catch (\Illuminate\Database\QueryException $ex) {
+                            error_log('query error = ' . $ex->getMessage());
+                            error_log('query error code= ' . $ex->getCode());
+                            return Response(['status' => 'error', 'code' => 2], 409);
+                        }
+                    }
+                }
+
                 break;
         }
         return Response($response, 200);
@@ -2579,7 +2620,17 @@ class AdminController extends Controller
                     ->where('id_business', '=', $id_business)->paginate(10);
                 $response['dataList'] = $result;
                 break;
+            case 'servicesByBusiness':
+                $userBusinessID = Auth::user()->businesse_id;
 
+                $filter = ($request->filter) . '%';
+
+                $services = DB::table('services')
+                    ->where([['id_business', '=', $userBusinessID],
+                        ['name', 'LIKE', '%' . $filter . '%']])
+                    ->get(['id_services', 'name']);
+                $response['servicesByBusiness'] = $services;
+                break;
         }
         return Response($response, 200);
     }

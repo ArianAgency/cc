@@ -2,8 +2,8 @@
     <div>
         <table-template
             title="تبدیلات امتیاز"
-            :headers="['عنوان','مقدار تخفیف','درصد تخفیف','امتیاز لازم','اعتبار تا','فعال شده در']"
-            :value-keys="['convertor_name','off_value','off_percent','score_cost','expire','created_at']"
+            :headers="['عنوان','مقدار تخفیف','درصد تخفیف','امتیاز لازم','اعتبار تا','فعال شده در','فعال برای']"
+            :value-keys="['convertor_name','off_value','off_percent','score_cost','expire','created_at','grouped_names']"
             :get-url="'/customer-panel/testTable/get/score_converts'"
             :pagination="false"
             :has-call-back="true"

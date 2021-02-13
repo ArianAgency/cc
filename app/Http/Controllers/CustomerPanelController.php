@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class CustomerPanelController extends Controller
 {
@@ -20,7 +21,7 @@ class CustomerPanelController extends Controller
         return view('registration');
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(Request $request): \Illuminate\Http\RedirectResponse
     {
 //        error_log($request);
 //        error_log('email = ');
@@ -39,9 +40,9 @@ class CustomerPanelController extends Controller
         if (Auth::guard('customers')->attempt($credentials)) {
             error_log(' Customer Authentication passed...');
 //            return redirect()->intended(route('customer-dashboard'));
-            return redirect()->intended(route('customer-panel/dashboard'));
+            return redirect()->route('customer-dashboard');
         }
-        return Redirect::to("login")->withSuccess('Oppes! You have entered invalid credentials');
+         return redirect()->route('customer-login')->withSuccess('Oppes! You have entered invalid credentials');
     }
 
     public function postRegistration(Request $request)
@@ -80,8 +81,10 @@ class CustomerPanelController extends Controller
     public function logout()
     {
         Session::flush();
-        Auth::logout();
-        return Redirect('login');
+        Auth::guard('customers')->logout();
+        return redirect()->route('customer-login');
+//        session()->flash('message', 'Invalid credentials');
+//        return redirect()->back();
     }
 
     public function customer_get_this(Request $request)
@@ -167,8 +170,6 @@ class CustomerPanelController extends Controller
 
                 break;
             case 'score_converts':
-
-
                 $score_convertors = array();
 
                 try {
