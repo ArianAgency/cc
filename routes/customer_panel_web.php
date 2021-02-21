@@ -26,10 +26,6 @@ Route::group(['prefix'=>'customer-panel'],function(){
     Route::get('registration', 'CustomerPanelController@registration');
     Route::post('post-registration', 'CustomerPanelController@postRegistration');
 
-
-
-
-
 });
 
 

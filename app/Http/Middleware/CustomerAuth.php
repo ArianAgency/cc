@@ -21,6 +21,5 @@ class CustomerAuth extends Middleware
 
         }
 
-
     }
 }

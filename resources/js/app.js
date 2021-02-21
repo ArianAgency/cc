@@ -65,12 +65,18 @@ Vue.use(Autocomplete)
 
 
 import VueKonva from 'vue-konva'
+
 Vue.use(VueKonva)
 
 
 import VTooltip from 'v-tooltip'
+
 Vue.use(VTooltip)
 
+
+import VWave from 'v-wave'
+
+Vue.use(VWave)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -151,6 +157,14 @@ Vue.component('cardDesigner', require('./components/tools/cardDesigner').default
 Vue.component('tableTemplate', require('./components/Template/tableTemplate').default);
 //SpaMainTemplate
 Vue.component('SpaMainTemplate', require('./components/template/SpaMainTemplate').default);
+
+//POS
+Vue.component('posSPA', require('./components/POS/PosSPA').default);
+Vue.component('posHeader', require('./components/POS/PosHeader').default);
+Vue.component('posSideBar', require('./components/POS/PosSideBar').default);
+Vue.component('posInvoiceItem', require('./components/POS/PosInvoiceItem').default);
+Vue.component('servicesCardObject', require('./components/POS/ServicesCardObject').default);
+Vue.component('simpleServicesCardObject', require('./components/POS/SimpleServicesCardObject').default);
 
 
 /**

@@ -6,7 +6,6 @@
                 <div class="card-body">
                     <ValidationObserver v-slot="{invalid, handleSubmit }" ref="observer">
                         <form ref="form" @submit.prevent="handleSubmit(user_new_form_submit($event))">
-
                             <div class="row">
                                 <div class="col-6">
                                     <div class="card-body">

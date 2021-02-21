@@ -60,6 +60,15 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
+        $role_id = Auth::user()->role_id;
+
+//        if ($role_id == 6) {
+
+            return '/pos-panel/dashboard';
+//        }
+
         return '/admin-panel';
+
+
     }
 }

@@ -530,7 +530,7 @@
                                                     </div>
                                                 </div>
 
-                                                <!--card_numbe-->
+                                                <!--card_number-->
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
