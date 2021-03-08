@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-//Route::get('/customer-panel', function () {
-//    return view('welcome');
-//});
+Route::get('/customer-panel', function () {
+    return view('welcome');
+});
 
 
 
@@ -19,7 +19,7 @@ Route::group(['prefix'=>'customer-panel'],function(){
         Route::post('/do/{type}', 'CustomerPanelController@do_action');
 
         Route::get('/testTable/get/{this}', 'CustomerPanelController@customer_get_this');
-        Route::get('/testTable/do/{this}', 'CustomerPanelController@purchase_do_this');
+        Route::get('/testTable/do/{this}', 'CustomerPanelController@customer_do_this');
     });
     Route::get('login', 'CustomerPanelController@index')->name('customer-login');
     Route::post('post-login', 'CustomerPanelController@postLogin');

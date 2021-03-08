@@ -26,28 +26,13 @@
 
 </head>
 
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" >
+<body class="app  sidebar-fixed aside-menu-fixed aside-menu-hidden" >
 <div id="app">
-<header class="app-header navbar">
-
-    <?php echo $__env->yieldContent('app-header'); ?>
-
-</header>
-
-<div class="app-body" >
-    <div class="sidebar" id="pos-side-bar">
-        <?php echo $__env->yieldContent('app-body-sidebar'); ?>
-    </div>
-
-    <!-- Main content -->
-    <main class="main" id="pos-main">
-        <!-- Breadcrumb -->
-        <?php echo $__env->yieldContent('app-body-main-content'); ?>
-    </main>
 
 
+    <?php echo $__env->yieldContent('main-app-body'); ?>
 
-</div>
+
 </div>
 <footer class="app-footer fixed-bottom" id="pos-footer">
 

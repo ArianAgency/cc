@@ -12,6 +12,7 @@ import Vue from 'vue';
 import {ValidationProvider, extend, localize, ValidationObserver} from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
 
+
 localize('fa', fa);
 Object.keys(rules).forEach(rule => {
     extend(rule, rules[rule]);
@@ -53,6 +54,8 @@ Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
 
 import swal from 'sweetalert'
+
+
 
 import {VueCsvImport} from 'vue-csv-import';
 
@@ -150,14 +153,16 @@ Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
 Vue.component('PurchaseHistoryTableComponent', require('./components/table/PurchaseHistoryTableComponent').default);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
-
+//TOOLS
 // card designer
 Vue.component('cardDesigner', require('./components/tools/cardDesigner').default);
 //table template
 Vue.component('tableTemplate', require('./components/Template/tableTemplate').default);
 //SpaMainTemplate
 Vue.component('SpaMainTemplate', require('./components/template/SpaMainTemplate').default);
-
+//ModalDialog
+Vue.component('ModalDialog', require('./components/tools/ModalDialog').default);
+//TOOLS
 //POS
 Vue.component('posSPA', require('./components/POS/PosSPA').default);
 Vue.component('posHeader', require('./components/POS/PosHeader').default);
@@ -176,5 +181,6 @@ Vue.component('simpleServicesCardObject', require('./components/POS/SimpleServic
 const app = new Vue({
     el: '#app',
 });
+
 
 

@@ -26,28 +26,13 @@
 
 </head>
 
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" >
+<body class="app  sidebar-fixed aside-menu-fixed aside-menu-hidden" >
 <div id="app">
-<header class="app-header navbar">
-{{--    @include('admin.main.app-header')--}}
-    @yield('app-header')
-
-</header>
-
-<div class="app-body" >
-    <div class="sidebar" id="pos-side-bar">
-        @yield('app-body-sidebar')
-    </div>
-
-    <!-- Main content -->
-    <main class="main" id="pos-main">
-        <!-- Breadcrumb -->
-        @yield('app-body-main-content')
-    </main>
 
 
+    @yield('main-app-body')
 
-</div>
+
 </div>
 <footer class="app-footer fixed-bottom" id="pos-footer">
 

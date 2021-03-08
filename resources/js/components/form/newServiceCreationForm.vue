@@ -413,6 +413,7 @@ export default {
                     this.$refs.observer.reset();
                     this.$parent.indexForEdit = -1;
                     this.$parent.initData();
+                    this.setToNewForm()
                 })
                 .catch(e => {
                     // this.errors.push(e)

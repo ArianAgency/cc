@@ -186,12 +186,12 @@ class CustomerPanelController extends Controller
         return Response($response, 200);
     }
 
-    public function purchase_do_this(Request $request)
+    public function customer_do_this(Request $request)
     {
         error_log($request);
         $do_this = $request['this'];
 
-        error_log('purchase_do_this -> ' . $do_this);
+        error_log('customer_do_this -> ' . $do_this);
         $response = array();
         $response['status'] = 'Done';
         $id_business = Auth::guard('customers')->user()->registration_origin;
@@ -217,15 +217,13 @@ class CustomerPanelController extends Controller
                 $id_score_convertor = $request['id'];
                 error_log('$id_score_convertor = ' . $id_score_convertor);
 
-
-                $query = "CALL sp_customer_score_convert  ('$id_score_convertor','$id_customers')";
+                $query = "CALL sp_customer_score_convert  ('$id_customers','$id_score_convertor')";
                 error_log('sp_customer_score_convert -> $query = ' . $query);
                 try {
                     $result = DB::select(DB::raw($query));
                     $response['result'] = $result;
                     error_log('query sp_customer_score_convert successfull');
                 } catch (\Illuminate\Database\QueryException $ex) {
-//            dd($ex->getMessage());
                     error_log('query error = ' . $ex->getMessage());
                     error_log('query error code= ' . $ex->getCode());
                     return Response(['status' => 'error', 'code' => 2], 409);

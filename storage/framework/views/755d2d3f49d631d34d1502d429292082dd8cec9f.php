@@ -1,13 +1,4 @@
-<?php $__env->startSection('app-header'); ?>
-    <pos-header></pos-header>
-<?php $__env->stopSection(); ?>
-
-
-<?php $__env->startSection('app-body-sidebar'); ?>
-    <pos-side-bar></pos-side-bar>
-<?php $__env->stopSection(); ?>
-
-<?php $__env->startSection('app-body-main-content'); ?>
+<?php $__env->startSection('main-app-body'); ?>
     <pos-s-p-a></pos-s-p-a>
 <?php $__env->stopSection(); ?>
 

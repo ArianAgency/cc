@@ -1,11 +1,25 @@
 <template>
-    <div class="card">
+    <div class="card  ">
         <div class="card-body" style="height: 150px">
-            <div class="d-flex justify-content-between">
 
+            <div class="d-flex justify-content-between">
                 <div><strong>مبلغ کل</strong></div>
                 <div class="d-flex flex-wrap">
-                    <div>200,000</div>
+                    <div>{{ totalPrice.string }}</div>
+                    <div class="mr-2">تومان</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div><strong>مالیات</strong></div>
+                <div class="d-flex flex-wrap">
+                    <div>{{ tax.string }}</div>
+                    <div class="mr-2">تومان</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div><strong>تخفیف کل</strong></div>
+                <div class="d-flex flex-wrap">
+                    <div>57,000</div>
                     <div class="mr-2">تومان</div>
                 </div>
             </div>
@@ -13,10 +27,26 @@
         </div>
 
         <hr class="solid">
-        <template v-for="item in items">
-            <pos-invoice-item
-                :item="item"></pos-invoice-item>
-        </template>
+
+        <div class="container-fluid scroll ">
+            <template v-for="value in basketItems">
+                <pos-invoice-item
+                    class="animated fadeIn"
+                    :Item="value"
+                    @increase="increase"
+                    @decrease="decrease"
+                    @remove="remove"
+                ></pos-invoice-item>
+            </template>
+        </div>
+
+        <hr class="solid">
+        <div class="card-body">
+            <button class="btn btn-primary confirm-btn fixed-bottom ">
+                <i class="fas fa-shopping-cart"></i>
+                خرید
+            </button>
+        </div>
 
     </div>
 </template>
@@ -24,26 +54,62 @@
 <script>
 export default {
     name: "PosSideBar",
-    props: ['basket'],
+    props: ['basketItems', 'customerDetail'],
     data() {
         return {
-            items: {
-                0: {
-                    name: 'نام محصول',
-                    price: 'قیمت',
-                    count: 'تعداد',
-                    off: 'تخفیف'
-                },
-                1: {
-                    name: 'نام محصول',
-                    price: 'قیمت',
-                    count: 'تعداد',
-                    off: 'تخفیف'
-                }
+            totalPrice: {
+                int: 0,
+                string: '0',
+            },
+            tax: {
+                int: 0,
+                string: '0',
             }
         }
     },
-    methods: {}
+    methods: {
+        increase(item) {
+            this.$emit('increase', item)
+        },
+        decrease(item) {
+            this.$emit('decrease', item)
+        },
+        remove(item) {
+            this.$emit('remove', item)
+        },
+        splitedNumber(txt) {
+            let result = String(txt);
+            while (/(\d+)(\d{3})/.test(result)) {
+                result = result.replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
+            }
+            return result;
+        },
+        calculateTotalPrice() {
+            var i;
+            let total = 0;
+            let totalOff = 0;
+            for (const key in this.basketItems) {
+                total += this.basketItems[key]['count'] * this.basketItems[key]['price'];
+
+            }
+
+            this.totalPrice.int = total;
+            this.totalPrice.string = this.splitedNumber(total);
+
+            this.tax.int = total * 0.09;
+            this.tax.string = this.splitedNumber(this.tax.int);
+
+            return total;
+        },
+
+    },
+    watch: {
+        basketItems: {
+            handler: function (after, before) {
+                this.calculateTotalPrice();
+            }, deep: true
+        }
+    }
 }
 </script>
 
@@ -56,5 +122,18 @@ hr.solid {
 
 .card {
     color: #1b1e21;
+}
+
+.scroll {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 307px;
+}
+
+.confirm-btn {
+    width: 290px;
+    height: 60px;
+    margin: 5px;
+
 }
 </style>

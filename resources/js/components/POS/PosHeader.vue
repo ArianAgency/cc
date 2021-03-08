@@ -1,6 +1,22 @@
 <template>
+
     <div class="container-fluid row h-100 ">
-        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="input-group">
+                <!--mobile-->
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                <input type="text" id="mobile" name="mobile"
+                       class="form-control"
+                       v-model="mobile"
+                       placeholder="شماره موبایل">
+
+
+                <button class="btn btn-success" type="button"
+                        v-on:click.prevent="getCustomerData($event)">برو!
+                </button>
+
+            </div>
+        </div>
         <div class="col-4">
             <div class="input-group">
                  <span class="input-group-text">
@@ -24,10 +40,12 @@
                 :get-result-value="getResultValue"
                 :debounce-time="500"
                 @submit="handleSearchSubmit"
-                ></autocomplete>
+            ></autocomplete>
         </div>
 
+
     </div>
+
 </template>
 
 <script>
@@ -37,10 +55,26 @@ export default {
         return {
             serviceCategory: [],
             ServiceSearchOptionCat: '',
+            customerDetail: {},
 
         }
     },
     methods: {
+        getCustomerData(event) {
+
+            console.log('mobile = ');
+            console.log(this.mobile);
+            axios.get('/admin-panel/purchase/get/customerDetail?mobile=' + this.mobile)
+                .then(response => {
+                    this.customerDetail = response.data.customerDetail[0];
+                    this.$emit('customerDataUpdated', this.customerDetail)
+                })
+                .catch(e => {
+                    // this.errors.push(e)
+                    console.log(e);
+                })
+        },
+
         //search
         search(input) {
             let searchResult;

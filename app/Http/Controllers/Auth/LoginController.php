@@ -62,10 +62,10 @@ class LoginController extends Controller
     {
         $role_id = Auth::user()->role_id;
 
-//        if ($role_id == 6) {
+        if ($role_id == 6) {
 
             return '/pos-panel/dashboard';
-//        }
+        }
 
         return '/admin-panel';
 

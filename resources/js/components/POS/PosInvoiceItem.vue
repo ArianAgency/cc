@@ -10,10 +10,16 @@
                 {{ Item.price }}
             </div>
             <div class="d-flex align-items-center col">
-                <button class="btn btn-primary">+</button>
+                <button class="btn btn-primary"
+                        @click="$emit('increase',Item)"
+                >+</button>
                 <div class="p-2 services-text">{{ Item.count }}</div>
-                <button class="btn btn-danger">-</button>
-                <button class="btn btn-warning m-1">x</button>
+                <button class="btn btn-danger"
+                        @click="$emit('decrease',Item)"
+                >-</button>
+                <button class="btn btn-warning m-1"
+                        @click="$emit('remove',Item)"
+                >x</button>
             </div>
         </div>
     </div>

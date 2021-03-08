@@ -1668,7 +1668,7 @@ class AdminController extends Controller
                 error_log('sp_create_new_service -> $query = ' . $query);
 
                 try {
-                    $queryResult = DB:: select(DB::raw($query));
+                    $queryResult = DB:: statement($query);
                     error_log('sp_create_new_service query successfull');
                 } catch (\Illuminate\Database\QueryException $ex) {
 //            dd($ex->getMessage());
@@ -2519,7 +2519,8 @@ class AdminController extends Controller
 
                 try {
                     $queryResult = DB::select(DB::raw($query));
-                    $response['result'] = $queryResult;
+                    $response['result'] = $queryResult[0]->id;
+
                 } catch (\Illuminate\Database\QueryException $ex) {
                     error_log('query error = ' . $ex->getMessage());
                     error_log('query error code= ' . $ex->getCode());
@@ -2527,10 +2528,16 @@ class AdminController extends Controller
                 }
 
                 $service_list = json_decode($request['service_list'], true);
+//                error_log('$service_list');
+//                error_log($service_list[0]['id_services']);
                 if (count($service_list) > 0) {
                     foreach ($service_list as $service) {
                         $id_score_convertor = $response['result'];
-                        $query = "CALL sp_score_convertor_plans_services_junction_add  ('$id_score_convertor','$service')";
+//                        error_log('$service=');
+//                        error_log($service['id_services']);
+                        $id_services=$service['id_services'];
+                        $query = "CALL sp_score_convertor_plans_services_junction_add ('$id_score_convertor','$id_services')";
+
                         try {
                             $queryResult = DB:: select(DB::raw($query));
                             error_log('sp_score_convertor_plans_services_junction_add query successful');
@@ -2542,7 +2549,6 @@ class AdminController extends Controller
                         }
                     }
                 }
-
 
                 break;
             case 'edit':
