@@ -19,7 +19,7 @@
             <div class="d-flex justify-content-between">
                 <div><strong>تخفیف کل</strong></div>
                 <div class="d-flex flex-wrap">
-                    <div>57,000</div>
+                    <div>{{ totalDiscount.string }}</div>
                     <div class="mr-2">تومان</div>
                 </div>
             </div>
@@ -61,6 +61,10 @@ export default {
                 int: 0,
                 string: '0',
             },
+            totalDiscount: {
+                int: 0,
+                string: '0',
+            },
             tax: {
                 int: 0,
                 string: '0',
@@ -87,10 +91,12 @@ export default {
         calculateTotalPrice() {
             var i;
             let total = 0;
-            let totalOff = 0;
+            let totalDis = 0;
             for (const key in this.basketItems) {
                 total += this.basketItems[key]['count'] * this.basketItems[key]['price'];
-
+                totalDis += this.basketItems[key]['count'] * this.basketItems[key]['off_value'];
+                totalDis += ((this.basketItems[key]['count'] * this.basketItems[key]['off_percent']) / 100)
+                    * this.basketItems[key]['price'];
             }
 
             this.totalPrice.int = total;
@@ -98,6 +104,9 @@ export default {
 
             this.tax.int = total * 0.09;
             this.tax.string = this.splitedNumber(this.tax.int);
+
+            this.totalDiscount.int = totalDis;
+            this.totalDiscount.string = this.splitedNumber(totalDis);
 
             return total;
         },

@@ -20,7 +20,6 @@
             <div>
                 <modal-dialog
                     @isOpen="modal = false"
-                    @mo="ModalItemSelected"
                     :list="list"
                     v-if="modal"></modal-dialog>
                 <div class="container-fluid">
@@ -49,6 +48,7 @@ export default {
             list: {
                 name: 'name',
             },
+            modalSelectedOffers: [],
             service: {
                 name: 'name',
                 price: 'price',
@@ -73,10 +73,12 @@ export default {
             if (data.count == null) {
                 data.count = 1;
             }
-            data.discount = 0;
+            data.off_percent = 0;
+            data.off_value = 0;
             this.checkForDiscount(this.customerDetail.id_customers, data);
 
             this.basketController('add', data);
+
         },
         getServiceData(href) {
             axios.get(href)
@@ -114,8 +116,8 @@ export default {
             return string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
         calculateTotalPrice() {
-            var t = 0;
-            var i;
+            let t = 0;
+            let i;
             for (i = 0; i < this.basketItems.length; i++) {
                 t += this.basketItems[i].total;
             }
@@ -152,10 +154,11 @@ export default {
             if (id_customers == 0) {
                 return 0;
             }
-            this.getDiscounts(id_customers, service).then(res => {
-                this.list = res;
-                this.modal = true;
-            });
+            this.getDiscounts(id_customers, service)
+                .then(res => {
+                    this.list = res;
+                    this.modal = true;
+                });
             //TODO selection of discount if multiple is available
         },
         async getDiscounts(id_customers, service) {
@@ -170,10 +173,14 @@ export default {
                 .then(response => {
                     // console.log('getDiscounts = ')
                     // console.log(response.data.response.dataList)
-                    console.log('response = ');
-                    console.log(response);
+                    // console.log('response = ');
+                    // console.log(response);
                     res = response.data.response.dataList;
-                    console.log(res);
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = service.id_services;
+                    }
+                    // console.log('res = ');
+                    // console.log(res);
 
                 })
                 .catch(e => {
@@ -181,10 +188,7 @@ export default {
                 })
             return res;
         },
-        ModalItemSelected() {
-            alert('ModalItemSelected')
-            console.log('ModalItemSelected')
-        }
+
     },
     created: function () {
         console.log('POS SPA created.');
@@ -192,11 +196,24 @@ export default {
 
     },
     mounted() {
-        this.$root.$on('modalItemSelected', function (data) {
-            console.log(data);
-
+        let vm = this;
+        this.$root.$on('modalItemSelected', function (item) {
+            let service_id = item.id;
+            for (let key in vm.basketItems) {
+                if (key == service_id) {
+                    this.$delete(vm.basketItems[key], 'off_percent');
+                    this.$set(vm.basketItems[key], 'off_percent', item.off_percent);
+                    this.$delete(vm.basketItems[key], 'off_value');
+                    this.$set(vm.basketItems[key], 'off_value', item.off_value);
+                    // vm.basketItems[key].off_percent = item.off_percent;
+                    // vm.basketItems[key].off_value = item.off_value;
+                }
+            }
+            this.modalSelectedOffers = item;
             Swal.close();
         })
+        console.log('after offer selection this.basketItems');
+        console.log(this.basketItems);
     }
 }
 </script>

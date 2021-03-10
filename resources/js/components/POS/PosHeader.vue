@@ -1,8 +1,8 @@
 <template>
 
     <div class="container-fluid row h-100 ">
-        <div class="col-4">
-            <div class="input-group">
+        <div class="col">
+            <div class="input-group ">
                 <!--mobile-->
                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                 <input type="text" id="mobile" name="mobile"
@@ -17,7 +17,19 @@
 
             </div>
         </div>
-        <div class="col-4">
+        <div class="col">
+            <div class="input-group ">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                <input type="text" id="user_name" name="user_name"
+                       class="form-control"
+                       placeholder="نام مشتری"
+                       disabled
+                       :value="customerDetail.name + ' ' +  customerDetail.family">
+
+
+            </div>
+        </div>
+        <div class="col">
             <div class="input-group">
                  <span class="input-group-text">
                      <i class="fas fa-tag"></i>
@@ -33,7 +45,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col">
             <autocomplete
                 :search="search"
                 placeholder="محصول را جستجو کنید"
@@ -53,9 +65,13 @@ export default {
     name: "PosHeader",
     data() {
         return {
+            mobile: '',
             serviceCategory: [],
             ServiceSearchOptionCat: '',
-            customerDetail: {},
+            customerDetail: {
+                name:'',
+                family:''
+            },
 
         }
     },

@@ -1,7 +1,7 @@
 <template>
     <div hidden>
         <div id="modal-content" class="card">
-            <div v-wave class="btn " v-for="item in list" @click="$root.$emit('modalItemSelected',item.name)">
+            <div v-wave class="btn " v-for="item in list" @click="$root.$emit('modalItemSelected',item)">
                 <div class="row">
                     <div class="col">
                         <i class="fas fa-file-signature"></i>
@@ -48,8 +48,8 @@ export default {
         }
     },
     mounted() {
-        console.log('Modal mounted list = ');
-        console.log(this.list)
+        // console.log('Modal mounted list = ');
+        // console.log(this.list)
         Swal.fire({
             title: 'example',
             icon: 'info',
