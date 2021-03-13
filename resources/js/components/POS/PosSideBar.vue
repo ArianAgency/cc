@@ -42,9 +42,10 @@
 
         <hr class="solid">
         <div class="card-body">
-            <button class="btn btn-primary confirm-btn fixed-bottom ">
+            <button class="btn btn-primary confirm-btn fixed-bottom "
+            @click="$emit('confirmPurchase')">
                 <i class="fas fa-shopping-cart"></i>
-                خرید
+                چاپ فاکتور
             </button>
         </div>
 

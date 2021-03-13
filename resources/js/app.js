@@ -55,7 +55,7 @@ Vue.component('ValidationObserver', ValidationObserver);
 
 import swal from 'sweetalert'
 
-
+window.Swal = require('sweetalert2')
 
 import {VueCsvImport} from 'vue-csv-import';
 

@@ -2208,6 +2208,14 @@ class AdminController extends Controller
 
                 $response['services'] = $services;
                 break;
+            case 'purchaseListByNameSearch':
+                $id_business = Auth::user()->businesse_id;
+                $serviceNameLike = $request->query('serviceNameLike');
+                $services = DB::table('v_get_services_list')
+                        ->where([['id_business', '=', $id_business], ['price', '>', '1'],['service_name', 'like', '%' . $serviceNameLike . '%']])
+                        ->get();
+                $response['searchResult'] = $services;
+                break;
             case 'history':
                 $page = $request['page'];
                 $id_business = Auth::user()->businesse_id;

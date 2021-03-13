@@ -19,6 +19,7 @@ Route::group(['prefix'=>'pos-panel'],function(){
         Route::post('/do/{type}', 'PosPanelController@do_action');
         Route::get('/testTable/get/{this}', 'PosPanelController@pos_get_this');
         Route::get('/testTable/do/{this}', 'PosPanelController@purchase_do_this');
+        Route::post('/purchase/doPurchase', 'PosPanelController@doPurchase');
     });
     Route::get('login', 'PosPanelController@index')->name('pos-login');
     Route::post('post-login', 'PosPanelController@postLogin');
