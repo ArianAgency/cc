@@ -80,6 +80,12 @@ Vue.use(VTooltip)
 import VWave from 'v-wave'
 
 Vue.use(VWave)
+
+//
+import ECharts from 'vue-echarts'
+import "echarts";
+Vue.component('v-chart', ECharts)
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -151,6 +157,8 @@ Vue.component('scoreConvertorSPA', require('./components/SPA/scoreConvertorSPA')
 
 Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
 Vue.component('PurchaseHistoryTableComponent', require('./components/table/PurchaseHistoryTableComponent').default);
+
+Vue.component('ReportSPA', require('./components/SPA/reportSPA').default);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 //TOOLS

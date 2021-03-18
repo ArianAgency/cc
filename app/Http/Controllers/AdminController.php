@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Business;
-use App\Category;
 use App\Customer;
 use App\Service;
 use App\User;
@@ -12,9 +11,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Symfony\Component\Console\Input\Input;
 
 
 class AdminController extends Controller
@@ -1821,6 +1818,54 @@ class AdminController extends Controller
 
 //****************************************************************************Product / Service
 //****************************************************************************X Sens
+    public function report()
+    {
+        return view('admin.report.report');
+    }
+
+    public function report_get_this(Request $request)
+    {
+        error_log($request);
+        $get_this = $request['this'];
+
+        error_log('report_get_this - ' . $get_this);
+        $response = array();
+        $response['status'] = 'Done';
+
+        $id_user = Auth::user()->id_users;
+        $id_business = Auth::user()->businesse_id;
+
+        switch ($get_this) {
+            case 'customerAnalyze':
+                $startDate = $request->query('startDate');
+                $endDate = $request->query('endDate');
+                $W = 30;
+                $X = 30;
+                $Y = 30;
+                $Z = 30;
+
+                $query = "CALL sp_get_customer_analyze('$startDate', '$endDate', $id_business,$X,$Y,$W,$Z);";
+                error_log('$query = ');
+                error_log($query);
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                   $response['dataList'] = $queryResult;
+                    error_log('sp_get_customer_analyze successful');
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+
+
+                break;
+
+        }
+
+        return Response($response, 200);
+    }
+//****************************************************************************Product / Service
+//****************************************************************************X Sens
     public
     function xsenses()
     {
@@ -2212,8 +2257,8 @@ class AdminController extends Controller
                 $id_business = Auth::user()->businesse_id;
                 $serviceNameLike = $request->query('serviceNameLike');
                 $services = DB::table('v_get_services_list')
-                        ->where([['id_business', '=', $id_business], ['price', '>', '1'],['service_name', 'like', '%' . $serviceNameLike . '%']])
-                        ->get();
+                    ->where([['id_business', '=', $id_business], ['price', '>', '1'], ['service_name', 'like', '%' . $serviceNameLike . '%']])
+                    ->get();
                 $response['searchResult'] = $services;
                 break;
             case 'history':
@@ -2543,7 +2588,7 @@ class AdminController extends Controller
                         $id_score_convertor = $response['result'];
 //                        error_log('$service=');
 //                        error_log($service['id_services']);
-                        $id_services=$service['id_services'];
+                        $id_services = $service['id_services'];
                         $query = "CALL sp_score_convertor_plans_services_junction_add ('$id_score_convertor','$id_services')";
 
                         try {

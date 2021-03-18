@@ -10,6 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@vue/composition-api": "^1.0.0-rc.5",
         "axios": "^0.21.1",
         "bootstrap": "^4.5.2",
         "cross-env": "^7.0",
@@ -27,6 +28,7 @@
         "@fortawesome/fontawesome-free": "^5.14.0",
         "@trevoreyre/autocomplete-vue": "^2.2.0",
         "css-ripple-effect": "^1.0.5",
+        "echarts": "^5.0.2",
         "filepond": "^4.20.1",
         "filepond-plugin-file-metadata": "^1.0.7",
         "filepond-plugin-file-poster": "^2.4.0",
@@ -48,6 +50,7 @@
         "vue-axios": "^2.1.5",
         "vue-content-loading": "^1.6.0",
         "vue-csv-import": "^3.3.5",
+        "vue-echarts": "^6.0.0-rc.3",
         "vue-filepond": "^6.0.3",
         "vue-html2canvas": "0.0.4",
         "vue-konva": "^2.1.6",

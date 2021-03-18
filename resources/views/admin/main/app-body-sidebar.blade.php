@@ -88,7 +88,7 @@
                         تحلیل
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="icon-user-follow"></i>رفتار مشتریان</a>
+                        <a href="/admin-panel/report/view/main" class="nav-link"><i class="icon-user-follow"></i>رفتار مشتریان</a>
                     </li>
                 </ul>
             </li>

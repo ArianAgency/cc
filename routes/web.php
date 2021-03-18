@@ -80,6 +80,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin-panel/score_convertor/do/{this}', 'AdminController@score_convertor_do_this');
     Route::get('/admin-panel/score_convertor/get/{this}', 'AdminController@score_convertor_get_this');
 
+    Route::get('/admin-panel/report/view/{v}', 'AdminController@report');
+    Route::get('/admin-panel/report/get/{this}', 'AdminController@report_get_this');
+
 
     Route::post('/upload/{this}','AdminController@store');
 });
