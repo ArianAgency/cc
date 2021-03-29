@@ -159,6 +159,8 @@ Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
 Vue.component('PurchaseHistoryTableComponent', require('./components/table/PurchaseHistoryTableComponent').default);
 
 Vue.component('ReportSPA', require('./components/SPA/reportSPA').default);
+Vue.component('customerAnalyze', require('./components/report/customerAnalyze').default);
+Vue.component('customerAnalyzeVolumePercent', require('./components/report/customerAnalyzeVolumePercent').default);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 //TOOLS
