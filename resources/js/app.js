@@ -158,9 +158,13 @@ Vue.component('scoreConvertorSPA', require('./components/SPA/scoreConvertorSPA')
 Vue.component('purchaseSPA', require('./components/SPA/purchaseSPA').default);
 Vue.component('PurchaseHistoryTableComponent', require('./components/table/PurchaseHistoryTableComponent').default);
 
+//REPORT
 Vue.component('ReportSPA', require('./components/SPA/reportSPA').default);
 Vue.component('customerAnalyze', require('./components/report/customerAnalyze').default);
 Vue.component('customerAnalyzeVolumePercent', require('./components/report/customerAnalyzeVolumePercent').default);
+Vue.component('salePerCustomerType', require('./components/report/salePerCustomerType').default);
+Vue.component('saleCountAndVolume', require('./components/report/saleCountAndVolume').default);
+Vue.component('clubSummary', require('./components/report/clubSummary').default);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 //TOOLS

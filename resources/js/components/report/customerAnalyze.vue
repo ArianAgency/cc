@@ -12,9 +12,6 @@ import VueContentLoading from "vue-content-loading";
 
 export default {
     name: "customerAnalyze",
-    components: {
-        datePicker: VuePersianDatetimePicker
-    },
     props:['date'],
     data() {
         return {

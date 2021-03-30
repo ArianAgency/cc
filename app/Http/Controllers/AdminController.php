@@ -1836,6 +1836,22 @@ class AdminController extends Controller
         $id_business = Auth::user()->businesse_id;
 
         switch ($get_this) {
+            case 'businessBranches':
+
+                try {
+                    $queryResult = DB::table('businesses')
+                        ->where('parent_id', '=', $id_business)
+                        ->get(['id_businesses', 'brand_name', 'company_name']);
+                    $response['dataList'] = $queryResult;
+                    error_log('sp_get_customer_analyze successful');
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+
+
+                break;
             case 'customerAnalyze':
                 $startDate = $request->query('startDate');
                 $endDate = $request->query('endDate');
@@ -1849,7 +1865,7 @@ class AdminController extends Controller
                 error_log($query);
                 try {
                     $queryResult = DB:: select(DB::raw($query));
-                   $response['dataList'] = $queryResult;
+                    $response['dataList'] = $queryResult;
                     error_log('sp_get_customer_analyze successful');
                 } catch (\Illuminate\Database\QueryException $ex) {
                     error_log('query error = ' . $ex->getMessage());
@@ -1858,6 +1874,87 @@ class AdminController extends Controller
                 }
 
 
+                break;
+            case 'customerAnalyzeVolume':
+                $startDate = $request->query('startDate');
+                $endDate = $request->query('endDate');
+                $W = 365;
+                $X = 365;
+                $Y = 365;
+                $Z = 365;
+
+                $query = "CALL sp_get_customer_analyze_volume('$startDate', '$endDate', $id_business,$X,$Y,$W,$Z);";
+                error_log('$query = ');
+                error_log($query);
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $response['dataList'] = $queryResult;
+                    error_log('sp_get_customer_analyze_volume successful');
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+
+
+                break;
+            case 'salePerCustomerType':
+                $startDate = $request->query('startDate');
+                $endDate = $request->query('endDate');
+                $id_business = $request->query('business_id');
+
+                $query = "CALL sp_get_sale_per_customer_type('$startDate', '$endDate', $id_business);";
+                error_log('$query = ');
+                error_log($query);
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $response['dataList'] = $queryResult;
+                    $response['id_business'] = $id_business;
+                    error_log('sp_get_sale_per_customer_type successful');
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+
+
+                break;
+            case 'saleCountAndVolume':
+                $startDate = $request->query('startDate');
+                $endDate = $request->query('endDate');
+
+                $query = "CALL sp_get_sale_count_and_volume('$startDate', '$endDate', $id_business);";
+                error_log('$query = ');
+                error_log($query);
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $response['dataList'] = $queryResult;
+                    $response['id_business'] = $id_business;
+                    error_log('sp_get_sale_per_customer_type successful');
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
+                break;
+            case 'clubSummary':
+                $startDate = $request->query('startDate');
+                $endDate = $request->query('endDate');
+                $id_business = $request->query('business_id');
+
+                $query = "CALL sp_get_club_summary('$startDate', '$endDate', $id_business);";
+                error_log('$query = ');
+                error_log($query);
+                try {
+                    $queryResult = DB:: select(DB::raw($query));
+                    $response['dataList'] = $queryResult;
+                    $response['id_business'] = $id_business;
+                    error_log('sp_get_sale_per_customer_type successful');
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    error_log('query error = ' . $ex->getMessage());
+                    error_log('query error code= ' . $ex->getCode());
+                    return Response(['status' => 'error', 'code' => 2], 409);
+                }
                 break;
 
         }

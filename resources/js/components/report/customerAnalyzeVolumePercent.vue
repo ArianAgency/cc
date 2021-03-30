@@ -12,10 +12,7 @@ import VueContentLoading from "vue-content-loading";
 
 export default {
     name: "customerAnalyzeVolumePercent",
-    components: {
-        datePicker: VuePersianDatetimePicker
-    },
-    props:['date'],
+    props: ['date'],
     data() {
         return {
 
@@ -71,29 +68,27 @@ export default {
     },
     methods: {
         getChartData(date) {
-            axios.get('/admin-panel/report/get/customerAnalyze?startDate=' + date.start + '&endDate=' + date.end)
+            axios.get('/admin-panel/report/get/customerAnalyzeVolume?startDate=' + date.start + '&endDate=' + date.end)
                 .then(response => {
                     console.log('getChartData =')
                     console.log(response)
                     console.log(response.data.dataList)
-                    let x = [];
-                    let y = [];
-                    let w = [];
-                    let z = [];
-                    let date = [];
-                    response.data.dataList.forEach(function (data) {
-                        x.push(data.X);
-                        y.push(data.Y);
-                        w.push(data.W);
-                        z.push(data.Z);
-                        date.push(data.date);
-                    });
-                    // this.option.series[0].data = '';
-                    this.option.series[1].data = w; //مشتریان فعال
-                    this.option.series[2].data = x;//بازگشته
-                    this.option.series[3].data = y;//از دست رفته
-                    this.option.series[4].data = z;//غیر فعال
-                    this.option.xAxis.data = date;
+                    let n = 0;
+                    let x = 0;
+                    let y = 0;
+                    let w = 0;
+                    let z = 0;
+
+                    x = response.data.dataList[0].X;
+                    y = response.data.dataList[0].Y;
+                    w = response.data.dataList[0].W;
+                    z = response.data.dataList[0].Z;
+
+                    this.option.series[0].data[0].value = n; //مشتریان جدید
+                    this.option.series[0].data[1].value = w; //مشتریان فعال
+                    this.option.series[0].data[2].value = x;//بازگشته
+                    this.option.series[0].data[3].value = y;//از دست رفته
+                    this.option.series[0].data[4].value = z;//غیر فعال
 
                 })
                 .catch(e => {

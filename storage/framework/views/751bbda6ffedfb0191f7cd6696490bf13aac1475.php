@@ -1,7 +1,7 @@
 <?php $__env->startSection('app-body-main-content'); ?>
     <div id="app">
 
-        <report-s-p-a></report-s-p-a>
+        <report-s-p-a :user="<?php echo e(Auth::user()); ?>"></report-s-p-a>
 
     </div>
 
